@@ -8,6 +8,8 @@
 #ifndef _ASPIA_NETWORK__FIREWALL_MANAGER_H
 #define _ASPIA_NETWORK__FIREWALL_MANAGER_H
 
+#include "base/common.h"
+
 #include <QString>
 
 #include <wrl/client.h>
@@ -54,7 +56,7 @@ private:
 
     QString application_path_;
 
-    Q_DISABLE_COPY(FirewallManager)
+    DISABLE_COPY(FirewallManager)
 };
 
 } // namespace aspia

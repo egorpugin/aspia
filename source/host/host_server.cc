@@ -141,7 +141,7 @@ void HostServer::stop()
     qInfo("Server is stopped");
 }
 
-void HostServer::setSessionChanged(quint32 event, quint32 session_id)
+void HostServer::setSessionChanged(uint32_t event, uint32_t session_id)
 {
     emit sessionChanged(event, session_id);
 
@@ -272,7 +272,7 @@ void HostServer::onHostFinished(Host* host)
 
 void HostServer::onIpcServerStarted(const QString& channel_id)
 {
-    Q_ASSERT(notifier_state_ == NotifierState::Starting);
+    assert(notifier_state_ == NotifierState::Starting);
 
     notifier_process_ = new HostProcess(this);
 
@@ -296,7 +296,7 @@ void HostServer::onIpcServerStarted(const QString& channel_id)
 
 void HostServer::onIpcNewConnection(IpcChannel* channel)
 {
-    Q_ASSERT(notifier_state_ == NotifierState::Starting);
+    assert(notifier_state_ == NotifierState::Starting);
 
     qInfo("Notifier is started");
     notifier_state_ = NotifierState::Started;

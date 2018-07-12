@@ -36,7 +36,7 @@ private:
 
     ScopedVpxCodec codec_;
 
-    Q_DISABLE_COPY(VideoDecoderVPX)
+    DISABLE_COPY(VideoDecoderVPX)
 };
 
 } // namespace aspia

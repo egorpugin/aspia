@@ -122,7 +122,7 @@ void VideoEncoderVPX::createImage()
     // Allocate a YUV buffer large enough for the aligned data & padding.
     const int buffer_size = y_stride * y_rows + (2 * uv_stride) * uv_rows;
 
-    yuv_image_ = std::make_unique<quint8[]>(buffer_size);
+    yuv_image_ = std::make_unique<uint8_t[]>(buffer_size);
 
     // Reset image value to 128 so we just need to fill in the y plane.
     memset(yuv_image_.get(), 128, buffer_size);
@@ -141,7 +141,7 @@ void VideoEncoderVPX::createActiveMap()
     active_map_.cols = (screen_size_.width() + kMacroBlockSize - 1) / kMacroBlockSize;
     active_map_.rows = (screen_size_.height() + kMacroBlockSize - 1) / kMacroBlockSize;
     active_map_size_ = active_map_.cols * active_map_.rows;
-    active_map_buffer_ = std::make_unique<quint8[]>(active_map_size_);
+    active_map_buffer_ = std::make_unique<uint8_t[]>(active_map_size_);
 
     memset(active_map_buffer_.get(), 0, active_map_size_);
     active_map_.active_map = active_map_buffer_.get();
@@ -157,7 +157,7 @@ void VideoEncoderVPX::createVp8Codec()
     vpx_codec_iface_t* algo = vpx_codec_vp8_cx();
 
     vpx_codec_err_t ret = vpx_codec_enc_config_default(algo, &config, 0);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     // Adjust default target bit-rate to account for actual desktop size.
     config.rc_target_bitrate = screen_size_.width() * screen_size_.height() *
@@ -177,22 +177,22 @@ void VideoEncoderVPX::createVp8Codec()
     config.rc_max_quantizer = 30;
 
     ret = vpx_codec_enc_init(codec_.get(), algo, &config, 0);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     // Value of 16 will have the smallest CPU load. This turns off subpixel
     // motion search.
     ret = vpx_codec_control(codec_.get(), VP8E_SET_CPUUSED, 16);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     ret = vpx_codec_control(codec_.get(), VP8E_SET_SCREEN_CONTENT_MODE, 1);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     //
     // Use the lowest level of noise sensitivity so as to spend less time
     // on motion estimation and inter-prediction mode.
     //
     ret = vpx_codec_control(codec_.get(), VP8E_SET_NOISE_SENSITIVITY, 0);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 }
 
 void VideoEncoderVPX::createVp9Codec()
@@ -205,7 +205,7 @@ void VideoEncoderVPX::createVp9Codec()
     vpx_codec_iface_t* algo = vpx_codec_vp9_cx();
 
     vpx_codec_err_t ret = vpx_codec_enc_config_default(algo, &config, 0);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     setCommonCodecParameters(&config, screen_size_);
 
@@ -218,30 +218,30 @@ void VideoEncoderVPX::createVp9Codec()
     config.rc_end_usage = VPX_VBR;
 
     ret = vpx_codec_enc_init(codec_.get(), algo, &config, 0);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     //
     // Request the lowest-CPU usage that VP9 supports, which depends on whether
     // we are encoding lossy or lossless.
     //
     ret = vpx_codec_control(codec_.get(), VP8E_SET_CPUUSED, 5);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     ret = vpx_codec_control(codec_.get(),
                             VP9E_SET_TUNE_CONTENT,
                             VP9E_CONTENT_SCREEN);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     //
     // Use the lowest level of noise sensitivity so as to spend less time
     // on motion estimation and inter-prediction mode.
     //
     ret = vpx_codec_control(codec_.get(), VP8E_SET_NOISE_SENSITIVITY, 0);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 
     // Set cyclic refresh (aka "top-off") only for lossy encoding.
     ret = vpx_codec_control(codec_.get(), VP9E_SET_AQ_MODE, kVp9AqModeNone);
-    Q_ASSERT(VPX_CODEC_OK == ret);
+    assert(VPX_CODEC_OK == ret);
 }
 
 void VideoEncoderVPX::setActiveMap(const QRect& rect)
@@ -251,7 +251,7 @@ void VideoEncoderVPX::setActiveMap(const QRect& rect)
     int right  = (rect.right() - 1) / kMacroBlockSize;
     int bottom = (rect.bottom() - 1) / kMacroBlockSize;
 
-    quint8* map = active_map_.active_map + top * active_map_.cols;
+    uint8_t* map = active_map_.active_map + top * active_map_.cols;
 
     for (int y = top; y <= bottom; ++y)
     {
@@ -271,9 +271,9 @@ void VideoEncoderVPX::prepareImageAndActiveMap(const DesktopFrame* frame,
 
     int y_stride = image_.stride[0];
     int uv_stride = image_.stride[1];
-    quint8* y_data = image_.planes[0];
-    quint8* u_data = image_.planes[1];
-    quint8* v_data = image_.planes[2];
+    uint8_t* y_data = image_.planes[0];
+    uint8_t* u_data = image_.planes[1];
+    uint8_t* v_data = image_.planes[2];
 
     switch (image_.fmt)
     {
@@ -326,7 +326,7 @@ void VideoEncoderVPX::prepareImageAndActiveMap(const DesktopFrame* frame,
 
 std::unique_ptr<proto::desktop::VideoPacket> VideoEncoderVPX::encode(const DesktopFrame* frame)
 {
-    Q_ASSERT(encoding_ == proto::desktop::VIDEO_ENCODING_VP8 ||
+    assert(encoding_ == proto::desktop::VIDEO_ENCODING_VP8 ||
              encoding_ == proto::desktop::VIDEO_ENCODING_VP9);
 
     std::unique_ptr<proto::desktop::VideoPacket> packet =
@@ -359,11 +359,11 @@ std::unique_ptr<proto::desktop::VideoPacket> VideoEncoderVPX::encode(const Deskt
 
     // Apply active map to the encoder.
     vpx_codec_err_t ret = vpx_codec_control(codec_.get(), VP8E_SET_ACTIVEMAP, &active_map_);
-    Q_ASSERT(ret == VPX_CODEC_OK);
+    assert(ret == VPX_CODEC_OK);
 
     // Do the actual encoding.
     ret = vpx_codec_encode(codec_.get(), &image_, 0, 1, 0, VPX_DL_REALTIME);
-    Q_ASSERT(ret == VPX_CODEC_OK);
+    assert(ret == VPX_CODEC_OK);
 
     // Read the encoded data.
     vpx_codec_iter_t iter = nullptr;

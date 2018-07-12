@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__WIN__HOST_PROCESS_H
 #define _ASPIA_HOST__WIN__HOST_PROCESS_H
 
+#include "base/common.h"
+
 #include <QObject>
 #include <QScopedPointer>
 
@@ -46,13 +48,13 @@ public:
     HostProcess(QObject* parent = nullptr);
     virtual ~HostProcess();
 
-    void start(quint32 session_id,
+    void start(uint32_t session_id,
                Account account,
                const QString& program,
                const QStringList& arguments);
 
-    quint32 sessionId() const;
-    void setSessionId(quint32 session_id);
+    uint32_t sessionId() const;
+    void setSessionId(uint32_t session_id);
 
     Account account() const;
     void setAccount(Account account);
@@ -79,7 +81,7 @@ private:
 
     QScopedPointer<HostProcessImpl> impl_;
 
-    Q_DISABLE_COPY(HostProcess)
+    DISABLE_COPY(HostProcess)
 };
 
 } // namespace aspia

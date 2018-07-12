@@ -69,7 +69,7 @@ private:
 
     T memory_ = nullptr;
 
-    Q_DISABLE_COPY(ScopedWtsMemory)
+    DISABLE_COPY(ScopedWtsMemory)
 };
 
 #endif // _ASPIA_BASE__WIN__SCOPED_WTS_MEMORY_H

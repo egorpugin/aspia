@@ -35,7 +35,7 @@ DesktopWindow::DesktopWindow(ConnectData* connect_data, QWidget* parent)
     }
     else
     {
-        Q_ASSERT(connect_data_->sessionType() == proto::auth::SESSION_TYPE_DESKTOP_VIEW);
+        assert(connect_data_->sessionType() == proto::auth::SESSION_TYPE_DESKTOP_VIEW);
         session_name = tr("Aspia Desktop View");
     }
 
@@ -125,12 +125,12 @@ void DesktopWindow::injectClipboard(const proto::desktop::ClipboardEvent& event)
         clipboard_->injectClipboardEvent(event);
 }
 
-void DesktopWindow::setSupportedVideoEncodings(quint32 video_encodings)
+void DesktopWindow::setSupportedVideoEncodings(uint32_t video_encodings)
 {
     supported_video_encodings_ = video_encodings;
 }
 
-void DesktopWindow::setSupportedFeatures(quint32 features)
+void DesktopWindow::setSupportedFeatures(uint32_t features)
 {
     supported_features_ = features;
 
@@ -155,7 +155,7 @@ void DesktopWindow::setSupportedFeatures(quint32 features)
     }
     else
     {
-        Q_ASSERT(connect_data_->sessionType() == proto::auth::SESSION_TYPE_DESKTOP_VIEW);
+        assert(connect_data_->sessionType() == proto::auth::SESSION_TYPE_DESKTOP_VIEW);
     }
 }
 
@@ -181,7 +181,7 @@ bool DesktopWindow::requireConfigChange(proto::desktop::Config* config)
     return false;
 }
 
-void DesktopWindow::onPointerEvent(const QPoint& pos, quint32 mask)
+void DesktopWindow::onPointerEvent(const QPoint& pos, uint32_t mask)
 {
     QPoint cursor = desktop_->mapTo(scroll_area_, pos);
     QRect client_area = scroll_area_->rect();

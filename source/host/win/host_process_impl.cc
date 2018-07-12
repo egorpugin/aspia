@@ -243,7 +243,7 @@ void HostProcessImpl::startProcess()
     }
     else
     {
-        Q_ASSERT(account_ == HostProcess::User);
+        assert(account_ == HostProcess::User);
 
         HostProcess::ErrorCode error_code = createLoggedOnUserToken(session_id_, &session_token);
         if (error_code != HostProcess::NoError)

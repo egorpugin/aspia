@@ -1,0 +1,3 @@
+- Remove alignedAlloc().
+- Remove BitSet.
+- Replace qt int types with stdint.

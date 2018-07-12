@@ -43,7 +43,7 @@ private slots:
 private:
     QPoint start_pos_;
 
-    Q_DISABLE_COPY(FileTreeWidget)
+    DISABLE_COPY(FileTreeWidget)
 };
 
 } // namespace aspia

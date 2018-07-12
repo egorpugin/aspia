@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__SCREEN_UPDATER_H
 #define _ASPIA_HOST__SCREEN_UPDATER_H
 
+#include "base/common.h"
+
 #include <QEvent>
 #include <QThread>
 
@@ -44,7 +46,7 @@ public:
         std::unique_ptr<aspia::proto::desktop::CursorShape> cursor_shape;
 
     private:
-        Q_DISABLE_COPY(UpdateEvent)
+        DISABLE_COPY(UpdateEvent)
     };
 
     class ErrorEvent : public QEvent
@@ -59,7 +61,7 @@ public:
         }
 
     private:
-        Q_DISABLE_COPY(ErrorEvent)
+        DISABLE_COPY(ErrorEvent)
     };
 
 protected:
@@ -74,7 +76,7 @@ private:
 
     proto::desktop::Config config_;
 
-    Q_DISABLE_COPY(ScreenUpdater)
+    DISABLE_COPY(ScreenUpdater)
 };
 
 } // namespace aspia

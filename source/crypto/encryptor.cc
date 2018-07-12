@@ -29,10 +29,10 @@ Encryptor::Encryptor(Mode mode)
         return;
     }
 
-    std::vector<quint8> public_key;
+    std::vector<uint8_t> public_key;
     public_key.resize(crypto_kx_PUBLICKEYBYTES);
 
-    std::vector<quint8> secret_key;
+    std::vector<uint8_t> secret_key;
     secret_key.resize(crypto_kx_SECRETKEYBYTES);
 
     if (crypto_kx_keypair(public_key.data(), secret_key.data()) != 0)
@@ -91,10 +91,10 @@ bool Encryptor::readHelloMessage(const QByteArray& message_buffer)
     decrypt_nonce_.resize(crypto_secretbox_NONCEBYTES);
     memcpy(decrypt_nonce_.data(), message.nonce().data(), crypto_secretbox_NONCEBYTES);
 
-    std::vector<quint8> decrypt_key;
+    std::vector<uint8_t> decrypt_key;
     decrypt_key.resize(crypto_kx_SESSIONKEYBYTES);
 
-    std::vector<quint8> encrypt_key;
+    std::vector<uint8_t> encrypt_key;
     encrypt_key.resize(crypto_kx_SESSIONKEYBYTES);
 
     if (mode_ == ServerMode)
@@ -104,7 +104,7 @@ bool Encryptor::readHelloMessage(const QByteArray& message_buffer)
                 encrypt_key.data(),
                 local_public_key_.data(),
                 local_secret_key_.data(),
-                reinterpret_cast<const quint8*>(message.public_key().data())) != 0)
+                reinterpret_cast<const uint8_t*>(message.public_key().data())) != 0)
         {
             qWarning("crypto_kx_server_session_keys failed");
             return false;
@@ -112,7 +112,7 @@ bool Encryptor::readHelloMessage(const QByteArray& message_buffer)
     }
     else
     {
-        Q_ASSERT(mode_ == ClientMode);
+        assert(mode_ == ClientMode);
 
         if (crypto_kx_client_session_keys(
                decrypt_key.data(),
@@ -178,10 +178,10 @@ QByteArray Encryptor::helloMessage()
 
 QByteArray Encryptor::encrypt(const QByteArray& source_buffer)
 {
-    Q_ASSERT(local_public_key_.empty());
-    Q_ASSERT(local_secret_key_.empty());
-    Q_ASSERT(encrypt_nonce_.size() == crypto_secretbox_NONCEBYTES);
-    Q_ASSERT(!encrypt_key_.empty());
+    assert(local_public_key_.empty());
+    assert(local_secret_key_.empty());
+    assert(encrypt_nonce_.size() == crypto_secretbox_NONCEBYTES);
+    assert(!encrypt_key_.empty());
 
     sodium_increment(encrypt_nonce_.data(), crypto_secretbox_NONCEBYTES);
 
@@ -189,8 +189,8 @@ QByteArray Encryptor::encrypt(const QByteArray& source_buffer)
     encrypted_buffer.resize(source_buffer.size() + crypto_secretbox_MACBYTES);
 
     // Encrypt message.
-    if (crypto_secretbox_easy(reinterpret_cast<quint8*>(encrypted_buffer.data()),
-                              reinterpret_cast<const quint8*>(source_buffer.data()),
+    if (crypto_secretbox_easy(reinterpret_cast<uint8_t*>(encrypted_buffer.data()),
+                              reinterpret_cast<const uint8_t*>(source_buffer.data()),
                               source_buffer.size(),
                               encrypt_nonce_.data(),
                               encrypt_key_.data()) != 0)
@@ -204,10 +204,10 @@ QByteArray Encryptor::encrypt(const QByteArray& source_buffer)
 
 QByteArray Encryptor::decrypt(const QByteArray& source_buffer)
 {
-    Q_ASSERT(local_public_key_.empty());
-    Q_ASSERT(local_secret_key_.empty());
-    Q_ASSERT(decrypt_nonce_.size() == crypto_secretbox_NONCEBYTES);
-    Q_ASSERT(!decrypt_key_.empty());
+    assert(local_public_key_.empty());
+    assert(local_secret_key_.empty());
+    assert(decrypt_nonce_.size() == crypto_secretbox_NONCEBYTES);
+    assert(!decrypt_key_.empty());
 
     sodium_increment(decrypt_nonce_.data(), crypto_secretbox_NONCEBYTES);
 
@@ -215,8 +215,8 @@ QByteArray Encryptor::decrypt(const QByteArray& source_buffer)
     decrypted_buffer.resize(source_buffer.size() - crypto_secretbox_MACBYTES);
 
     // Decrypt message.
-    if (crypto_secretbox_open_easy(reinterpret_cast<quint8*>(decrypted_buffer.data()),
-                                   reinterpret_cast<const quint8*>(source_buffer.data()),
+    if (crypto_secretbox_open_easy(reinterpret_cast<uint8_t*>(decrypted_buffer.data()),
+                                   reinterpret_cast<const uint8_t*>(source_buffer.data()),
                                    source_buffer.size(),
                                    decrypt_nonce_.data(),
                                    decrypt_key_.data()) != 0)

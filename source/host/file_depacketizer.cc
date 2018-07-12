@@ -35,7 +35,7 @@ std::unique_ptr<FileDepacketizer> FileDepacketizer::create(
 
 bool FileDepacketizer::writeNextPacket(const proto::file_transfer::Packet& packet)
 {
-    Q_ASSERT(!file_.isNull() && file_->isOpen());
+    assert(!file_.isNull() && file_->isOpen());
 
     // The first packet must have the full file size.
     if (packet.flags() & proto::file_transfer::Packet::FLAG_FIRST_PACKET)

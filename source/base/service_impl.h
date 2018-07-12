@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__SERVICE_IMPL_H
 #define _ASPIA_BASE__SERVICE_IMPL_H
 
+#include "base/common.h"
+
 #include <QString>
 
 namespace aspia {
@@ -35,7 +37,7 @@ protected:
     virtual void stop() = 0;
 
 #if defined(Q_OS_WIN)
-    virtual void sessionChange(quint32 event, quint32 session_id) = 0;
+    virtual void sessionChange(uint32_t event, uint32_t session_id) = 0;
 #endif // defined(Q_OS_WIN)
 
     virtual void createApplication(int argc, char* argv[]) = 0;
@@ -48,7 +50,7 @@ private:
     QString display_name_;
     QString description_;
 
-    Q_DISABLE_COPY(ServiceImpl)
+    DISABLE_COPY(ServiceImpl)
 };
 
 } // namespace aspia

@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CLIENT__UI__DESKTOP_CONFIG_DIALOG_H
 #define _ASPIA_CLIENT__UI__DESKTOP_CONFIG_DIALOG_H
 
+#include "base/common.h"
+
 #include "protocol/desktop_session.pb.h"
 #include "ui_desktop_config_dialog.h"
 
@@ -19,8 +21,8 @@ class DesktopConfigDialog : public QDialog
 
 public:
     DesktopConfigDialog(const proto::desktop::Config& config,
-                        quint32 supported_video_encodings,
-                        quint32 supported_features,
+                        uint32_t supported_video_encodings,
+                        uint32_t supported_features,
                         QWidget* parent = nullptr);
     ~DesktopConfigDialog() = default;
 
@@ -35,10 +37,10 @@ private:
     Ui::DesktopConfigDialog ui;
 
     proto::desktop::Config config_;
-    quint32 supported_video_encodings_;
-    quint32 supported_features_;
+    uint32_t supported_video_encodings_;
+    uint32_t supported_features_;
 
-    Q_DISABLE_COPY(DesktopConfigDialog)
+    DISABLE_COPY(DesktopConfigDialog)
 };
 
 } // namespace aspia

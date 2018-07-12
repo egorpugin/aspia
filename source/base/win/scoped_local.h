@@ -85,7 +85,7 @@ private:
 
     T local_ = nullptr;
 
-    Q_DISABLE_COPY(ScopedLocal)
+    DISABLE_COPY(ScopedLocal)
 };
 
 } // namespace aspia

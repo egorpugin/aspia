@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__SERVICE_CONTROLLER_H
 #define _ASPIA_BASE__SERVICE_CONTROLLER_H
 
+#include "base/common.h"
+
 #include <QString>
 
 #include "base/win/scoped_object.h"
@@ -49,7 +51,7 @@ private:
     ScopedScHandle sc_manager_;
     mutable ScopedScHandle service_;
 
-    Q_DISABLE_COPY(ServiceController)
+    DISABLE_COPY(ServiceController)
 };
 
 } // namespace aspia

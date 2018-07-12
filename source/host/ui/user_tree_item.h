@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__UI__USER_TREE_ITEM_H
 #define _ASPIA_HOST__UI__USER_TREE_ITEM_H
 
+#include "base/common.h"
+
 #include <QTreeWidget>
 
 #include "host/user.h"
@@ -27,7 +29,7 @@ private:
     User* user_;
     int index_;
 
-    Q_DISABLE_COPY(UserTreeItem)
+    DISABLE_COPY(UserTreeItem)
 };
 
 } // namespace aspia

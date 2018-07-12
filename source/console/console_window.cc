@@ -40,7 +40,7 @@ public:
 
 private:
     QString locale_;
-    Q_DISABLE_COPY(LanguageAction)
+    DISABLE_COPY(LanguageAction)
 };
 
 } // namespace

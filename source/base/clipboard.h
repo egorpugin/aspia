@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__CLIPBOARD_H
 #define _ASPIA_BASE__CLIPBOARD_H
 
+#include "base/common.h"
+
 #include <QObject>
 
 #include "protocol/desktop_session.pb.h"
@@ -36,7 +38,7 @@ private:
     std::string last_mime_type_;
     std::string last_data_;
 
-    Q_DISABLE_COPY(Clipboard)
+    DISABLE_COPY(Clipboard)
 };
 
 } // namespace aspia

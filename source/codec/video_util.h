@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CODEC__VIDEO_UTIL_H
 #define _ASPIA_CODEC__VIDEO_UTIL_H
 
+#include "base/common.h"
+
 #include <QRect>
 
 #include "desktop_capture/pixel_format.h"
@@ -28,7 +30,7 @@ public:
     static void toVideoPixelFormat(const PixelFormat& from, proto::desktop::PixelFormat* to);
 
 private:
-    Q_DISABLE_COPY(VideoUtil)
+    DISABLE_COPY(VideoUtil)
 };
 
 } // namespace aspia

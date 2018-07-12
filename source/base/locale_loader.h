@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__LOCALE_LOADER_H
 #define _ASPIA_BASE__LOCALE_LOADER_H
 
+#include "base/common.h"
+
 #include <QHash>
 #include <QStringList>
 
@@ -35,7 +37,7 @@ private:
     QHash<QString, QStringList> locale_list_;
     QList<QTranslator*> translator_list_;
 
-    Q_DISABLE_COPY(LocaleLoader)
+    DISABLE_COPY(LocaleLoader)
 };
 
 } // namespace aspia

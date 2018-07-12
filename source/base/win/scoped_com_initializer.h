@@ -45,7 +45,7 @@ public:
     {
 #ifndef NDEBUG
         // Using the windows API directly to avoid dependency on platform_thread.
-        Q_ASSERT(GetCurrentThreadId() == thread_id_);
+        assert(GetCurrentThreadId() == thread_id_);
 #endif
 
         if (isSucceeded())
@@ -83,7 +83,7 @@ private:
     DWORD thread_id_;
 #endif
 
-    Q_DISABLE_COPY(ScopedCOMInitializer)
+    DISABLE_COPY(ScopedCOMInitializer)
 };
 
 }  // namespace aspia

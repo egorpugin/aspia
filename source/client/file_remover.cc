@@ -112,7 +112,7 @@ void FileRemover::taskQueueError(const QString& message)
 
 void FileRemover::taskQueueReady()
 {
-    Q_ASSERT(builder_ != nullptr);
+    assert(builder_ != nullptr);
 
     tasks_ = builder_->taskQueue();
     tasks_count_ = tasks_.size();
@@ -128,7 +128,7 @@ void FileRemover::processTask()
         return;
     }
 
-    Q_ASSERT(tasks_count_ != 0);
+    assert(tasks_count_ != 0);
 
     int percentage = (tasks_count_ - tasks_.size()) * 100 / tasks_count_;
 

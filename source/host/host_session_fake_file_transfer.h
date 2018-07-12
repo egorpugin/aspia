@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__HOST_SESSION_FAKE_FILE_TRANSFER_H
 #define _ASPIA_HOST__HOST_SESSION_FAKE_FILE_TRANSFER_H
 
+#include "base/common.h"
+
 #include "host/host_session_fake.h"
 
 namespace aspia {
@@ -28,7 +30,7 @@ public slots:
     void onMessageWritten(int message_id) override;
 
 private:
-    Q_DISABLE_COPY(HostSessionFakeFileTransfer)
+    DISABLE_COPY(HostSessionFakeFileTransfer)
 };
 
 } // namespace aspia

@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CONSOLE__OPEN_ADDRESS_BOOK_DIALOG_H
 #define _ASPIA_CONSOLE__OPEN_ADDRESS_BOOK_DIALOG_H
 
+#include "base/common.h"
+
 #include "protocol/address_book.pb.h"
 #include "ui_open_address_book_dialog.h"
 
@@ -30,7 +32,7 @@ private slots:
 private:
     Ui::OpenAddressBookDialog ui;
 
-    Q_DISABLE_COPY(OpenAddressBookDialog)
+    DISABLE_COPY(OpenAddressBookDialog)
 };
 
 } // namespace aspia

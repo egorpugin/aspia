@@ -16,14 +16,14 @@ namespace aspia {
 
 namespace {
 
-constexpr quint32 kMaxMessageSize = 16 * 1024 * 1024; // 16MB
+constexpr uint32_t kMaxMessageSize = 16 * 1024 * 1024; // 16MB
 constexpr qint64 kMaxWriteSize = 1200;
 
 QByteArray createWriteBuffer(const QByteArray& message_buffer)
 {
-    quint32 message_size = message_buffer.size();
+    uint32_t message_size = message_buffer.size();
 
-    quint8 buffer[4];
+    uint8_t buffer[4];
     size_t length = 1;
 
     buffer[0] = message_size & 0x7F;
@@ -59,7 +59,7 @@ QByteArray createWriteBuffer(const QByteArray& message_buffer)
 NetworkChannel::NetworkChannel(ChannelType channel_type, QTcpSocket* socket, QObject* parent)
     : QObject(parent), channel_type_(channel_type), socket_(socket)
 {
-    Q_ASSERT(!socket_.isNull());
+    assert(!socket_.isNull());
 
     socket_->setParent(this);
 
@@ -109,7 +109,7 @@ QString NetworkChannel::peerAddress() const
 
 void NetworkChannel::readMessage()
 {
-    Q_ASSERT(!read_required_);
+    assert(!read_required_);
 
     read_required_ = true;
     onReadyRead();
@@ -169,7 +169,7 @@ void NetworkChannel::onConnected()
     }
     else
     {
-        Q_ASSERT(channel_type_ == ClientChannel);
+        assert(channel_type_ == ClientChannel);
         encryptor_.reset(new Encryptor(Encryptor::ClientMode));
 
         // Write hello message to server.
@@ -227,7 +227,7 @@ void NetworkChannel::onReadyRead()
     {
         if (!read_size_received_)
         {
-            quint8 byte;
+            uint8_t byte;
 
             current = socket_->read(reinterpret_cast<char*>(&byte), sizeof(byte));
             if (current == sizeof(byte))
@@ -315,7 +315,7 @@ void NetworkChannel::onMessageWritten(int message_id)
         {
             if (channel_type_ == ServerChannel)
             {
-                Q_ASSERT(!pinger_timer_id_);
+                assert(!pinger_timer_id_);
 
                 channel_state_ = Encrypted;
                 pinger_timer_id_ = startTimer(std::chrono::seconds(30));
@@ -324,7 +324,7 @@ void NetworkChannel::onMessageWritten(int message_id)
             }
             else
             {
-                Q_ASSERT(channel_type_ == ClientChannel);
+                assert(channel_type_ == ClientChannel);
 
                 // Read hello message from server.
                 readMessage();
@@ -367,8 +367,8 @@ void NetworkChannel::onMessageReceived(const QByteArray& buffer)
             }
             else
             {
-                Q_ASSERT(channel_type_ == ClientChannel);
-                Q_ASSERT(!pinger_timer_id_);
+                assert(channel_type_ == ClientChannel);
+                assert(!pinger_timer_id_);
 
                 channel_state_ = Encrypted;
                 pinger_timer_id_ = startTimer(std::chrono::seconds(30));

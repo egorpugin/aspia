@@ -16,16 +16,16 @@ namespace aspia {
 
 namespace {
 
-const quint32 kSupportedVideoEncodings =
+const uint32_t kSupportedVideoEncodings =
     proto::desktop::VIDEO_ENCODING_ZLIB |
     proto::desktop::VIDEO_ENCODING_VP8 |
     proto::desktop::VIDEO_ENCODING_VP9;
 
-const quint32 kSupportedFeaturesDesktopManage =
+const uint32_t kSupportedFeaturesDesktopManage =
     proto::desktop::FEATURE_CURSOR_SHAPE |
     proto::desktop::FEATURE_CLIPBOARD;
 
-const quint32 kSupportedFeaturesDesktopView = 0;
+const uint32_t kSupportedFeaturesDesktopView = 0;
 
 enum MessageId { ScreenUpdateMessage };
 
@@ -79,7 +79,7 @@ void HostSessionDesktop::customEvent(QEvent* event)
             ScreenUpdater::UpdateEvent* update_event =
                 reinterpret_cast<ScreenUpdater::UpdateEvent*>(event);
 
-            Q_ASSERT(update_event->video_packet || update_event->cursor_shape);
+            assert(update_event->video_packet || update_event->cursor_shape);
 
             proto::desktop::HostToClient message;
             message.set_allocated_video_packet(update_event->video_packet.release());

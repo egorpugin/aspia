@@ -8,6 +8,8 @@
 #ifndef _ASPIA_IPC__IPC_SERVER_H
 #define _ASPIA_IPC__IPC_SERVER_H
 
+#include "base/common.h"
+
 #include <QPointer>
 
 class QLocalServer;
@@ -42,7 +44,7 @@ private slots:
 private:
     QPointer<QLocalServer> server_;
 
-    Q_DISABLE_COPY(IpcServer)
+    DISABLE_COPY(IpcServer)
 };
 
 } // namespace aspia

@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__FILE_DEPACKETIZER_H
 #define _ASPIA_HOST__FILE_DEPACKETIZER_H
 
+#include "base/common.h"
+
 #include <QFile>
 #include <QPointer>
 #include <memory>
@@ -34,7 +36,7 @@ private:
     qint64 file_size_ = 0;
     qint64 left_size_ = 0;
 
-    Q_DISABLE_COPY(FileDepacketizer)
+    DISABLE_COPY(FileDepacketizer)
 };
 
 } // namespace aspia

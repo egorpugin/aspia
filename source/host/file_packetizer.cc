@@ -43,7 +43,7 @@ std::unique_ptr<FilePacketizer> FilePacketizer::create(const QString& file_path)
 
 std::unique_ptr<proto::file_transfer::Packet> FilePacketizer::readNextPacket()
 {
-    Q_ASSERT(!file_.isNull() && file_->isOpen());
+    assert(!file_.isNull() && file_->isOpen());
 
     // Create a new file packet.
     std::unique_ptr<proto::file_transfer::Packet> packet =

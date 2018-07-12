@@ -24,7 +24,7 @@ void Serializer::onReady(const google::protobuf::MessageLite& message)
     if (size)
     {
         buffer.resize(size);
-        message.SerializeWithCachedSizesToArray(reinterpret_cast<quint8*>(buffer.data()));
+        message.SerializeWithCachedSizesToArray(reinterpret_cast<uint8_t*>(buffer.data()));
     }
 
     emit replyReady(requestUuid(), buffer);

@@ -31,7 +31,7 @@ public:
         : length_(length)
     {
         if (length_ != 0)
-            buffer_ = reinterpret_cast<T*>(new quint8[length_]);
+            buffer_ = reinterpret_cast<T*>(new uint8_t[length_]);
     }
 
     TypedBuffer(TypedBuffer&& rvalue) noexcept
@@ -44,7 +44,7 @@ public:
     {
         if (buffer_)
         {
-            delete[] reinterpret_cast<quint8*>(buffer_);
+            delete[] reinterpret_cast<uint8_t*>(buffer_);
             buffer_ = nullptr;
         }
     }
@@ -74,9 +74,9 @@ public:
 
     // Helper returning a pointer to the structure starting at a specified byte
     // offset.
-    T* getAtOffset(quint32 offset)
+    T* getAtOffset(uint32_t offset)
     {
-        return reinterpret_cast<T*>(reinterpret_cast<quint8*>(buffer_) + offset);
+        return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(buffer_) + offset);
     }
 
     // Allow TypedBuffer<T> to be used in boolean expressions.
@@ -96,7 +96,7 @@ private:
     // Length of the owned buffer in bytes.
     size_t length_;
 
-    Q_DISABLE_COPY(TypedBuffer)
+    DISABLE_COPY(TypedBuffer)
 };
 
 } // namespace aspia

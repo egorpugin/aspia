@@ -39,7 +39,7 @@ private:
 
     QList<Category> category_list_;
 
-    Q_DISABLE_COPY(HostSessionSystemInfo)
+    DISABLE_COPY(HostSessionSystemInfo)
 };
 
 } // namespace aspia

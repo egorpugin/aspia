@@ -12,8 +12,9 @@
 #include <qt_windows.h>
 #endif
 
-#include "base/bitset.h"
 #include "base/errno_logging.h"
+
+#include <bitset>
 
 namespace aspia {
 
@@ -52,13 +53,13 @@ void DmiTableEnumerator::advance()
 {
     current_ = next_;
 
-    const quint8* start = &data_.smbios_table_data[0];
-    const quint8* end = start + data_.length;
+    const uint8_t* start = &data_.smbios_table_data[0];
+    const uint8_t* end = start + data_.length;
 
     while (current_ + 4 <= end)
     {
-        const quint8 table_type = current_[0];
-        const quint8 table_length = current_[1];
+        const uint8_t table_type = current_[0];
+        const uint8_t table_length = current_[1];
 
         // If a short entry is found (less than 4 bytes), not only it is invalid, but we
         // cannot reliably locate the next entry. Better stop at this point, and let the
@@ -113,19 +114,19 @@ const DmiTable* DmiTableEnumerator::table() const
 // DmiTable implementation.
 //================================================================================================
 
-DmiTable::DmiTable(const quint8* table)
+DmiTable::DmiTable(const uint8_t* table)
     : table_(table)
 {
     // Nothing
 }
 
-QString DmiTable::string(quint8 offset) const
+QString DmiTable::string(uint8_t offset) const
 {
-    quint8 handle = table_[offset];
+    uint8_t handle = table_[offset];
     if (!handle)
         return QString();
 
-    char* string = reinterpret_cast<char*>(const_cast<quint8*>(&table_[0])) + length();
+    char* string = reinterpret_cast<char*>(const_cast<uint8_t*>(&table_[0])) + length();
     while (handle > 1 && *string)
     {
         string += strlen(string) + 1;
@@ -142,7 +143,7 @@ QString DmiTable::string(quint8 offset) const
 // DmiBiosTable implementation.
 //================================================================================================
 
-DmiBiosTable::DmiBiosTable(const quint8* table)
+DmiBiosTable::DmiBiosTable(const uint8_t* table)
     : DmiTable(table)
 {
     // Nothing
@@ -163,26 +164,34 @@ QString DmiBiosTable::date() const
     return string(0x08);
 }
 
-quint64 DmiBiosTable::biosSize() const
+template <int T>
+auto range(const std::bitset<T> &bs, size_t from, size_t to)
 {
-    const quint8 old_size = number<quint8>(0x09);
+    assert(from <= to && from < bs.size() && to < bs.size());
+    const uint64_t mask = (1ULL << (to + 1)) - 1;
+    return ((bs.to_ullong() & mask) >> from);
+}
+
+uint64_t DmiBiosTable::biosSize() const
+{
+    const uint8_t old_size = number<uint8_t>(0x09);
     if (old_size != 0xFF)
         return (old_size + 1) << 6;
 
-    BitSet<quint16> bitfield(number<quint16>(0x18));
+    std::bitset<sizeof(uint16_t)> bitfield(number<uint16_t>(0x18));
 
-    quint16 size = 16; // By default 16 MBytes.
+    uint16_t size = 16; // By default 16 MBytes.
 
     if (length() >= 0x1A)
-        size = bitfield.range(0, 13);
+        size = range(bitfield, 0, 13);
 
-    switch (bitfield.range(14, 15))
+    switch (range(bitfield, 14, 15))
     {
         case 0x0000: // MB
-            return static_cast<quint64>(size) * 1024ULL;
+            return static_cast<uint64_t>(size) * 1024ULL;
 
         case 0x0001: // GB
-            return static_cast<quint64>(size) * 1024ULL * 1024ULL;
+            return static_cast<uint64_t>(size) * 1024ULL * 1024ULL;
 
         default:
             return 0;
@@ -191,8 +200,8 @@ quint64 DmiBiosTable::biosSize() const
 
 QString DmiBiosTable::biosRevision() const
 {
-    const quint8 major = number<quint8>(0x14);
-    const quint8 minor = number<quint8>(0x15);
+    const uint8_t major = number<uint8_t>(0x14);
+    const uint8_t minor = number<uint8_t>(0x15);
 
     if (major == 0xFF || minor == 0xFF)
         return QString();
@@ -202,8 +211,8 @@ QString DmiBiosTable::biosRevision() const
 
 QString DmiBiosTable::firmwareRevision() const
 {
-    const quint8 major = number<quint8>(0x16);
-    const quint8 minor = number<quint8>(0x17);
+    const uint8_t major = number<uint8_t>(0x16);
+    const uint8_t minor = number<uint8_t>(0x17);
 
     if (major == 0xFF || minor == 0xFF)
         return QString();
@@ -213,20 +222,20 @@ QString DmiBiosTable::firmwareRevision() const
 
 QString DmiBiosTable::address() const
 {
-    const quint16 address = number<quint16>(0x06);
+    const uint16_t address = number<uint16_t>(0x06);
     if (!address)
         return QString();
 
     return QString("%10h").arg(address, 4, 16);
 }
 
-quint64 DmiBiosTable::runtimeSize() const
+uint64_t DmiBiosTable::runtimeSize() const
 {
-    const quint16 address = number<quint16>(0x06);
+    const uint16_t address = number<uint16_t>(0x06);
     if (!address)
         return 0;
 
-    const quint32 code = (0x10000 - address) << 4;
+    const uint32_t code = (0x10000 - address) << 4;
 
     if (code & 0x000003FF)
         return code;
@@ -238,8 +247,8 @@ void DmiBiosTable::characteristics(Characteristics* result) const
 {
     memset(result, 0, sizeof(Characteristics));
 
-    BitSet<quint64> bf = number<quint64>(0x0A);
-    if (!bf.test(3))
+    std::bitset<sizeof(uint64_t)> bf = number<uint64_t>(0x0A);
+    if (!bf[3])
     {
         result->isa                         = bf.test(4);
         result->mca                         = bf.test(5);
@@ -273,7 +282,7 @@ void DmiBiosTable::characteristics(Characteristics* result) const
 
     if (length() >= 0x13)
     {
-        BitSet<quint8> bf1 = number<quint8>(0x12);
+        std::bitset<sizeof(uint8_t)> bf1 = number<uint8_t>(0x12);
 
         result->acpi                 = bf1.test(0);
         result->usb_legacy           = bf1.test(1);
@@ -287,7 +296,7 @@ void DmiBiosTable::characteristics(Characteristics* result) const
 
     if (length() >= 0x14)
     {
-        BitSet<quint8> bf2 = number<quint8>(0x13);
+        std::bitset<sizeof(uint8_t)> bf2 = number<uint8_t>(0x13);
 
         result->bios_boot_specification  = bf2.test(0);
         result->key_init_network_boot    = bf2.test(1);

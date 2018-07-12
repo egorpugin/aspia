@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CLIENT__UI__FILE_ITEM_H
 #define _ASPIA_CLIENT__UI__FILE_ITEM_H
 
+#include "base/common.h"
+
 #include <QTreeWidget>
 
 #include "protocol/file_transfer_session.pb.h"
@@ -36,7 +38,7 @@ private:
     qint64 size_ = 0;
     time_t last_modified_ = 0;
 
-    Q_DISABLE_COPY(FileItem)
+    DISABLE_COPY(FileItem)
 };
 
 } // namespace aspia

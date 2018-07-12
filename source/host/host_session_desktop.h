@@ -52,7 +52,7 @@ private:
     QPointer<Clipboard> clipboard_;
     QScopedPointer<InputInjector> input_injector_;
 
-    Q_DISABLE_COPY(HostSessionDesktop)
+    DISABLE_COPY(HostSessionDesktop)
 };
 
 } // namespace aspia

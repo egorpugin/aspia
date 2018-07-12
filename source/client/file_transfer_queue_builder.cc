@@ -55,7 +55,7 @@ void FileTransferQueueBuilder::start(const QString& source_path,
 void FileTransferQueueBuilder::reply(const proto::file_transfer::Request& request,
                                      const proto::file_transfer::Reply& reply)
 {
-    Q_ASSERT(!tasks_.isEmpty());
+    assert(!tasks_.isEmpty());
 
     if (!request.has_file_list_request())
     {
@@ -72,7 +72,7 @@ void FileTransferQueueBuilder::reply(const proto::file_transfer::Request& reques
 
     // If we get a list of files, then the last task is a directory.
     const FileTransferTask& last_task = tasks_.back();
-    Q_ASSERT(last_task.isDirectory());
+    assert(last_task.isDirectory());
 
     for (int i = 0; i < reply.file_list().item_size(); ++i)
     {

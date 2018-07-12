@@ -8,6 +8,8 @@
 #ifndef _ASPIA_SYSTEM_INFO__UI__DMI_PARSER_H
 #define _ASPIA_SYSTEM_INFO__UI__DMI_PARSER_H
 
+#include "base/common.h"
+
 #include "system_info/parser/parser.h"
 #include "system_info/protocol/dmi.pb.h"
 
@@ -37,7 +39,7 @@ protected:
 private:
     std::unique_ptr<system_info::dmi::Dmi> dmi_;
 
-    Q_DISABLE_COPY(DmiParser)
+    DISABLE_COPY(DmiParser)
 };
 
 } // namespace aspia

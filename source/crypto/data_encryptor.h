@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CRYPTO__DATA_ENCRYPTOR_H
 #define _ASPIA_CRYPTO__DATA_ENCRYPTOR_H
 
+#include "base/common.h"
+
 #include <QByteArray>
 
 namespace aspia {
@@ -32,7 +34,7 @@ public:
                         QByteArray* decrypted_data);
 
 private:
-    Q_DISABLE_COPY(DataEncryptor)
+    DISABLE_COPY(DataEncryptor)
 };
 
 } // namespace aspia

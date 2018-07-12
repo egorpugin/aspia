@@ -53,7 +53,7 @@ void HostSessionFileTransfer::messageReceived(const QByteArray& buffer)
 
 void HostSessionFileTransfer::messageWritten(int message_id)
 {
-    Q_ASSERT(message_id == ReplyMessageId);
+    assert(message_id == ReplyMessageId);
     emit readMessage();
 }
 

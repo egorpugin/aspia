@@ -58,7 +58,7 @@ private:
     quintptr taskbar_create_message_ = 0;
 #endif
 
-    Q_DISABLE_COPY(HostNotifierWindow)
+    DISABLE_COPY(HostNotifierWindow)
 };
 
 } // namespace aspia

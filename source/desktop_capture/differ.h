@@ -8,6 +8,8 @@
 #ifndef _ASPIA_DESKTOP_CAPTURE__DIFFER_H
 #define _ASPIA_DESKTOP_CAPTURE__DIFFER_H
 
+#include "base/common.h"
+
 #include <QRegion>
 #include <memory>
 
@@ -20,12 +22,12 @@ public:
     explicit Differ(const QSize& size);
     ~Differ() = default;
 
-    void calcDirtyRegion(const quint8* prev_image,
-                         const quint8* curr_image,
+    void calcDirtyRegion(const uint8_t* prev_image,
+                         const uint8_t* curr_image,
                          QRegion* changed_region);
 
 private:
-    void markDirtyBlocks(const quint8* prev_image, const quint8* curr_image);
+    void markDirtyBlocks(const uint8_t* prev_image, const uint8_t* curr_image);
     void mergeBlocks(QRegion* dirty_region);
 
     const QRect screen_rect_;
@@ -43,12 +45,12 @@ private:
     const int diff_width_;
     const int diff_height_;
 
-    std::unique_ptr<quint8[]> diff_info_;
+    std::unique_ptr<uint8_t[]> diff_info_;
 
-    typedef quint8(*DiffFullBlockFunc)(const quint8*, const quint8*, int);
+    typedef uint8_t(*DiffFullBlockFunc)(const uint8_t*, const uint8_t*, int);
     DiffFullBlockFunc diff_full_block_func_;
 
-    Q_DISABLE_COPY(Differ)
+    DISABLE_COPY(Differ)
 };
 
 } // namespace aspia

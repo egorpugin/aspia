@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CLIENT__UI__CLIENT_DIALOG_H
 #define _ASPIA_CLIENT__UI__CLIENT_DIALOG_H
 
+#include "base/common.h"
+
 #include "protocol/address_book.pb.h"
 #include "ui_client_dialog.h"
 
@@ -32,7 +34,7 @@ private:
     Ui::ClientDialog ui;
     proto::address_book::Computer computer_;
 
-    Q_DISABLE_COPY(ClientDialog)
+    DISABLE_COPY(ClientDialog)
 };
 
 } // namespace aspia

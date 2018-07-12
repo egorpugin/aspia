@@ -47,7 +47,7 @@ void FileTransfer::start(const QString& source_path,
     }
     else
     {
-        Q_ASSERT(type_ == Uploader);
+        assert(type_ == Uploader);
         connect(builder_, &FileTransferQueueBuilder::newRequest, this, &FileTransfer::localRequest);
     }
 
@@ -207,7 +207,7 @@ void FileTransfer::taskQueueError(const QString& message)
 
 void FileTransfer::taskQueueReady()
 {
-    Q_ASSERT(builder_ != nullptr);
+    assert(builder_ != nullptr);
 
     tasks_ = builder_->taskQueue();
 
@@ -313,7 +313,7 @@ void FileTransfer::sourceRequest(FileRequest* request)
     }
     else
     {
-        Q_ASSERT(type_ == Uploader);
+        assert(type_ == Uploader);
         emit localRequest(request);
     }
 }
@@ -326,7 +326,7 @@ void FileTransfer::targetRequest(FileRequest* request)
     }
     else
     {
-        Q_ASSERT(type_ == Uploader);
+        assert(type_ == Uploader);
         emit remoteRequest(request);
     }
 }

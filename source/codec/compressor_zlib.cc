@@ -21,35 +21,35 @@ CompressorZLIB::CompressorZLIB(int compress_ratio)
                                MAX_WBITS,
                                MAX_MEM_LEVEL,
                                Z_DEFAULT_STRATEGY);
-    Q_ASSERT(ret == Z_OK);
+    assert(ret == Z_OK);
 }
 
 CompressorZLIB::~CompressorZLIB()
 {
     int ret = zng_deflateEnd(&stream_);
-    Q_ASSERT(ret == Z_OK);
+    assert(ret == Z_OK);
 }
 
 void CompressorZLIB::reset()
 {
     int ret = zng_deflateReset(&stream_);
-    Q_ASSERT(ret == Z_OK);
+    assert(ret == Z_OK);
 }
 
-bool CompressorZLIB::process(const quint8* input_data,
+bool CompressorZLIB::process(const uint8_t* input_data,
                              size_t input_size,
-                             quint8* output_data,
+                             uint8_t* output_data,
                              size_t output_size,
                              CompressorFlush flush,
                              size_t* consumed,
                              size_t* written)
 {
-    Q_ASSERT(output_size != 0);
+    assert(output_size != 0);
 
     // Setup I/O parameters.
-    stream_.avail_in  = static_cast<quint32>(input_size);
+    stream_.avail_in  = static_cast<uint32_t>(input_size);
     stream_.next_in   = input_data;
-    stream_.avail_out = static_cast<quint32>(output_size);
+    stream_.avail_out = static_cast<uint32_t>(output_size);
     stream_.next_out  = output_data;
 
     int z_flush = 0;

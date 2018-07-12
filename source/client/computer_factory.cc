@@ -46,7 +46,7 @@ proto::desktop::Config ComputerFactory::defaultDesktopViewConfig()
 // static
 void ComputerFactory::setDefaultDesktopManageConfig(proto::desktop::Config* config)
 {
-    Q_ASSERT(config);
+    assert(config);
 
     config->set_features(proto::desktop::FEATURE_CLIPBOARD | proto::desktop::FEATURE_CURSOR_SHAPE);
     config->set_video_encoding(proto::desktop::VideoEncoding::VIDEO_ENCODING_ZLIB);
@@ -59,7 +59,7 @@ void ComputerFactory::setDefaultDesktopManageConfig(proto::desktop::Config* conf
 // static
 void ComputerFactory::setDefaultDesktopViewConfig(proto::desktop::Config* config)
 {
-    Q_ASSERT(config);
+    assert(config);
 
     config->set_features(0);
     config->set_video_encoding(proto::desktop::VideoEncoding::VIDEO_ENCODING_ZLIB);

@@ -65,7 +65,7 @@ public:
 private:
     T object_ = nullptr;
 
-    Q_DISABLE_COPY(ScopedUserObject)
+    DISABLE_COPY(ScopedUserObject)
 };
 
 // The traits class that uses DestroyWindow() to close a handle.

@@ -8,7 +8,7 @@
 #ifndef _ASPIA_DESKTOP_CAPTURE__WIN__DESKTOP_H
 #define _ASPIA_DESKTOP_CAPTURE__WIN__DESKTOP_H
 
-#include <qglobal.h>
+#include "base/common.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -74,7 +74,7 @@ private:
     // True if |desktop_| must be closed on teardown.
     bool own_ = false;
 
-    Q_DISABLE_COPY(Desktop)
+    DISABLE_COPY(Desktop)
 };
 
 } // namespace aspia

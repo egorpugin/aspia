@@ -13,7 +13,7 @@ namespace aspia {
 
 namespace {
 
-constexpr quint32 kMaxMessageSize = 16 * 1024 * 1024; // 16MB
+constexpr uint32_t kMaxMessageSize = 16 * 1024 * 1024; // 16MB
 
 } // namespace
 
@@ -21,7 +21,7 @@ IpcChannel::IpcChannel(QLocalSocket* socket, QObject* parent)
     : QObject(parent),
       socket_(socket)
 {
-    Q_ASSERT(socket_);
+    assert(socket_);
 
     socket_->setParent(this);
 
@@ -69,7 +69,7 @@ void IpcChannel::stop()
 
 void IpcChannel::readMessage()
 {
-    Q_ASSERT(!read_required_);
+    assert(!read_required_);
 
     read_required_ = true;
     onReadyRead();

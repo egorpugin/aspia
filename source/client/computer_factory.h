@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CLIENT__COMPUTER_FACTORY_H
 #define _ASPIA_CLIENT__COMPUTER_FACTORY_H
 
+#include "base/common.h"
+
 #include "protocol/address_book.pb.h"
 
 #include <qglobal.h>
@@ -26,7 +28,7 @@ public:
     static void setDefaultDesktopViewConfig(proto::desktop::Config* config);
 
 private:
-    Q_DISABLE_COPY(ComputerFactory)
+    DISABLE_COPY(ComputerFactory)
 };
 
 } // namespace aspia

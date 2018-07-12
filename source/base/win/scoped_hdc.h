@@ -23,8 +23,8 @@ public:
     {
         if (hwnd_)
         {
-            Q_ASSERT(IsWindow(hwnd_));
-            Q_ASSERT(hdc_);
+            assert(IsWindow(hwnd_));
+            assert(hdc_);
         }
         else
         {
@@ -50,7 +50,7 @@ private:
     HWND hwnd_;
     HDC hdc_;
 
-    Q_DISABLE_COPY(ScopedGetDC);
+    DISABLE_COPY(ScopedGetDC);
 };
 
 // Like ScopedHandle but for HDC.  Only use this on HDCs returned from
@@ -87,7 +87,7 @@ private:
 
     HDC hdc_ = nullptr;
 
-    Q_DISABLE_COPY(ScopedCreateDC)
+    DISABLE_COPY(ScopedCreateDC)
 };
 
 } // namespace aspia

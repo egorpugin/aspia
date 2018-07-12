@@ -47,7 +47,7 @@ private:
 
     CURSORINFO prev_cursor_info_;
 
-    Q_DISABLE_COPY(CapturerGDI)
+    DISABLE_COPY(CapturerGDI)
 };
 
 } // namespace aspia

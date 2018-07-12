@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__UI__USER_DIALOG_H
 #define _ASPIA_HOST__UI__USER_DIALOG_H
 
+#include "base/common.h"
+
 #include "host/user.h"
 #include "ui_user_dialog.h"
 
@@ -38,7 +40,7 @@ private:
 
     bool password_changed_ = true;
 
-    Q_DISABLE_COPY(UserDialog)
+    DISABLE_COPY(UserDialog)
 };
 
 } // namespace aspia

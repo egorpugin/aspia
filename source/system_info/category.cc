@@ -98,12 +98,12 @@ const CategoryList kCategoryList[] =
 CategoryGroup::CategoryGroup(const CategoryList* current)
     : current_(current)
 {
-    Q_ASSERT(current_);
-    Q_ASSERT(current_->name);
-    Q_ASSERT(current_->icon);
-    Q_ASSERT(!current_->uuid);
-    Q_ASSERT(!current_->create_form);
-    Q_ASSERT(current_->child);
+    assert(current_);
+    assert(current_->name);
+    assert(current_->icon);
+    assert(!current_->uuid);
+    assert(!current_->create_form);
+    assert(current_->child);
 }
 
 CategoryGroup::CategoryGroup(const CategoryGroup& other)
@@ -178,12 +178,12 @@ QList<Category> CategoryGroup::childCategoryList() const
 Category::Category(const CategoryList* current)
     : current_(current)
 {
-    Q_ASSERT(current_);
-    Q_ASSERT(current_->name);
-    Q_ASSERT(current_->icon);
-    Q_ASSERT(current_->uuid);
-    Q_ASSERT(current_->create_form);
-    Q_ASSERT(!current_->child);
+    assert(current_);
+    assert(current_->name);
+    assert(current_->icon);
+    assert(current_->uuid);
+    assert(current_->create_form);
+    assert(!current_->child);
 }
 
 Category::Category(const Category& other)

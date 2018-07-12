@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__SYSTEM_INFO_REQUEST_H
 #define _ASPIA_HOST__SYSTEM_INFO_REQUEST_H
 
+#include "base/common.h"
+
 #include <QObject>
 #include <QString>
 
@@ -34,7 +36,7 @@ private:
 
     proto::system_info::Request request_;
 
-    Q_DISABLE_COPY(SystemInfoRequest)
+    DISABLE_COPY(SystemInfoRequest)
 };
 
 } // namespace aspia

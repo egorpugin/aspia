@@ -8,6 +8,8 @@
 #ifndef _ASPIA_IPC__IPC_CHANNEL_H
 #define _ASPIA_IPC__IPC_CHANNEL_H
 
+#include "base/common.h"
+
 #include <QByteArray>
 #include <QLocalSocket>
 #include <QPointer>
@@ -67,7 +69,7 @@ private:
 
     void scheduleWrite();
 
-    using MessageSizeType = quint32;
+    using MessageSizeType = uint32_t;
 
     QPointer<QLocalSocket> socket_;
     State state_ = NotConnected;
@@ -82,7 +84,7 @@ private:
     MessageSizeType read_size_ = 0;
     qint64 read_ = 0;
 
-    Q_DISABLE_COPY(IpcChannel)
+    DISABLE_COPY(IpcChannel)
 };
 
 } // namespace aspia

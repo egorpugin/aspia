@@ -17,8 +17,8 @@ namespace aspia {
 
 namespace {
 
-const quint32 kKeyHashingRounds = 100000;
-const quint32 kPasswordHashingRounds = 100000;
+const uint32_t kKeyHashingRounds = 100000;
+const uint32_t kPasswordHashingRounds = 100000;
 
 enum MessageId { LogonRequest, ClientChallenge };
 
@@ -38,7 +38,7 @@ QByteArray createSessionKey(const QByteArray& password_hash, const QByteArray& n
 {
     QByteArray data = password_hash;
 
-    for (quint32 i = 0; i < kKeyHashingRounds; ++i)
+    for (uint32_t i = 0; i < kKeyHashingRounds; ++i)
     {
         QCryptographicHash hash(QCryptographicHash::Sha512);
 

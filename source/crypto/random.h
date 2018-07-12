@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CRYPTO__RANDOM_H
 #define _ASPIA_CRYPTO__RANDOM_H
 
+#include "base/common.h"
+
 #include <QByteArray>
 
 namespace aspia {
@@ -16,10 +18,10 @@ class Random
 {
 public:
     static QByteArray generateBuffer(int size);
-    static quint32 generateNumber();
+    static uint32_t generateNumber();
 
 private:
-    Q_DISABLE_COPY(Random)
+    DISABLE_COPY(Random)
 };
 
 } // namespace aspia

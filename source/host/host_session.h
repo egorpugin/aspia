@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__HOST_SESSION_H
 #define _ASPIA_HOST__HOST_SESSION_H
 
+#include "base/common.h"
+
 #include <QByteArray>
 #include <QPointer>
 
@@ -49,7 +51,7 @@ private:
     QString channel_id_;
     QPointer<IpcChannel> ipc_channel_;
 
-    Q_DISABLE_COPY(HostSession)
+    DISABLE_COPY(HostSession)
 };
 
 } // namespace aspia

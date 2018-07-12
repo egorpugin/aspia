@@ -37,7 +37,7 @@ private:
 
     QPoint start_pos_;
 
-    Q_DISABLE_COPY(ComputerGroupTree)
+    DISABLE_COPY(ComputerGroupTree)
 };
 
 } // namespace aspia

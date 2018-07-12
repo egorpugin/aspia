@@ -26,9 +26,9 @@ private:
     DesktopFrameAligned(const QSize& size,
                       const PixelFormat& format,
                       int stride,
-                      quint8* data);
+                      uint8_t* data);
 
-    Q_DISABLE_COPY(DesktopFrameAligned)
+    DISABLE_COPY(DesktopFrameAligned)
 };
 
 } // namespace aspia

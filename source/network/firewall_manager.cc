@@ -192,7 +192,7 @@ void FirewallManager::allRules(QVector<Microsoft::WRL::ComPtr<INetFwRule>>* rule
         if (hr != S_OK)
             break;
 
-        Q_ASSERT(VT_DISPATCH == rule_var.vt);
+        assert(VT_DISPATCH == rule_var.vt);
 
         if (VT_DISPATCH != rule_var.vt)
             continue;

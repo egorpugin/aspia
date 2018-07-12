@@ -14,7 +14,7 @@ namespace aspia {
 
 namespace {
 
-constexpr quint32 RGBA(quint32 r, quint32 g, quint32 b, quint32 a)
+constexpr uint32_t RGBA(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
 {
     return (((a << 24) & 0xFF000000) | ((b << 16) & 0xFF0000) | ((g << 8) & 0xFF00) | (r & 0xFF));
 }
@@ -22,15 +22,15 @@ constexpr quint32 RGBA(quint32 r, quint32 g, quint32 b, quint32 a)
 constexpr int kBytesPerPixel = 4;
 
 // Pixel colors used when generating cursor outlines.
-constexpr quint32 kPixelRgbaBlack       = RGBA(0,    0,    0,    0xFF);
-constexpr quint32 kPixelRgbaWhite       = RGBA(0xFF, 0xFF, 0xFF, 0xFF);
-constexpr quint32 kPixelRgbaTransparent = RGBA(0,    0,    0,    0);
+constexpr uint32_t kPixelRgbaBlack       = RGBA(0,    0,    0,    0xFF);
+constexpr uint32_t kPixelRgbaWhite       = RGBA(0xFF, 0xFF, 0xFF, 0xFF);
+constexpr uint32_t kPixelRgbaTransparent = RGBA(0,    0,    0,    0);
 
-constexpr quint32 kPixelRgbWhite = RGB(0xFF, 0xFF, 0xFF);
+constexpr uint32_t kPixelRgbWhite = RGB(0xFF, 0xFF, 0xFF);
 
 // Scans a 32bpp bitmap looking for any pixels with non-zero alpha component.
 // Returns true if non-zero alpha is found. |stride| is expressed in pixels.
-bool hasAlphaChannel(const quint32* data, int width, int height)
+bool hasAlphaChannel(const uint32_t* data, int width, int height)
 {
     const RGBQUAD* plane = reinterpret_cast<const RGBQUAD*>(data);
 
@@ -50,7 +50,7 @@ bool hasAlphaChannel(const quint32* data, int width, int height)
 
 // Expands the cursor shape to add a white outline for visibility against
 // dark backgrounds.
-void addCursorOutline(int width, int height, quint32* data)
+void addCursorOutline(int width, int height, uint32_t* data)
 {
     for (int y = 0; y < height; ++y)
     {
@@ -79,19 +79,19 @@ void addCursorOutline(int width, int height, quint32* data)
 
 // Premultiplies RGB components of the pixel data in the given image by
 // the corresponding alpha components.
-void alphaMul(quint32* data, int width, int height)
+void alphaMul(uint32_t* data, int width, int height)
 {
-    static_assert(sizeof(quint32) == kBytesPerPixel,
+    static_assert(sizeof(uint32_t) == kBytesPerPixel,
                   "size of uint32 should be the number of bytes per pixel");
 
-    for (quint32* data_end = data + width * height; data != data_end; ++data)
+    for (uint32_t* data_end = data + width * height; data != data_end; ++data)
     {
         RGBQUAD* from = reinterpret_cast<RGBQUAD*>(data);
         RGBQUAD* to = reinterpret_cast<RGBQUAD*>(data);
 
-        to->rgbBlue  = (static_cast<quint16>(from->rgbBlue)  * from->rgbReserved) / 0xFF;
-        to->rgbGreen = (static_cast<quint16>(from->rgbGreen) * from->rgbReserved) / 0xFF;
-        to->rgbRed   = (static_cast<quint16>(from->rgbRed)   * from->rgbReserved) / 0xFF;
+        to->rgbBlue  = (static_cast<uint16_t>(from->rgbBlue)  * from->rgbReserved) / 0xFF;
+        to->rgbGreen = (static_cast<uint16_t>(from->rgbGreen) * from->rgbReserved) / 0xFF;
+        to->rgbRed   = (static_cast<uint16_t>(from->rgbRed)   * from->rgbReserved) / 0xFF;
     }
 }
 
@@ -124,7 +124,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
     int width = bitmap_info.bmWidth;
     int height = bitmap_info.bmHeight;
 
-    std::unique_ptr<quint32[]> mask_data = std::make_unique<quint32[]>(width * height);
+    std::unique_ptr<uint32_t[]> mask_data = std::make_unique<uint32_t[]>(width * height);
 
     // Get pixel data from |scoped_mask| converting it to 32bpp along the way.
     // GetDIBits() sets the alpha component of every pixel to 0.
@@ -154,7 +154,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
 
     uint32_t* mask_plane = mask_data.get();
 
-    std::unique_ptr<quint8[]> image;
+    std::unique_ptr<uint8_t[]> image;
     size_t image_size;
 
     bool has_alpha = false;
@@ -162,7 +162,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
     if (is_color)
     {
         image_size = width * height * kBytesPerPixel;
-        image = std::make_unique<quint8[]>(image_size);
+        image = std::make_unique<uint8_t[]>(image_size);
 
         // Get the pixels from the color bitmap.
         if (!GetDIBits(dc,
@@ -179,7 +179,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
 
         // GetDIBits() does not provide any indication whether the bitmap has
         // alpha channel, so we use HasAlphaChannel() below to find it out.
-        has_alpha = hasAlphaChannel(reinterpret_cast<const quint32*>(image.get()), width, height);
+        has_alpha = hasAlphaChannel(reinterpret_cast<const uint32_t*>(image.get()), width, height);
     }
     else
     {
@@ -189,7 +189,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
         height /= 2;
 
         image_size = width * height * kBytesPerPixel;
-        image = std::make_unique<quint8[]>(image_size);
+        image = std::make_unique<uint8_t[]>(image_size);
 
         // The XOR mask becomes the color bitmap.
         memcpy(image.get(), mask_plane + (width * height), image_size);
@@ -202,8 +202,8 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
     if (!has_alpha)
     {
         bool add_outline = false;
-        quint32* dst = reinterpret_cast<quint32*>(image.get());
-        quint32* mask = mask_plane;
+        uint32_t* dst = reinterpret_cast<uint32_t*>(image.get());
+        uint32_t* mask = mask_plane;
 
         for (int y = 0; y < height; ++y)
         {
@@ -244,13 +244,13 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
 
         if (add_outline)
         {
-            addCursorOutline(width, height, reinterpret_cast<quint32*>(image.get()));
+            addCursorOutline(width, height, reinterpret_cast<uint32_t*>(image.get()));
         }
     }
 
     // Pre-multiply the resulting pixels since MouseCursor uses premultiplied
     // images.
-    alphaMul(reinterpret_cast<quint32*>(image.get()), width, height);
+    alphaMul(reinterpret_cast<uint32_t*>(image.get()), width, height);
 
     return MouseCursor::create(std::move(image),
                                QSize(width, height),
@@ -310,7 +310,7 @@ bool CapturerGDI::prepareCaptureResources()
 
     if (!desktop_dc_)
     {
-        Q_ASSERT(!memory_dc_);
+        assert(!memory_dc_);
 
         // Vote to disable Aero composited desktop effects while capturing.
         // Windows will restore Aero automatically if the process exits.

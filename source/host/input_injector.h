@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__INPUT_INJECTOR_H
 #define _ASPIA_HOST__INPUT_INJECTOR_H
 
+#include "base/common.h"
+
 #include <QThread>
 
 #include <condition_variable>
@@ -42,7 +44,7 @@ private:
     std::queue<InputEvent> incoming_input_queue_;
     bool terminate_ = false;
 
-    Q_DISABLE_COPY(InputInjector)
+    DISABLE_COPY(InputInjector)
 };
 
 } // namespace aspia

@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__HOST_SETTINGS_H
 #define _ASPIA_HOST__HOST_SETTINGS_H
 
+#include "base/common.h"
+
 #include <QSettings>
 
 #include "host/user.h"
@@ -35,7 +37,7 @@ public:
 private:
     mutable QSettings settings_;
 
-    Q_DISABLE_COPY(HostSettings)
+    DISABLE_COPY(HostSettings)
 };
 
 } // namespace aspia

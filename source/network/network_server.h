@@ -8,6 +8,8 @@
 #ifndef _ASPIA_NETWORK__NETWORK_SERVER_H
 #define _ASPIA_NETWORK__NETWORK_SERVER_H
 
+#include "base/common.h"
+
 #include <QPointer>
 #include <QList>
 #include <QTcpServer>
@@ -47,7 +49,7 @@ private:
     // Contains a list of channels that are ready for use.
     QList<QPointer<NetworkChannel>> ready_channels_;
 
-    Q_DISABLE_COPY(NetworkServer)
+    DISABLE_COPY(NetworkServer)
 };
 
 } // namespace aspia

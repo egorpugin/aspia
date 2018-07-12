@@ -57,7 +57,7 @@ public:
 
 public slots:
     void stop();
-    void sessionChanged(quint32 event, quint32 session_id);
+    void sessionChanged(uint32_t event, uint32_t session_id);
 
 signals:
     void finished(Host* host);
@@ -73,19 +73,19 @@ private slots:
     void ipcMessageReceived(const QByteArray& buffer);
     void ipcServerStarted(const QString& channel_id);
     void ipcNewConnection(IpcChannel* channel);
-    void attachSession(quint32 session_id);
+    void attachSession(uint32_t session_id);
     void dettachSession();
 
 private:
     bool startFakeSession();
 
-    static const quint32 kInvalidSessionId = 0xFFFFFFFF;
+    static const uint32_t kInvalidSessionId = 0xFFFFFFFF;
 
     proto::auth::SessionType session_type_ = proto::auth::SESSION_TYPE_UNKNOWN;
     QString user_name_;
     QString uuid_;
 
-    quint32 session_id_ = kInvalidSessionId;
+    uint32_t session_id_ = kInvalidSessionId;
     int attach_timer_id_ = 0;
     State state_ = StoppedState;
 
@@ -94,7 +94,7 @@ private:
     QPointer<HostProcess> session_process_;
     QPointer<HostSessionFake> fake_session_;
 
-    Q_DISABLE_COPY(Host)
+    DISABLE_COPY(Host)
 };
 
 } // namespace aspia

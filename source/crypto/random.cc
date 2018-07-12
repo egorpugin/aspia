@@ -29,7 +29,7 @@ QByteArray Random::generateBuffer(int size)
 }
 
 // static
-quint32 Random::generateNumber()
+uint32_t Random::generateNumber()
 {
     return randombytes_random();
 }

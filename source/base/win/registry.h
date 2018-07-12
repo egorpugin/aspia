@@ -9,7 +9,7 @@
 #ifndef _ASPIA_BASE__WIN__REGISTRY_H
 #define _ASPIA_BASE__WIN__REGISTRY_H
 
-#include <qglobal.h>
+#include "base/common.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -84,7 +84,7 @@ private:
     HKEY key_ = nullptr;
     REGSAM wow64access_ = 0;
 
-    Q_DISABLE_COPY(RegistryKey)
+    DISABLE_COPY(RegistryKey)
 };
 
 // Iterates the entries found in a particular folder on the registry.
@@ -139,7 +139,7 @@ private:
     DWORD value_size_;
     DWORD type_;
 
-    Q_DISABLE_COPY(RegistryValueIterator)
+    DISABLE_COPY(RegistryValueIterator)
 };
 
 class RegistryKeyIterator
@@ -183,7 +183,7 @@ private:
 
     wchar_t name_[MAX_PATH];
 
-    Q_DISABLE_COPY(RegistryKeyIterator)
+    DISABLE_COPY(RegistryKeyIterator)
 };
 
 } // namespace aspia

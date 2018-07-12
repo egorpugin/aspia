@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__FILE_REQUEST_H
 #define _ASPIA_HOST__FILE_REQUEST_H
 
+#include "base/common.h"
+
 #include <QObject>
 #include <QPointer>
 #include <QString>
@@ -43,7 +45,7 @@ private:
 
     proto::file_transfer::Request request_;
 
-    Q_DISABLE_COPY(FileRequest)
+    DISABLE_COPY(FileRequest)
 };
 
 } // namespace aspia

@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CLIENT__UI__DESKTOP_PANEL_H
 #define _ASPIA_CLIENT__UI__DESKTOP_PANEL_H
 
+#include "base/common.h"
+
 #include <QPointer>
 
 #include "protocol/authorization.pb.h"
@@ -55,7 +57,7 @@ private:
     bool allow_hide_ = true;
     bool leaved_ = true;
 
-    Q_DISABLE_COPY(DesktopPanel)
+    DISABLE_COPY(DesktopPanel)
 };
 
 } // namespace aspia

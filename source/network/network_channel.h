@@ -8,6 +8,8 @@
 #ifndef _ASPIA_NETWORK__NETWORK_CHANNEL_H
 #define _ASPIA_NETWORK__NETWORK_CHANNEL_H
 
+#include "base/common.h"
+
 #include <QPointer>
 #include <QTcpSocket>
 
@@ -87,7 +89,7 @@ private:
     void write(int message_id, const QByteArray& buffer);
     void scheduleWrite();
 
-    using MessageSizeType = quint32;
+    using MessageSizeType = uint32_t;
 
     const ChannelType channel_type_;
     ChannelState channel_state_ = NotConnected;
@@ -106,7 +108,7 @@ private:
 
     int pinger_timer_id_ = 0;
 
-    Q_DISABLE_COPY(NetworkChannel)
+    DISABLE_COPY(NetworkChannel)
 };
 
 } // namespace aspia

@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CLIENT__UI__DESKTOP_WINDOW_H
 #define _ASPIA_CLIENT__UI__DESKTOP_WINDOW_H
 
+#include "base/common.h"
+
 #include <QPointer>
 #include <QWidget>
 
@@ -38,15 +40,15 @@ public:
     void injectCursor(const QCursor& cursor);
     void injectClipboard(const proto::desktop::ClipboardEvent& event);
 
-    void setSupportedVideoEncodings(quint32 video_encodings);
-    void setSupportedFeatures(quint32 features);
+    void setSupportedVideoEncodings(uint32_t video_encodings);
+    void setSupportedFeatures(uint32_t features);
     bool requireConfigChange(proto::desktop::Config* config);
 
 signals:
     void windowClose();
     void sendConfig(const proto::desktop::Config& config);
-    void sendKeyEvent(quint32 usb_keycode, quint32 flags);
-    void sendPointerEvent(const QPoint& pos, quint32 mask);
+    void sendKeyEvent(uint32_t usb_keycode, uint32_t flags);
+    void sendPointerEvent(const QPoint& pos, uint32_t mask);
     void sendClipboardEvent(const proto::desktop::ClipboardEvent& event);
 
 protected:
@@ -58,15 +60,15 @@ protected:
     bool eventFilter(QObject* object, QEvent* event) override;
 
 private slots:
-    void onPointerEvent(const QPoint& pos, quint32 mask);
+    void onPointerEvent(const QPoint& pos, uint32_t mask);
     void changeSettings();
     void autosizeWindow();
 
 private:
     ConnectData* connect_data_;
 
-    quint32 supported_video_encodings_ = 0;
-    quint32 supported_features_ = 0;
+    uint32_t supported_video_encodings_ = 0;
+    uint32_t supported_features_ = 0;
 
     QPointer<QHBoxLayout> layout_;
     QPointer<QScrollArea> scroll_area_;
@@ -79,7 +81,7 @@ private:
 
     bool is_maximized_ = false;
 
-    Q_DISABLE_COPY(DesktopWindow)
+    DISABLE_COPY(DesktopWindow)
 };
 
 } // namespace aspia

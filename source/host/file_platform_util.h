@@ -8,6 +8,8 @@
 #ifndef _ASPIA_HOST__FILE_PLATFORM_UTIL_H
 #define _ASPIA_HOST__FILE_PLATFORM_UTIL_H
 
+#include "base/common.h"
+
 #include <QIcon>
 #include <QPair>
 #include <QString>
@@ -30,7 +32,7 @@ public:
     static proto::file_transfer::DriveList::Item::Type driveType(const QString& drive_path);
 
 private:
-    Q_DISABLE_COPY(FilePlatformUtil)
+    DISABLE_COPY(FilePlatformUtil)
 };
 
 } // namespace aspia

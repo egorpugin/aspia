@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__FILE_LOGGER_H
 #define _ASPIA_BASE__FILE_LOGGER_H
 
+#include "base/common.h"
+
 #include <QFile>
 #include <QScopedPointer>
 
@@ -28,7 +30,7 @@ private:
 
     static QScopedPointer<QFile> file_;
 
-    Q_DISABLE_COPY(FileLogger);
+    DISABLE_COPY(FileLogger);
 };
 
 } // namespace aspia

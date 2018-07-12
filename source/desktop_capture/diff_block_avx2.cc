@@ -16,7 +16,7 @@
 
 namespace aspia {
 
-quint8 diffFullBlock_32x32_AVX2(const quint8* image1, const quint8* image2, int bytes_per_row)
+uint8_t diffFullBlock_32x32_AVX2(const uint8_t* image1, const uint8_t* image2, int bytes_per_row)
 {
     __m256i acc = _mm256_setzero_si256();
     __m256i sad;
@@ -54,7 +54,7 @@ quint8 diffFullBlock_32x32_AVX2(const quint8* image1, const quint8* image2, int 
     return 0U;
 }
 
-quint8 diffFullBlock_16x16_AVX2(const quint8* image1, const quint8* image2, int bytes_per_row)
+uint8_t diffFullBlock_16x16_AVX2(const uint8_t* image1, const uint8_t* image2, int bytes_per_row)
 {
     __m256i acc = _mm256_setzero_si256();
     __m256i sad;
@@ -86,7 +86,7 @@ quint8 diffFullBlock_16x16_AVX2(const quint8* image1, const quint8* image2, int 
     return 0U;
 }
 
-quint8 diffFullBlock_8x8_AVX2(const quint8* image1, const quint8* image2, int bytes_per_row)
+uint8_t diffFullBlock_8x8_AVX2(const uint8_t* image1, const uint8_t* image2, int bytes_per_row)
 {
     __m256i acc = _mm256_setzero_si256();
     __m256i sad;

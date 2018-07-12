@@ -76,7 +76,7 @@ private:
     proto::auth::SessionType session_type_ = proto::auth::SESSION_TYPE_UNKNOWN;
     proto::auth::Status status_ = proto::auth::STATUS_ACCESS_DENIED;
 
-    Q_DISABLE_COPY(HostUserAuthorizer)
+    DISABLE_COPY(HostUserAuthorizer)
 };
 
 } // namespace aspia

@@ -28,10 +28,10 @@ public:
 
     bool start(int port, const QList<User>& user_list);
     void stop();
-    void setSessionChanged(quint32 event, quint32 session_id);
+    void setSessionChanged(uint32_t event, uint32_t session_id);
 
 signals:
-    void sessionChanged(quint32 event, quint32 session_id);
+    void sessionChanged(uint32_t event, uint32_t session_id);
 
 protected:
     // QObject implementation.
@@ -80,7 +80,7 @@ private:
 
     int restart_timer_id_ = 0;
 
-    Q_DISABLE_COPY(HostServer)
+    DISABLE_COPY(HostServer)
 };
 
 } // namespace aspia

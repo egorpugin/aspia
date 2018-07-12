@@ -175,7 +175,7 @@ void Host::stop()
     emit finished(this);
 }
 
-void Host::sessionChanged(quint32 event, quint32 session_id)
+void Host::sessionChanged(uint32_t event, uint32_t session_id)
 {
     qInfo() << "Session change event" << event << "for session" << session_id;
 
@@ -208,7 +208,7 @@ void Host::timerEvent(QTimerEvent* event)
 
 void Host::networkMessageWritten(int message_id)
 {
-    Q_ASSERT(message_id == NetworkMessageId);
+    assert(message_id == NetworkMessageId);
 
     if (!ipc_channel_.isNull())
         ipc_channel_->readMessage();
@@ -222,7 +222,7 @@ void Host::networkMessageReceived(const QByteArray& buffer)
 
 void Host::ipcMessageWritten(int message_id)
 {
-    Q_ASSERT(message_id == IpcMessageId);
+    assert(message_id == IpcMessageId);
     network_channel_->readMessage();
 }
 
@@ -233,8 +233,8 @@ void Host::ipcMessageReceived(const QByteArray& buffer)
 
 void Host::ipcServerStarted(const QString& channel_id)
 {
-    Q_ASSERT(state_ == StartingState);
-    Q_ASSERT(session_process_.isNull());
+    assert(state_ == StartingState);
+    assert(session_process_.isNull());
 
     session_process_ = new HostProcess(this);
 
@@ -297,8 +297,8 @@ void Host::ipcServerStarted(const QString& channel_id)
 
 void Host::ipcNewConnection(IpcChannel* channel)
 {
-    Q_ASSERT(channel);
-    Q_ASSERT(attach_timer_id_);
+    assert(channel);
+    assert(attach_timer_id_);
 
     killTimer(attach_timer_id_);
     attach_timer_id_ = 0;
@@ -323,7 +323,7 @@ void Host::ipcNewConnection(IpcChannel* channel)
     network_channel_->readMessage();
 }
 
-void Host::attachSession(quint32 session_id)
+void Host::attachSession(uint32_t session_id)
 {
     qInfo() << "Starting host process attachment to session" << session_id;
 

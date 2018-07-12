@@ -26,7 +26,7 @@ MouseCursorCache::MouseCursorCache(size_t cache_size) :
 
 size_t MouseCursorCache::find(const MouseCursor* mouse_cursor)
 {
-    Q_ASSERT(mouse_cursor);
+    assert(mouse_cursor);
 
     size_t size = cache_.size();
 
@@ -45,7 +45,7 @@ size_t MouseCursorCache::find(const MouseCursor* mouse_cursor)
 
 size_t MouseCursorCache::add(std::unique_ptr<MouseCursor> mouse_cursor)
 {
-    Q_ASSERT(mouse_cursor);
+    assert(mouse_cursor);
 
     // Add the cursor to the end of the list.
     cache_.emplace_back(std::move(mouse_cursor));

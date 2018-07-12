@@ -31,7 +31,7 @@ public:
     HostProcess* process_;
     HostProcess::ProcessState state_ = HostProcess::NotRunning;
     HostProcess::Account account_ = HostProcess::User;
-    quint32 session_id_ = -1;
+    uint32_t session_id_ = -1;
     QString program_;
     QStringList arguments_;
 
@@ -40,7 +40,7 @@ public:
 
     QPointer<QWinEventNotifier> finish_notifier_;
 
-    Q_DISABLE_COPY(HostProcessImpl)
+    DISABLE_COPY(HostProcessImpl)
 };
 
 } // namespace aspia

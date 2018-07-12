@@ -32,12 +32,12 @@ private:
     DesktopFrameDIB(const QSize& size,
                     const PixelFormat& format,
                     int stride,
-                    quint8* data,
+                    uint8_t* data,
                     HBITMAP bitmap);
 
     ScopedHBITMAP bitmap_;
 
-    Q_DISABLE_COPY(DesktopFrameDIB)
+    DISABLE_COPY(DesktopFrameDIB)
 };
 
 } // namespace aspia

@@ -62,7 +62,7 @@ public:
 
 private:
     proto::notifier::Session session_;
-    Q_DISABLE_COPY(SessionTreeItem)
+    DISABLE_COPY(SessionTreeItem)
 };
 
 } // namespace

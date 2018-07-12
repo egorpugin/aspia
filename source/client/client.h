@@ -8,6 +8,8 @@
 #ifndef _ASPIA_CLIENT__CLIENT_H
 #define _ASPIA_CLIENT__CLIENT_H
 
+#include "base/common.h"
+
 #include "client/client_session.h"
 #include "client/connect_data.h"
 #include "network/network_channel.h"
@@ -44,7 +46,7 @@ private:
     QPointer<ClientUserAuthorizer> authorizer_;
     QPointer<ClientSession> session_;
 
-    Q_DISABLE_COPY(Client)
+    DISABLE_COPY(Client)
 };
 
 } // namespace aspia

@@ -30,7 +30,7 @@ public:
 private:
     QList<FileTransfer::Item> file_list_;
 
-    Q_DISABLE_COPY(FileItemMimeData)
+    DISABLE_COPY(FileItemMimeData)
 };
 
 } // namespace aspia

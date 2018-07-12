@@ -67,7 +67,7 @@ private:
     SERVICE_STATUS_HANDLE status_handle_ = nullptr;
     SERVICE_STATUS status_;
 
-    Q_DISABLE_COPY(ServiceHandler)
+    DISABLE_COPY(ServiceHandler)
 };
 
 class ServiceEventHandler : public QObject
@@ -84,12 +84,12 @@ public:
 
     static void postStartEvent();
     static void postStopEvent();
-    static void postSessionChangeEvent(quint32 event, quint32 session_id);
+    static void postSessionChangeEvent(uint32_t event, uint32_t session_id);
 
     class SessionChangeEvent : public QEvent
     {
     public:
-        SessionChangeEvent(quint32 event, quint32 session_id)
+        SessionChangeEvent(uint32_t event, uint32_t session_id)
             : QEvent(QEvent::Type(kSessionChangeEvent)),
               event_(event),
               session_id_(session_id)
@@ -97,14 +97,14 @@ public:
             // Nothing
         }
 
-        quint32 event() const { return event_; }
-        quint32 sessionId() const { return session_id_; }
+        uint32_t event() const { return event_; }
+        uint32_t sessionId() const { return session_id_; }
 
     private:
-        quint32 event_;
-        quint32 session_id_;
+        uint32_t event_;
+        uint32_t session_id_;
 
-        Q_DISABLE_COPY(SessionChangeEvent)
+        DISABLE_COPY(SessionChangeEvent)
     };
 
 protected:
@@ -112,7 +112,7 @@ protected:
     void customEvent(QEvent* event) override;
 
 private:
-    Q_DISABLE_COPY(ServiceEventHandler)
+    DISABLE_COPY(ServiceEventHandler)
 };
 
 //================================================================================================
@@ -123,7 +123,7 @@ ServiceHandler* ServiceHandler::instance = nullptr;
 
 ServiceHandler::ServiceHandler()
 {
-    Q_ASSERT(!instance);
+    assert(!instance);
     instance = this;
 
     memset(&status_, 0, sizeof(status_));
@@ -131,7 +131,7 @@ ServiceHandler::ServiceHandler()
 
 ServiceHandler::~ServiceHandler()
 {
-    Q_ASSERT(instance);
+    assert(instance);
     instance = nullptr;
 }
 
@@ -301,13 +301,13 @@ ServiceEventHandler* ServiceEventHandler::instance = nullptr;
 
 ServiceEventHandler::ServiceEventHandler()
 {
-    Q_ASSERT(!instance);
+    assert(!instance);
     instance = this;
 }
 
 ServiceEventHandler::~ServiceEventHandler()
 {
-    Q_ASSERT(instance);
+    assert(instance);
     instance = nullptr;
 }
 
@@ -326,7 +326,7 @@ void ServiceEventHandler::postStopEvent()
 }
 
 // static
-void ServiceEventHandler::postSessionChangeEvent(quint32 event, quint32 session_id)
+void ServiceEventHandler::postSessionChangeEvent(uint32_t event, uint32_t session_id)
 {
     if (instance)
         QCoreApplication::postEvent(instance, new SessionChangeEvent(event, session_id));
