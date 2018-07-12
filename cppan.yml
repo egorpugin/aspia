@@ -1,0 +1,165 @@
+local_settings:
+    #storage_dir: .s
+    use_shared_libs: false
+    builds:
+        vs2017:
+            generator: Visual Studio 15 2017
+            #cxx_flags: /W0
+        vs2017_64:
+            generator: Visual Studio 15 2017 Win64
+            #cxx_flags: /W0
+
+common_settings:
+    c++: 17
+    root_dir: source
+    options:
+        any:
+            definitions:
+                private:
+                    - _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING
+                    - _CRT_SECURE_NO_WARNINGS
+                    - CORE_IMPLEMENTATION
+                public:
+                    - _UNICODE
+                    - UNICODE
+    post_sources: |
+        file(GLOB_RECURSE x "${SDIR}/*")
+        source_group(TREE ${SDIR} PREFIX "Source Files" FILES ${x})
+
+projects:
+    console:
+        executable_type: win32
+        rc_enabled: false
+        files:
+            - console/entry_point.cc
+            - console/console.rc
+        dependencies:
+            - core
+            - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+    host_config:
+        executable_type: win32
+        rc_enabled: false
+        files:
+            - host/host_config_entry_point.cc
+            - host/host_config.rc
+        dependencies:
+            - core
+            - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+    host_service:
+        rc_enabled: false
+        files:
+            - host/win/host_service_entry_point.cc
+            - host/win/host_service.rc
+        dependencies:
+            - core
+
+    host:
+        executable_type: win32
+        rc_enabled: false
+        files:
+            - host/win/host_entry_point.cc
+            - host/win/host.rc
+        dependencies:
+            - core
+            - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+    host_notifier:
+        executable_type: win32
+        rc_enabled: false
+        files:
+            - host/host_notifier_entry_point.cc
+            - host/host_notifier.rc
+        dependencies:
+            - core
+            - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+    core:
+        type: lib
+        shared_only: true
+        files:
+            - "[^/]*\\.cc"
+            - "[^/]*\\.h"
+            - .*\.rc
+            - base/.*
+            - client/.*
+            - codec/.*
+            - console/.*
+            - crypto/.*
+            - desktop_capture/.*
+            - host/.*
+            - ipc/.*
+            - network/.*
+            - protocol/.*
+            - resources/.*
+            - system_info/.*
+
+        exclude_from_build:
+            - .*entry_point.cc$
+            - .*manifest$
+            - .*rc$
+
+        dependencies:
+            - pvt.cppan.demo.google.protobuf.protobuf: 3
+            - pvt.cppan.demo.dead2.zlib_ng: develop
+            - pvt.cppan.demo.jedisct1.libsodium: 1
+            - pvt.cppan.demo.chromium.libyuv.libyuv: master
+            - pvt.cppan.demo.webmproject.vpx: 1
+
+            - pvt.cppan.demo.qtproject.qt.base.network: 5
+            - pvt.cppan.demo.qtproject.qt.base.xml: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
+            - pvt.cppan.demo.qtproject.qt.winextras: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+              ref: WIDGETS
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.rcc
+              ref: RCC_COMMAND
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+              ref: UIC_COMMAND
+              version: 5
+
+        options:
+            any:
+                link_libraries:
+                    win32:
+                        public:
+                            - Wtsapi32
+                            - sas
+                            - comsuppw
+
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
+            #
+            set(Qt5Core_RCC_EXECUTABLE ${RCC_COMMAND})
+            qt5_add_resources(rcc ${SDIR}/resources/resources.qrc)
+            set(src ${src} ${rcc})
+
