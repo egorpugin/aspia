@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__WIN__SCOPED_LOCAL_H
 #define _ASPIA_BASE__WIN__SCOPED_LOCAL_H
 
+#include "base/common.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 

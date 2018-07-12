@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__TYPED_BUFFER_H
 #define _ASPIA_BASE__TYPED_BUFFER_H
 
+#include "base/common.h"
+
 namespace aspia {
 
 //

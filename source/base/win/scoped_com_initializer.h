@@ -8,6 +8,8 @@
 #ifndef _ASPIA_BASE__WIN__SCOPED_COM_INITIALIZER_H
 #define _ASPIA_BASE__WIN__SCOPED_COM_INITIALIZER_H
 
+#include "base/common.h"
+
 #include <objbase.h>
 
 #ifndef NDEBUG
