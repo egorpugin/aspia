@@ -17,7 +17,7 @@
 
 namespace aspia {
 
-class SystemInfoRequest : public QObject
+class ASPIA_CLIENT_API SystemInfoRequest : public QObject
 {
     Q_OBJECT
 

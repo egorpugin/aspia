@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__SERVICE_H
-#define _ASPIA_BASE__SERVICE_H
+#pragma once
 
 #include <QPointer>
 
@@ -46,5 +45,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__SERVICE_H

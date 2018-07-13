@@ -15,7 +15,7 @@
 
 namespace aspia {
 
-class MouseCursor
+class ASPIA_DESKTOP_CAPTURE_API MouseCursor
 {
 public:
     ~MouseCursor() = default;

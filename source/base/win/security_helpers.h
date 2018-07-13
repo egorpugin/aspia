@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__WIN__SECURITY_HELPERS_H
-#define _ASPIA_BASE__WIN__SECURITY_HELPERS_H
+#pragma once
 
 namespace aspia {
 
@@ -18,10 +17,9 @@ namespace aspia {
 //  - Caller's identity is verified on every call (Dynamic cloaking).
 //  - Unless |activate_as_activator| is true, activations where the server
 //    would run under this process's identity are prohibited.
+ASPIA_BASE_API
 bool initializeComSecurity(const wchar_t* security_descriptor,
                            const wchar_t* mandatory_label,
                            bool activate_as_activator);
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__WIN__SECURITY_HELPERS_H

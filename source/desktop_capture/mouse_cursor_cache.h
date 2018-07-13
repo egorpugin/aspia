@@ -14,7 +14,7 @@
 
 namespace aspia {
 
-class MouseCursorCache
+class ASPIA_DESKTOP_CAPTURE_API MouseCursorCache
 {
 public:
     explicit MouseCursorCache(size_t cache_size);

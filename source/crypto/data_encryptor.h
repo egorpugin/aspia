@@ -14,7 +14,7 @@
 
 namespace aspia {
 
-class DataEncryptor
+class ASPIA_CRYPTO_API DataEncryptor
 {
 public:
     // Creates a key from the password. |password| must be in UTF-8 encoding.

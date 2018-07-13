@@ -20,7 +20,7 @@ typedef struct vpx_image vpx_image_t;
 
 namespace aspia {
 
-class VideoEncoderVPX : public VideoEncoder
+class ASPIA_CODEC_API VideoEncoderVPX : public VideoEncoder
 {
 public:
     ~VideoEncoderVPX();

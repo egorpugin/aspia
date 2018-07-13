@@ -20,8 +20,10 @@ using SystemErrorCode = unsigned long;
 using SystemErrorCode = int;
 #endif
 
+ASPIA_BASE_API
 QString errnoToString(SystemErrorCode error_code);
 
+ASPIA_BASE_API
 void errnoToLog(QtMsgType type, const char* file, int line, const char* message, ...);
 
 #define qDebugErrno(_msg_, ...) \
@@ -41,4 +43,5 @@ void errnoToLog(QtMsgType type, const char* file, int line, const char* message,
 
 } // namespace aspia
 
+ASPIA_BASE_API
 QDebug &operator<<(QDebug &, const std::string &);

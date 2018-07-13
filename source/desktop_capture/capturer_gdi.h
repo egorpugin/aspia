@@ -17,7 +17,7 @@
 
 namespace aspia {
 
-class CapturerGDI : public Capturer
+class ASPIA_DESKTOP_CAPTURE_API CapturerGDI : public Capturer
 {
 public:
     ~CapturerGDI() = default;

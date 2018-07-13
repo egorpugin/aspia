@@ -16,7 +16,7 @@
 
 namespace aspia {
 
-class CursorEncoder
+class ASPIA_CODEC_API CursorEncoder
 {
 public:
     CursorEncoder();

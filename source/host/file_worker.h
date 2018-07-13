@@ -15,7 +15,7 @@
 
 namespace aspia {
 
-class FileWorker : public QObject
+class ASPIA_CLIENT_API FileWorker : public QObject
 {
     Q_OBJECT
 

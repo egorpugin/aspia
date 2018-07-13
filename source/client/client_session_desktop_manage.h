@@ -14,12 +14,13 @@ namespace aspia {
 
 class CursorDecoder;
 
-class ClientSessionDesktopManage : public ClientSessionDesktopView
+class ASPIA_CLIENT_API ClientSessionDesktopManage : public ClientSessionDesktopView
 {
     Q_OBJECT
 
 public:
     ClientSessionDesktopManage(ConnectData* connect_data, QObject* parent);
+    ~ClientSessionDesktopManage();
 
     static quint32 supportedVideoEncodings();
     static quint32 supportedFeatures();

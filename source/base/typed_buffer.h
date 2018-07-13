@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__TYPED_BUFFER_H
-#define _ASPIA_BASE__TYPED_BUFFER_H
+#pragma once
 
 #include "base/common.h"
 
@@ -102,5 +101,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__TYPED_BUFFER_H

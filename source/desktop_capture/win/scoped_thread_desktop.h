@@ -12,7 +12,7 @@
 
 namespace aspia {
 
-class ScopedThreadDesktop
+class ASPIA_DESKTOP_CAPTURE_API ScopedThreadDesktop
 {
 public:
     ScopedThreadDesktop();

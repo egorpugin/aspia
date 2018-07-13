@@ -12,7 +12,10 @@
 
 namespace aspia {
 
+ASPIA_CRYPTO_API
 void secureMemZero(void* data, size_t data_size);
+
+ASPIA_CRYPTO_API
 void secureMemZero(std::string* str);
 
 } // namespace aspia

@@ -13,7 +13,7 @@
 
 namespace aspia {
 
-class ComputerFactory
+class ASPIA_CLIENT_API ComputerFactory
 {
 public:
     static proto::address_book::Computer defaultComputer();

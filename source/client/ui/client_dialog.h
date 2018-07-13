@@ -13,7 +13,7 @@
 
 namespace aspia {
 
-class ClientDialog : public QDialog
+class ASPIA_CLIENT_API ClientDialog : public QDialog
 {
     Q_OBJECT
 

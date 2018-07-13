@@ -17,7 +17,7 @@ namespace aspia {
 struct CategoryList;
 class Category;
 
-class CategoryGroup
+class ASPIA_SYSTEM_INFO_API CategoryGroup
 {
 public:
     CategoryGroup(const CategoryGroup& other);
@@ -35,7 +35,7 @@ private:
     const CategoryList* current_;
 };
 
-class Category
+class ASPIA_SYSTEM_INFO_API Category
 {
 public:
     Category(const Category& other);

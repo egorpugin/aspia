@@ -14,7 +14,7 @@
 
 namespace aspia {
 
-class CaptureScheduler
+class ASPIA_DESKTOP_CAPTURE_API CaptureScheduler
 {
 public:
     CaptureScheduler() = default;

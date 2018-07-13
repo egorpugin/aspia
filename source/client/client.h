@@ -17,7 +17,7 @@ namespace aspia {
 class ClientUserAuthorizer;
 class StatusDialog;
 
-class Client : public QObject
+class ASPIA_CLIENT_API Client : public QObject
 {
     Q_OBJECT
 

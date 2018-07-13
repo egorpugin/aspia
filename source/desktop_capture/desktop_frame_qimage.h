@@ -15,7 +15,7 @@
 
 namespace aspia {
 
-class DesktopFrameQImage : public DesktopFrame
+class ASPIA_DESKTOP_CAPTURE_API DesktopFrameQImage : public DesktopFrame
 {
 public:
     ~DesktopFrameQImage() = default;

@@ -18,7 +18,7 @@ namespace aspia {
 // lifetime. This object should be destroyed after use.
 //
 
-class Compressor
+class ASPIA_CODEC_API Compressor
 {
 public:
     enum CompressorFlush

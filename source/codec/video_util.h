@@ -17,7 +17,7 @@
 
 namespace aspia {
 
-class VideoUtil
+class ASPIA_CODEC_API VideoUtil
 {
 public:
     static QRect fromVideoRect(const proto::desktop::Rect& rect);

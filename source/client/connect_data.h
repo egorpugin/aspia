@@ -15,7 +15,7 @@
 
 namespace aspia {
 
-class ConnectData
+class ASPIA_CLIENT_API ConnectData
 {
 public:
     ConnectData() = default;

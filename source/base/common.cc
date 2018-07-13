@@ -19,10 +19,3 @@ std::string to_string(const std::wstring &s)
     auto &converter = get_string_converter();
     return converter.to_bytes(s.c_str());
 }
-
-namespace aspia
-{
-
-const int kDefaultHostTcpPort = 8050;
-
-} // namespace aspia

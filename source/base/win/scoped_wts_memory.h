@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__WIN__SCOPED_WTS_MEMORY_H
-#define _ASPIA_BASE__WIN__SCOPED_WTS_MEMORY_H
+#pragma once
 
 #include <wtsapi32.h>
 
@@ -71,5 +70,3 @@ private:
 
     DISABLE_COPY(ScopedWtsMemory)
 };
-
-#endif // _ASPIA_BASE__WIN__SCOPED_WTS_MEMORY_H

@@ -6,8 +6,7 @@
 // NOTE:            This file is based on Chromium code.
 //
 
-#ifndef _ASPIA_BASE__KEYCODE_CONVERTER_H
-#define _ASPIA_BASE__KEYCODE_CONVERTER_H
+#pragma once
 
 #include "base/common.h"
 
@@ -57,5 +56,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__KEYCODE_CONVERTER_H

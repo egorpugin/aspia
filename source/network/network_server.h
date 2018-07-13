@@ -18,7 +18,7 @@ namespace aspia {
 
 class NetworkChannel;
 
-class NetworkServer : public QObject
+class ASPIA_NETWORK_API NetworkServer : public QObject
 {
     Q_OBJECT
 

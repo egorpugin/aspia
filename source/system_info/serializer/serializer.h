@@ -14,7 +14,7 @@
 
 namespace aspia {
 
-class Serializer : public QObject
+class ASPIA_SYSTEM_INFO_API Serializer : public QObject
 {
     Q_OBJECT
 

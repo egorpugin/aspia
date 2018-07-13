@@ -78,6 +78,10 @@ NetworkChannel::NetworkChannel(ChannelType channel_type, QTcpSocket* socket, QOb
             Qt::QueuedConnection);
 }
 
+NetworkChannel::~NetworkChannel()
+{
+}
+
 // static
 NetworkChannel* NetworkChannel::createClient(QObject* parent)
 {

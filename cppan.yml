@@ -1,6 +1,6 @@
 local_settings:
     #storage_dir: .s
-    use_shared_libs: false
+    #use_shared_libs: false
     builds:
         vs2017:
             generator: Visual Studio 15 2017
@@ -28,6 +28,10 @@ common_settings:
                 public:
                     - _UNICODE
                     - UNICODE
+            compile_options:
+                msvc:
+                    public:
+                        - /wd4251 # needs to have dll-interface to be used by clients of
     post_sources: |
         file(GLOB_RECURSE x "${SDIR}/*")
         source_group(TREE ${SDIR} PREFIX "Source Files" FILES ${x})
@@ -187,6 +191,7 @@ projects:
         dependencies:
             public:
                 - base
+                - desktop_capture
                 - pvt.cppan.demo.qtproject.qt.base.gui: 5
             private:
                 - pvt.cppan.demo.dead2.zlib_ng: develop
@@ -207,6 +212,14 @@ projects:
         type: lib
         files:
             - desktop_capture/.*
+
+        options:
+            any:
+                link_libraries:
+                    win32:
+                        public:
+                            - Dwmapi
+
         dependencies:
             public:
                 - base
@@ -223,7 +236,7 @@ projects:
                 - pvt.cppan.demo.qtproject.qt.base.network: 5
 
             public:
-                - base
+                - crypto
 
                 - name: pvt.cppan.demo.qtproject.qt.base.widgets
                   ref: WIDGETS
@@ -238,6 +251,12 @@ projects:
                   ref: UIC_COMMAND
                   version: 5
 
+        options:
+            any:
+                link_libraries:
+                    win32:
+                        public:
+                            - comsuppw
         post_sources: |
             include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
 
@@ -266,7 +285,7 @@ projects:
             private:
                 - pvt.cppan.demo.qtproject.qt.base.network: 5
             public:
-                - base
+                - crypto
 
                 - name: pvt.cppan.demo.qtproject.qt.base.widgets
                   ref: WIDGETS
@@ -306,12 +325,18 @@ projects:
         files:
             - base_client/.*
             - client/.*
+            - host/file_.*
+            - host/system_info_.*
 
         dependencies:
-            - base
+            - codec
+            - desktop_capture
             - network
+            # remove from here?
             - resources
+            - system_info
 
+            - pvt.cppan.demo.qtproject.qt.winextras: 5
             - pvt.cppan.demo.qtproject.qt.base.xml: 5
             - name: pvt.cppan.demo.qtproject.qt.base.widgets
               ref: WIDGETS
@@ -409,6 +434,8 @@ projects:
             - .*entry_point.cc$
             - .*manifest$
             - .*rc$
+            - host/file_.*
+            - host/system_info_.*
 
         options:
             any:
@@ -417,20 +444,12 @@ projects:
                         public:
                             - Wtsapi32
                             - sas
-                            - comsuppw
 
         dependencies:
-            - base
             - client
-            - codec
             - crypto
-            - desktop_capture
             - ipc
-            - network
-            - resources
-            - system_info
 
-            - pvt.cppan.demo.qtproject.qt.winextras: 5
             - name: pvt.cppan.demo.qtproject.qt.base.widgets
               ref: WIDGETS
               version: 5

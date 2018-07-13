@@ -15,7 +15,7 @@
 
 namespace aspia {
 
-class VideoDecoder
+class ASPIA_CODEC_API VideoDecoder
 {
 public:
     virtual ~VideoDecoder() = default;

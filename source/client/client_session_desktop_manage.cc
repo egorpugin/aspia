@@ -40,6 +40,10 @@ ClientSessionDesktopManage::ClientSessionDesktopManage(ConnectData* connect_data
             this, &ClientSessionDesktopManage::onSendClipboardEvent);
 }
 
+ClientSessionDesktopManage::~ClientSessionDesktopManage()
+{
+}
+
 // static
 quint32 ClientSessionDesktopManage::supportedVideoEncodings()
 {

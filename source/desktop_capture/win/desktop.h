@@ -15,7 +15,7 @@
 
 namespace aspia {
 
-class Desktop
+class ASPIA_DESKTOP_CAPTURE_API Desktop
 {
 public:
     Desktop() = default;

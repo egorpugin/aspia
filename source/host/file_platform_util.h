@@ -12,7 +12,6 @@
 
 #include <QIcon>
 #include <QPair>
-#include "base/common.h"
 
 #include "protocol/file_transfer_session.pb.h"
 

@@ -17,7 +17,7 @@
 
 namespace aspia {
 
-class FirewallManager
+class ASPIA_NETWORK_API FirewallManager
 {
 public:
     explicit FirewallManager(const std::string& application_path);

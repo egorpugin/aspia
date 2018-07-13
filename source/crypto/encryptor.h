@@ -17,7 +17,7 @@
 namespace aspia {
 
 // Implements encryption of messages with using xsalsa20 + poly1305 algorithms.
-class Encryptor
+class ASPIA_CRYPTO_API Encryptor
 {
 public:
     enum Mode

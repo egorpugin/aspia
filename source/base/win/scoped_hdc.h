@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__WIN__SCOPED_HDC_H
-#define _ASPIA_BASE__WIN__SCOPED_HDC_H
+#pragma once
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -91,5 +90,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__WIN__SCOPED_HDC_H

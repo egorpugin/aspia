@@ -18,7 +18,7 @@ namespace aspia {
 
 class PixelTranslator;
 
-class VideoEncoderZLIB : public VideoEncoder
+class ASPIA_CODEC_API VideoEncoderZLIB : public VideoEncoder
 {
 public:
     ~VideoEncoderZLIB() = default;

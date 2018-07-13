@@ -14,7 +14,7 @@
 
 namespace aspia {
 
-class Random
+class ASPIA_CRYPTO_API Random
 {
 public:
     static QByteArray generateBuffer(int size);

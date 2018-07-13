@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__WIN__SCOPED_GDI_OBJECT_H
-#define _ASPIA_BASE__WIN__SCOPED_GDI_OBJECT_H
+#pragma once
 
 #include "base/common.h"
 
@@ -80,5 +79,3 @@ using ScopedHFONT = ScopedGDIObject<HFONT, DeleteObjectTraits<HFONT>>;
 using ScopedHBRUSH = ScopedGDIObject<HBRUSH, DeleteObjectTraits<HBRUSH>>;
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__WIN__SCOPED_GDI_OBJECT_H

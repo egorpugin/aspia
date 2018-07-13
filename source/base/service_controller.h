@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__SERVICE_CONTROLLER_H
-#define _ASPIA_BASE__SERVICE_CONTROLLER_H
+#pragma once
 
 #include "base/common.h"
 
@@ -55,5 +54,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__SERVICE_CONTROLLER_H

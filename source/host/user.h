@@ -12,7 +12,7 @@
 
 namespace aspia {
 
-class User
+class ASPIA_CORE_API User
 {
 public:
     ~User();

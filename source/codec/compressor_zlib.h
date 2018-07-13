@@ -15,7 +15,7 @@ typedef struct zng_stream_s zng_stream;
 
 namespace aspia {
 
-class CompressorZLIB : public Compressor
+class ASPIA_CODEC_API CompressorZLIB : public Compressor
 {
 public:
     explicit CompressorZLIB(int compress_ratio);

@@ -16,7 +16,7 @@
 
 namespace aspia {
 
-class Clipboard : public QObject
+class ASPIA_CLIENT_API Clipboard : public QObject
 {
     Q_OBJECT
 

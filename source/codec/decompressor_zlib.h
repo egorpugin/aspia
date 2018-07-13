@@ -15,7 +15,7 @@ typedef struct zng_stream_s zng_stream;
 
 namespace aspia {
 
-class DecompressorZLIB : public Decompressor
+class ASPIA_CODEC_API DecompressorZLIB : public Decompressor
 {
 public:
     DecompressorZLIB();

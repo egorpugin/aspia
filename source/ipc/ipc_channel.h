@@ -21,7 +21,7 @@ namespace aspia {
 
 class IpcServer;
 
-class IpcChannel : public QObject
+class ASPIA_IPC_API IpcChannel : public QObject
 {
     Q_OBJECT
 

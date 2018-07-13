@@ -14,7 +14,7 @@
 
 namespace aspia {
 
-class CursorDecoder
+class ASPIA_CODEC_API CursorDecoder
 {
 public:
     CursorDecoder() = default;

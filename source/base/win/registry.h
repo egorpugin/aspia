@@ -6,8 +6,7 @@
 // NOTE:            This file based on Chromium code.
 //
 
-#ifndef _ASPIA_BASE__WIN__REGISTRY_H
-#define _ASPIA_BASE__WIN__REGISTRY_H
+#pragma once
 
 #include "base/common.h"
 
@@ -187,5 +186,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__WIN__REGISTRY_H

@@ -18,7 +18,7 @@
 
 namespace aspia {
 
-class DesktopFrame
+class ASPIA_DESKTOP_CAPTURE_API DesktopFrame
 {
 public:
     virtual ~DesktopFrame() = default;

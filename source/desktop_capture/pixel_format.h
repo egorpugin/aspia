@@ -12,7 +12,7 @@
 
 namespace aspia {
 
-class PixelFormat
+class ASPIA_DESKTOP_CAPTURE_API PixelFormat
 {
 public:
     PixelFormat() = default;

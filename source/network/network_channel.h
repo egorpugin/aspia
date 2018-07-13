@@ -21,7 +21,7 @@ namespace aspia {
 class Encryptor;
 class NetworkServer;
 
-class NetworkChannel : public QObject
+class ASPIA_NETWORK_API NetworkChannel : public QObject
 {
     Q_OBJECT
 
@@ -41,7 +41,7 @@ public:
     };
     Q_ENUM(ChannelState);
 
-    ~NetworkChannel() = default;
+    ~NetworkChannel();
 
     static NetworkChannel* createClient(QObject* parent = nullptr);
 

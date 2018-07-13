@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__WIN__SCOPED_USER_OBJECT_H
-#define _ASPIA_BASE__WIN__SCOPED_USER_OBJECT_H
+#pragma once
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -149,5 +148,3 @@ using ScopedHACCEL = ScopedUserObject<HACCEL, DestroyAccelTraits>;
 using ScopedHHOOK = ScopedUserObject<HHOOK, DestroyHookTraits>;
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__WIN__SCOPED_USER_OBJECT_H

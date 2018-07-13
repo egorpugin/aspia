@@ -14,7 +14,7 @@
 
 namespace aspia {
 
-class DesktopFrameAligned : public DesktopFrame
+class ASPIA_DESKTOP_CAPTURE_API DesktopFrameAligned : public DesktopFrame
 {
 public:
     ~DesktopFrameAligned();
