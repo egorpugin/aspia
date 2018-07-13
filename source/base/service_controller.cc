@@ -73,17 +73,20 @@ ServiceController ServiceController::install(const std::string& name,
         return ServiceController();
     }
 
-    std::string normalized_file_path = file_path;
+    auto normalized_file_path = to_wstring(file_path);
     std::replace(normalized_file_path.begin(), normalized_file_path.end(), '/', '\\');
 
+    auto n2 = to_wstring(name);
+    auto d2 = to_wstring(display_name);
+
     ScopedScHandle service(CreateServiceW(sc_manager,
-                                          qUtf16Printable(name.c_str()),
-                                          qUtf16Printable(display_name.c_str()),
+                                          n2.c_str(),
+                                          d2.c_str(),
                                           SERVICE_ALL_ACCESS,
                                           SERVICE_WIN32_OWN_PROCESS,
                                           SERVICE_AUTO_START,
                                           SERVICE_ERROR_NORMAL,
-                                          qUtf16Printable(normalized_file_path.c_str()),
+                                          normalized_file_path.c_str(),
                                           nullptr,
                                           nullptr,
                                           nullptr,

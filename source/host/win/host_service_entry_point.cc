@@ -13,10 +13,10 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
 #endif
 
-int qInitResources_resources();
+//int qInitResources_resources();
 
 int main(int argc, char *argv[])
 {
-    qInitResources_resources();
-    aspia::hostServiceMain(argc, argv);
+    //qInitResources_resources();
+    return aspia::hostServiceMain(argc, argv);
 }

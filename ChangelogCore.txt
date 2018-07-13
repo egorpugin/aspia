@@ -2,3 +2,4 @@
 - Remove BitSet.
 - Replace qt int types with stdint.
 - Remove generated pb files.
+- Split into libraries.
