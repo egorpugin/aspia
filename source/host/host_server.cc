@@ -40,9 +40,6 @@ const char* sessionTypeToString(proto::auth::SessionType session_type)
         case proto::auth::SESSION_TYPE_FILE_TRANSFER:
             return "File Transfer";
 
-        case proto::auth::SESSION_TYPE_SYSTEM_INFO:
-            return "System Information";
-
         default:
             return "Unknown";
     }

@@ -23,6 +23,8 @@ namespace aspia {
 
 namespace {
 
+const char* kReplySlot = "reply";
+
 QString normalizePath(const QString& path)
 {
     QString normalized_path = path;
@@ -173,9 +175,7 @@ void FilePanel::reply(const proto::file_transfer::Request& request,
 
 void FilePanel::refresh()
 {
-    FileRequest* request = FileRequest::driveListRequest();
-    connect(request, &FileRequest::replyReady, this, &FilePanel::reply);
-    emit newRequest(request);
+    emit request(FileRequest::driveListRequest(this, kReplySlot));
 }
 
 void FilePanel::keyPressEvent(QKeyEvent* event)
@@ -237,9 +237,7 @@ void FilePanel::onAddressItemChanged(int index)
         }
     }
 
-    FileRequest* request = FileRequest::fileListRequest(current_path_.toStdString());
-    connect(request, &FileRequest::replyReady, this, &FilePanel::reply);
-    emit newRequest(request);
+    emit request(FileRequest::fileListRequest(this, current_path_.toStdString(), kReplySlot));
 }
 
 void FilePanel::onFileDoubleClicked(QTreeWidgetItem* item, int column)
@@ -271,12 +269,12 @@ void FilePanel::onFileSelectionChanged()
 
 void FilePanel::onFileNameChanged(FileItem* file_item)
 {
-    QString initial_name = file_item->initialName();
-    QString current_name = file_item->currentName();
+    auto initial_name = file_item->initialName().toStdString();
+    auto current_name = file_item->currentName().toStdString();
 
-    if (initial_name.isEmpty()) // New item.
+    if (initial_name.empty()) // New item.
     {
-        if (current_name.isEmpty())
+        if (current_name.empty())
         {
             QMessageBox::warning(this,
                                  tr("Warning"),
@@ -286,19 +284,19 @@ void FilePanel::onFileNameChanged(FileItem* file_item)
             return;
         }
 
-        FileRequest* request = FileRequest::createDirectoryRequest(currentPath().toStdString() + current_name.toStdString());
-        connect(request, &FileRequest::replyReady, this, &FilePanel::reply);
-        emit newRequest(request);
+        emit request(FileRequest::createDirectoryRequest(
+            this, currentPath().toStdString() + current_name, kReplySlot));
     }
     else // Rename item.
     {
         if (current_name == initial_name)
             return;
 
-        FileRequest* request = FileRequest::renameRequest(currentPath().toStdString() + initial_name.toStdString(),
-                                                          currentPath().toStdString() + current_name.toStdString());
-        connect(request, &FileRequest::replyReady, this, &FilePanel::reply);
-        emit newRequest(request);
+        emit request(FileRequest::renameRequest(
+            this,
+            currentPath().toStdString() + initial_name,
+            currentPath().toStdString() + current_name,
+            kReplySlot));
     }
 }
 

@@ -223,57 +223,6 @@ projects:
             set(src ${src} ${uic})
 
 
-    system_info:
-        type: lib
-        files:
-            - system_info/.*
-        dependencies:
-            - base
-
-            - pvt.cppan.demo.qtproject.qt.base.xml: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.widgets
-              ref: WIDGETS
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.core
-              ref: CORE
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
-              ref: MOC_COMMAND
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
-              ref: UIC_COMMAND
-              version: 5
-            - pvt.cppan.demo.google.protobuf.protobuf: 3
-            - name: pvt.cppan.demo.google.protobuf.protoc
-              version: 3
-
-        post_sources: |
-            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
-
-            set(moc ${src})
-            list(FILTER moc INCLUDE REGEX ".h$")
-
-            find_moc_targets(moc ${moc})
-
-            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
-            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
-            list(FILTER moc INCLUDE REGEX ".cpp$")
-            set(src ${src} ${moc})
-
-            #
-            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
-            file(GLOB_RECURSE uis "${SDIR}/system_info/*.ui")
-            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
-            qt5_wrap_ui(uic ${uis})
-            set(src ${src} ${uic})
-
-            #
-            file(GLOB_RECURSE protos "${SDIR}/system_info/*.proto")
-            foreach(f ${protos})
-                cppan_genpb(${f})
-            endforeach()
-
-
     client:
         type: lib
         files:
@@ -285,7 +234,6 @@ projects:
             - network
             # remove from here?
             - resources
-            - system_info
 
             - pvt.cppan.demo.qtproject.qt.winextras: 5
             - pvt.cppan.demo.qtproject.qt.base.xml: 5

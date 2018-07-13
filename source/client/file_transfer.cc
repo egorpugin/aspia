@@ -13,6 +13,13 @@
 
 namespace aspia {
 
+namespace {
+
+const char* kSourceReplySlot = "sourceReply";
+const char* kTargetReplySlot = "targetReply";
+
+} // namespace
+
 FileTransfer::FileTransfer(Type type, QObject* parent)
     : QObject(parent),
       type_(type)
@@ -44,12 +51,12 @@ void FileTransfer::start(const QString& source_path,
 
     if (type_ == Downloader)
     {
-        connect(builder_, &FileTransferQueueBuilder::newRequest, this, &FileTransfer::remoteRequest);
+        connect(builder_, &FileTransferQueueBuilder::request, this, &FileTransfer::remoteRequest);
     }
     else
     {
         Q_ASSERT(type_ == Uploader);
-        connect(builder_, &FileTransferQueueBuilder::newRequest, this, &FileTransfer::localRequest);
+        connect(builder_, &FileTransferQueueBuilder::request, this, &FileTransfer::localRequest);
     }
 
     connect(builder_, &FileTransferQueueBuilder::finished,
@@ -111,9 +118,7 @@ void FileTransfer::targetReply(const proto::file_transfer::Request& request,
             return;
         }
 
-        FileRequest* request = FileRequest::packetRequest();
-        connect(request, &FileRequest::replyReady, this, &FileTransfer::sourceReply);
-        sourceRequest(request);
+        sourceRequest(FileRequest::packetRequest(this, kSourceReplySlot));
     }
     else if (request.has_packet())
     {
@@ -151,9 +156,7 @@ void FileTransfer::targetReply(const proto::file_transfer::Request& request,
             return;
         }
 
-        FileRequest* request = FileRequest::packetRequest();
-        connect(request, &FileRequest::replyReady, this, &FileTransfer::sourceReply);
-        sourceRequest(request);
+        sourceRequest(FileRequest::packetRequest(this, kSourceReplySlot));
     }
     else
     {
@@ -175,10 +178,11 @@ void FileTransfer::sourceReply(const proto::file_transfer::Request& request,
             return;
         }
 
-        FileRequest* request = FileRequest::uploadRequest(currentTask().targetPath().toStdString(),
-                                                          currentTask().overwrite());
-        connect(request, &FileRequest::replyReady, this, &FileTransfer::targetReply);
-        targetRequest(request);
+        targetRequest(FileRequest::uploadRequest(
+            this,
+            currentTask().targetPath().toStdString(),
+            currentTask().overwrite(),
+            kTargetReplySlot));
     }
     else if (request.has_packet_request())
     {
@@ -191,9 +195,7 @@ void FileTransfer::sourceReply(const proto::file_transfer::Request& request,
             return;
         }
 
-        FileRequest* request = FileRequest::packet(reply.packet());
-        connect(request, &FileRequest::replyReady, this, &FileTransfer::targetReply);
-        targetRequest(request);
+        targetRequest(FileRequest::packet(this, reply.packet(), kTargetReplySlot));
     }
     else
     {
@@ -264,17 +266,9 @@ void FileTransfer::processTask(bool overwrite)
     emit currentItemChanged(task.sourcePath(), task.targetPath());
 
     if (task.isDirectory())
-    {
-        FileRequest* request = FileRequest::createDirectoryRequest(task.targetPath().toStdString());
-        connect(request, &FileRequest::replyReady, this, &FileTransfer::targetReply);
-        targetRequest(request);
-    }
+        targetRequest(FileRequest::createDirectoryRequest(this, task.targetPath().toStdString(), kTargetReplySlot));
     else
-    {
-        FileRequest* request = FileRequest::FileRequest::downloadRequest(task.sourcePath().toStdString());
-        connect(request, &FileRequest::replyReady, this, &FileTransfer::sourceReply);
-        sourceRequest(request);
-    }
+        sourceRequest(FileRequest::downloadRequest(this, task.sourcePath().toStdString(), kSourceReplySlot));
 }
 
 void FileTransfer::processNextTask()
@@ -310,12 +304,12 @@ void FileTransfer::sourceRequest(FileRequest* request)
 {
     if (type_ == Downloader)
     {
-        emit remoteRequest(request);
+        QMetaObject::invokeMethod(this, "remoteRequest", Q_ARG(FileRequest*, request));
     }
     else
     {
         Q_ASSERT(type_ == Uploader);
-        emit localRequest(request);
+        QMetaObject::invokeMethod(this, "localRequest", Q_ARG(FileRequest*, request));
     }
 }
 
@@ -323,12 +317,12 @@ void FileTransfer::targetRequest(FileRequest* request)
 {
     if (type_ == Downloader)
     {
-        emit localRequest(request);
+        QMetaObject::invokeMethod(this, "localRequest", Q_ARG(FileRequest*, request));
     }
     else
     {
         Q_ASSERT(type_ == Uploader);
-        emit remoteRequest(request);
+        QMetaObject::invokeMethod(this, "remoteRequest", Q_ARG(FileRequest*, request));
     }
 }
 
