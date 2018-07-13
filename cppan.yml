@@ -379,7 +379,7 @@ projects:
             qt5_wrap_ui(uic ${uis})
             set(src ${src} ${uic})
 
-    console:
+    aspia_console:
         executable_type: win32
         rc_enabled: false
         files:
@@ -424,7 +424,7 @@ projects:
             set(src ${src} ${uic})
 
 
-    host_config:
+    aspia_host_config:
         executable_type: win32
         rc_enabled: false
         files:
@@ -436,7 +436,7 @@ projects:
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
 
-    host_service:
+    aspia_host_service:
         # service must be win32
         executable_type: win32
         rc_enabled: false
@@ -449,7 +449,7 @@ projects:
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
 
-    host:
+    aspia_host:
         executable_type: win32
         rc_enabled: false
         files:
@@ -461,7 +461,7 @@ projects:
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
 
-    host_notifier:
+    aspia_host_notifier:
         executable_type: win32
         rc_enabled: false
         files:

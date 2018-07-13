@@ -25,7 +25,7 @@ namespace aspia {
 
 int hostNotifierMain(int argc, char *argv[])
 {
-    initLoggerForApplication(argc, argv);
+    //initLoggerForApplication(argc, argv);
 
     int max_attempt_count = 600;
 

@@ -294,7 +294,7 @@ void NetworkChannel::onReadyRead()
             read_size_received_ = false;
             read_ = 0;
 
-            onMessageReceived(read_buffer_.c_str());
+            onMessageReceived(read_buffer_);
             break;
         }
 
@@ -354,13 +354,13 @@ void NetworkChannel::onMessageReceived(const std::string& buffer)
                 return;
             }
 
-            emit messageReceived(encryptor_->decrypt(buffer.data()).c_str());
+            emit messageReceived(encryptor_->decrypt(buffer));
         }
         break;
 
         case Connected:
         {
-            if (!encryptor_->readHelloMessage(buffer.data()))
+            if (!encryptor_->readHelloMessage(buffer))
             {
                 stop();
                 return;
