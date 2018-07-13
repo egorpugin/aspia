@@ -12,6 +12,7 @@
 #include "base/log.h"
 #include "base/errno_logging.h"
 #include "base/message_serialization.h"
+#include "crypto/data_encryptor.h"
 #include "crypto/random.h"
 #include "crypto/secure_memory.h"
 #include "network/network_channel.h"
@@ -33,17 +34,8 @@ std::string generateNonce()
 std::string createSessionKey(const std::string& password_hash, const std::string& nonce)
 {
     auto data = password_hash;
-
-    for (uint32_t i = 0; i < kKeyHashingRounds; ++i)
-    {
-        /*QCryptographicHash hash(QCryptographicHash::Sha512);
-
-        hash.addData(data);
-        hash.addData(nonce);
-
-        data = hash.result();*/
-    }
-
+    for (quint32 i = 0; i < kKeyHashingRounds; ++i)
+        data = sha512(data + nonce);
     return data;
 }
 

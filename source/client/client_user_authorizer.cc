@@ -7,10 +7,9 @@
 
 #include "client/client_user_authorizer.h"
 
-#include <QCryptographicHash>
-
 #include "base/message_serialization.h"
 #include "client/ui/authorization_dialog.h"
+#include "crypto/data_encryptor.h"
 #include "crypto/secure_memory.h"
 
 namespace aspia {
@@ -22,32 +21,19 @@ const quint32 kPasswordHashingRounds = 100000;
 
 enum MessageId { LogonRequest, ClientChallenge };
 
-QByteArray createPasswordHash(const QString& password)
+std::string createPasswordHash(const std::string& password)
 {
-    QByteArray data = password.toUtf8();
-
+    auto data = password;
     for (int i = 0; i < kPasswordHashingRounds; ++i)
-    {
-        data = QCryptographicHash::hash(data, QCryptographicHash::Sha512);
-    }
-
+        data = sha512(data);
     return data;
 }
 
-QByteArray createSessionKey(const QByteArray& password_hash, const QByteArray& nonce)
+std::string createSessionKey(const std::string& password_hash, const std::string& nonce)
 {
-    QByteArray data = password_hash;
-
+    auto data = password_hash;
     for (quint32 i = 0; i < kKeyHashingRounds; ++i)
-    {
-        QCryptographicHash hash(QCryptographicHash::Sha512);
-
-        hash.addData(data);
-        hash.addData(nonce);
-
-        data = hash.result();
-    }
-
+        data = sha512(data + nonce);
     return data;
 }
 
@@ -61,8 +47,8 @@ ClientUserAuthorizer::ClientUserAuthorizer(QWidget* parent)
 
 ClientUserAuthorizer::~ClientUserAuthorizer()
 {
-    secureMemZero(&username_.toStdString());
-    secureMemZero(&password_.toStdString());
+    secureMemZero(&username_);
+    secureMemZero(&password_);
 
     cancel();
 }
@@ -74,12 +60,12 @@ void ClientUserAuthorizer::setSessionType(proto::auth::SessionType session_type)
 
 void ClientUserAuthorizer::setUserName(const QString& username)
 {
-    username_ = username;
+    username_ = username.toStdString();
 }
 
 void ClientUserAuthorizer::setPassword(const QString& password)
 {
-    password_ = password;
+    password_ = password.toStdString();
 }
 
 void ClientUserAuthorizer::start()
@@ -144,21 +130,19 @@ void ClientUserAuthorizer::messageReceived(const std::string& buffer)
 void ClientUserAuthorizer::readServerChallenge(
     const proto::auth::ServerChallenge& server_challenge)
 {
-    QByteArray nonce = QByteArray(server_challenge.nonce().c_str(),
-                                  server_challenge.nonce().size());
-    if (nonce.isEmpty())
+    if (server_challenge.nonce().empty())
     {
         emit errorOccurred(tr("Authorization error: Empty nonce is not allowed."));
         cancel();
         return;
     }
 
-    if (username_.isEmpty() || password_.isEmpty())
+    if (username_.empty() || password_.empty())
     {
         AuthorizationDialog dialog(dynamic_cast<QWidget*>(parent()));
 
-        dialog.setUserName(username_);
-        dialog.setPassword(password_);
+        dialog.setUserName(username_.c_str());
+        dialog.setPassword(password_.c_str());
 
         if (dialog.exec() == AuthorizationDialog::Rejected)
         {
@@ -167,20 +151,20 @@ void ClientUserAuthorizer::readServerChallenge(
             return;
         }
 
-        username_ = dialog.userName();
-        password_ = dialog.password();
+        username_ = dialog.userName().toStdString();
+        password_ = dialog.password().toStdString();
     }
 
-    QByteArray session_key = createSessionKey(createPasswordHash(password_), nonce);
+    auto session_key = createSessionKey(createPasswordHash(password_), server_challenge.nonce());
 
     proto::auth::ClientToHost message;
 
     proto::auth::ClientChallenge* client_challenge = message.mutable_client_challenge();
     client_challenge->set_session_type(session_type_);
-    client_challenge->set_username(username_.toStdString());
-    client_challenge->set_session_key(session_key.constData(), session_key.size());
+    client_challenge->set_username(username_);
+    client_challenge->set_session_key(session_key);
 
-    secureMemZero(&session_key.toStdString());
+    secureMemZero(&session_key);
 
     auto serialized_message = serializeMessage(message);
 

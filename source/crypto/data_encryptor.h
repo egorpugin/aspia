@@ -35,6 +35,9 @@ private:
     DISABLE_COPY(DataEncryptor)
 };
 
+ASPIA_CRYPTO_API
+std::string sha512(const std::string &);
+
 } // namespace aspia
 
 #endif // _ASPIA_CRYPTO__DATA_ENCRYPTOR_H

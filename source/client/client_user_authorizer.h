@@ -27,10 +27,10 @@ public:
     proto::auth::SessionType sessionType() const { return session_type_; }
     void setSessionType(proto::auth::SessionType session_type);
 
-    QString userName() const { return username_; }
+    std::string userName() const { return username_; }
     void setUserName(const QString& username);
 
-    QString password() const { return password_; }
+    std::string password() const { return password_; }
     void setPassword(const QString& password);
 
 public slots:
@@ -51,8 +51,8 @@ private:
 
     State state_ = NotStarted;
     proto::auth::SessionType session_type_ = proto::auth::SESSION_TYPE_UNKNOWN;
-    QString username_;
-    QString password_;
+    std::string username_;
+    std::string password_;
 
     Q_DISABLE_COPY(ClientUserAuthorizer)
 };

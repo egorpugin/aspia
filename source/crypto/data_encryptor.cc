@@ -176,4 +176,13 @@ bool DataEncryptor::decrypt(const char* source_data, int source_size, const std:
     return true;
 }
 
+std::string sha512(const std::string &d)
+{
+    std::string data;
+    data.resize(64);
+    crypto_hash_sha512((uint8_t*)data.data(), (uint8_t*)d.data(), d.size());
+    return data;
+}
+
+
 } // namespace aspia

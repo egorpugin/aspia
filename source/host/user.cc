@@ -7,9 +7,9 @@
 
 #include "host/user.h"
 
-#include <QCryptographicHash>
 #include <qchar.h>
 
+#include "crypto/data_encryptor.h"
 #include "crypto/secure_memory.h"
 
 namespace aspia {
@@ -47,12 +47,8 @@ std::string createPasswordHash(const std::string& password)
     static const int kIterCount = 100000;
 
     auto data = password;
-
-    for (int i = 0; i < kIterCount; ++i)
-    {
-        data = QCryptographicHash::hash(data.c_str(), QCryptographicHash::Sha512);
-    }
-
+    for (quint32 i = 0; i < kIterCount; ++i)
+        data = sha512(data);
     return data;
 }
 
