@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__ABOUT_DIALOG_H
 #define _ASPIA_CONSOLE__ABOUT_DIALOG_H
 
-#include "base/common.h"
-
 #include "ui_about_dialog.h"
 
 namespace aspia {
@@ -25,7 +23,7 @@ public:
 private:
     Ui::AboutDialog ui;
 
-    DISABLE_COPY(AboutDialog)
+    Q_DISABLE_COPY(AboutDialog)
 };
 
 } // namespace aspia

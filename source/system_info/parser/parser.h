@@ -25,20 +25,20 @@ public:
     virtual QJsonObject toJson() = 0;
     virtual QDomElement toXml() = 0;
     virtual QDomElement toHtml() = 0;
-    virtual QString toText() = 0;
+    virtual std::string toText() = 0;
 
-    QString uuid() const { return uuid_; }
+    std::string uuid() const { return uuid_; }
 
 public slots:
     virtual void updateData() const = 0;
-    virtual void readReply(const QString& uuid, const QByteArray& data) = 0;
+    virtual void readReply(const std::string& uuid, const QByteArray& data) = 0;
 
 signals:
     void sendRequest(SystemInfoRequest* request);
     void dataUpdated();
 
 protected:
-    Parser(QObject* parent, const QString& uuid)
+    Parser(QObject* parent, const std::string& uuid)
         : QObject(parent),
           uuid_(uuid)
     {
@@ -46,7 +46,7 @@ protected:
     }
 
 private:
-    QString uuid_;
+    std::string uuid_;
 };
 
 } // namespace aspia

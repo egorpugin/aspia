@@ -76,7 +76,7 @@ private:
     Action failure_action_ = Ask;
     int tasks_count_ = 0;
 
-    DISABLE_COPY(FileRemover)
+    Q_DISABLE_COPY(FileRemover)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(FileRemover::Actions)

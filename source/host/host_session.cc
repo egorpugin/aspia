@@ -9,6 +9,7 @@
 
 #include <QCoreApplication>
 
+#include "base/errno_logging.h"
 #include "host/host_session_desktop.h"
 #include "host/host_session_file_transfer.h"
 #include "host/host_session_system_info.h"
@@ -16,34 +17,34 @@
 
 namespace aspia {
 
-HostSession::HostSession(const QString& channel_id)
+HostSession::HostSession(const std::string& channel_id)
     : channel_id_(channel_id)
 {
     // Nothing
 }
 
 // static
-HostSession* HostSession::create(const QString& session_type, const QString& channel_id)
+HostSession* HostSession::create(const std::string& session_type, const std::string& channel_id)
 {
-    if (channel_id.isEmpty())
+    if (channel_id.empty())
     {
         qWarning("Invalid IPC channel id");
         return nullptr;
     }
 
-    if (session_type == QLatin1String("desktop_manage"))
+    if (session_type == ("desktop_manage"))
     {
         return new HostSessionDesktop(proto::auth::SESSION_TYPE_DESKTOP_MANAGE, channel_id);
     }
-    else if (session_type == QLatin1String("desktop_view"))
+    else if (session_type == ("desktop_view"))
     {
         return new HostSessionDesktop(proto::auth::SESSION_TYPE_DESKTOP_VIEW, channel_id);
     }
-    else if (session_type == QLatin1String("file_transfer"))
+    else if (session_type == ("file_transfer"))
     {
         return new HostSessionFileTransfer(channel_id);
     }
-    else if (session_type == QLatin1String("system_info"))
+    else if (session_type == ("system_info"))
     {
         return new HostSessionSystemInfo(channel_id);
     }

@@ -24,9 +24,9 @@ public:
 
     bool isWritable() const;
 
-    static QString defaultLocale();
-    QString locale() const;
-    void setLocale(const QString& locale);
+    static std::string defaultLocale();
+    std::string locale() const;
+    void setLocale(const std::string& locale);
 
     int tcpPort() const;
     bool setTcpPort(int port);

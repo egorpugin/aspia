@@ -41,7 +41,7 @@ private slots:
     void onNewConnection();
     void onAuthorizationFinished(HostUserAuthorizer* authorizer);
     void onHostFinished(Host* host);
-    void onIpcServerStarted(const QString& channel_id);
+    void onIpcServerStarted(const std::string& channel_id);
     void onIpcNewConnection(IpcChannel* channel);
     void onIpcMessageReceived(const QByteArray& buffer);
     void onNotifierProcessError(HostProcess::ErrorCode error_code);

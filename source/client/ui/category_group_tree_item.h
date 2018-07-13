@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CLIENT__UI__CATEGORY_GROUP_TREE_ITEM_H
 #define _ASPIA_CLIENT__UI__CATEGORY_GROUP_TREE_ITEM_H
 
-#include "base/common.h"
-
 #include <QTreeWidget>
 
 #include "system_info/category.h"
@@ -26,7 +24,7 @@ public:
 private:
     CategoryGroup category_group_;
 
-    DISABLE_COPY(CategoryGroupTreeItem)
+    Q_DISABLE_COPY(CategoryGroupTreeItem)
 };
 
 } // namespace aspia

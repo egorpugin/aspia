@@ -19,7 +19,7 @@ class HostSessionFileTransfer : public HostSession
     Q_OBJECT
 
 public:
-    explicit HostSessionFileTransfer(const QString& channel_id);
+    explicit HostSessionFileTransfer(const std::string& channel_id);
     ~HostSessionFileTransfer() = default;
 
 public slots:

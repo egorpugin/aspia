@@ -26,7 +26,7 @@ HostConfigDialog::HostConfigDialog(QWidget* parent)
 {
     HostSettings settings;
 
-    QString current_locale = settings.locale();
+    std::string current_locale = settings.locale();
 
     if (!locale_loader_.contains(current_locale))
     {
@@ -143,7 +143,7 @@ void HostConfigDialog::onDeleteUser()
     if (QMessageBox::question(this,
                               tr("Confirmation"),
                               tr("Are you sure you want to delete user \"%1\"?")
-                                  .arg(user_item->user()->name()),
+                                  .arg(user_item->user()->name().c_str()),
                               QMessageBox::Yes,
                               QMessageBox::No) == QMessageBox::Yes)
     {
@@ -164,7 +164,7 @@ void HostConfigDialog::onButtonBoxClicked(QAbstractButton* button)
 
         if (!settings.isWritable())
         {
-            QString message =
+            auto message =
                 tr("The configuration can not be written. "
                    "Make sure that you have sufficient rights to write.");
 
@@ -172,18 +172,18 @@ void HostConfigDialog::onButtonBoxClicked(QAbstractButton* button)
             return;
         }
 
-        QString new_locale = ui.combobox_language->currentData().toString();
+        auto new_locale = ui.combobox_language->currentData().toString();
 
         if (standard_button == QDialogButtonBox::Apply)
-            retranslateUi(new_locale);
+            retranslateUi(new_locale.toStdString());
 
-        settings.setLocale(new_locale);
+        settings.setLocale(new_locale.toStdString());
         settings.setTcpPort(ui.spinbox_port->value());
         settings.setUserList(user_list_);
 
         if (isServiceStarted())
         {
-            QString message =
+            auto message =
                 tr("Service configuration changed. "
                    "For the changes to take effect, you must restart the service. "
                    "Restart the service now?");
@@ -223,19 +223,19 @@ void HostConfigDialog::onButtonBoxClicked(QAbstractButton* button)
     close();
 }
 
-void HostConfigDialog::createLanguageList(const QString& current_locale)
+void HostConfigDialog::createLanguageList(const std::string& current_locale)
 {
     for (const auto& locale : locale_loader_.sortedLocaleList())
     {
-        const QString language = QLocale::languageToString(QLocale(locale).language());
+        const auto language = QLocale::languageToString(QLocale(locale).language());
 
         ui.combobox_language->addItem(language, locale);
-        if (current_locale == locale)
+        if (current_locale == locale.toStdString())
             ui.combobox_language->setCurrentText(language);
     }
 }
 
-void HostConfigDialog::retranslateUi(const QString& locale)
+void HostConfigDialog::retranslateUi(const std::string& locale)
 {
     locale_loader_.installTranslators(locale);
     ui.retranslateUi(this);

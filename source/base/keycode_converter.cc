@@ -14,7 +14,7 @@ namespace aspia {
 
 namespace {
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
 #define USB_KEYMAP(usb, evdev, xkb, win, mac, qt) {usb, win, qt}
 #elif defined(Q_OS_LINUX)
 #define USB_KEYMAP(usb, evdev, xkb, win, mac, qt) {usb, xkb, qt}

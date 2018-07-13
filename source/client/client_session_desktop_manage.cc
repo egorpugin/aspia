@@ -15,12 +15,12 @@ namespace aspia {
 
 namespace {
 
-const uint32_t kSupportedVideoEncodings =
+const quint32 kSupportedVideoEncodings =
     proto::desktop::VIDEO_ENCODING_ZLIB |
     proto::desktop::VIDEO_ENCODING_VP8 |
     proto::desktop::VIDEO_ENCODING_VP9;
 
-const uint32_t kSupportedFeatures =
+const quint32 kSupportedFeatures =
     proto::desktop::FEATURE_CURSOR_SHAPE |
     proto::desktop::FEATURE_CLIPBOARD;
 
@@ -41,13 +41,13 @@ ClientSessionDesktopManage::ClientSessionDesktopManage(ConnectData* connect_data
 }
 
 // static
-uint32_t ClientSessionDesktopManage::supportedVideoEncodings()
+quint32 ClientSessionDesktopManage::supportedVideoEncodings()
 {
     return kSupportedVideoEncodings;
 }
 
 // static
-uint32_t ClientSessionDesktopManage::supportedFeatures()
+quint32 ClientSessionDesktopManage::supportedFeatures()
 {
     return kSupportedFeatures;
 }
@@ -102,7 +102,7 @@ void ClientSessionDesktopManage::onSendConfig(const proto::desktop::Config& conf
     emit writeMessage(-1, serializeMessage(message));
 }
 
-void ClientSessionDesktopManage::onSendKeyEvent(uint32_t usb_keycode, uint32_t flags)
+void ClientSessionDesktopManage::onSendKeyEvent(quint32 usb_keycode, quint32 flags)
 {
     proto::desktop::ClientToHost message;
 
@@ -113,7 +113,7 @@ void ClientSessionDesktopManage::onSendKeyEvent(uint32_t usb_keycode, uint32_t f
     emit writeMessage(-1, serializeMessage(message));
 }
 
-void ClientSessionDesktopManage::onSendPointerEvent(const QPoint& pos, uint32_t mask)
+void ClientSessionDesktopManage::onSendPointerEvent(const QPoint& pos, quint32 mask)
 {
     proto::desktop::ClientToHost message;
 
@@ -127,7 +127,7 @@ void ClientSessionDesktopManage::onSendPointerEvent(const QPoint& pos, uint32_t 
 
 void ClientSessionDesktopManage::onSendClipboardEvent(const proto::desktop::ClipboardEvent& event)
 {
-    uint32_t features = connect_data_->desktopConfig().features();
+    quint32 features = connect_data_->desktopConfig().features();
     if (!(features & proto::desktop::FEATURE_CLIPBOARD))
         return;
 
@@ -169,7 +169,7 @@ void ClientSessionDesktopManage::readConfigRequest(
 
 void ClientSessionDesktopManage::readCursorShape(const proto::desktop::CursorShape& cursor_shape)
 {
-    uint32_t features = connect_data_->desktopConfig().features();
+    quint32 features = connect_data_->desktopConfig().features();
     if (!(features & proto::desktop::FEATURE_CURSOR_SHAPE))
         return;
 
@@ -195,7 +195,7 @@ void ClientSessionDesktopManage::readCursorShape(const proto::desktop::CursorSha
 void ClientSessionDesktopManage::readClipboardEvent(
     const proto::desktop::ClipboardEvent& clipboard_event)
 {
-    uint32_t features = connect_data_->desktopConfig().features();
+    quint32 features = connect_data_->desktopConfig().features();
     if (!(features & proto::desktop::FEATURE_CLIPBOARD))
         return;
 

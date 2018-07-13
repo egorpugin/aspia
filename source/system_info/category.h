@@ -26,7 +26,7 @@ public:
     static QList<CategoryGroup> rootGroups();
 
     QIcon icon() const;
-    QString name() const;
+    std::string name() const;
     QList<CategoryGroup> childGroupList() const;
     QList<Category> childCategoryList() const;
 
@@ -44,8 +44,8 @@ public:
     static QList<Category> all();
 
     QIcon icon() const;
-    QString name() const;
-    QString uuid() const;
+    std::string name() const;
+    std::string uuid() const;
 
     Serializer* serializer(QObject* parent) const;
     Parser* parser(QObject* parent) const;

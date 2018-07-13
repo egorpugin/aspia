@@ -31,8 +31,8 @@ private slots:
     void onButtonBoxClicked(QAbstractButton* button);
 
 private:
-    void createLanguageList(const QString& current_locale);
-    void retranslateUi(const QString& locale);
+    void createLanguageList(const std::string& current_locale);
+    void retranslateUi(const std::string& locale);
     void setConfigChanged(bool changed);
     bool isConfigChanged() const;
     void reloadUserList();

@@ -17,7 +17,7 @@ namespace aspia {
 namespace {
 
 constexpr uint32_t kMaxMessageSize = 16 * 1024 * 1024; // 16MB
-constexpr qint64 kMaxWriteSize = 1200;
+constexpr int64_t kMaxWriteSize = 1200;
 
 QByteArray createWriteBuffer(const QByteArray& message_buffer)
 {
@@ -84,7 +84,7 @@ NetworkChannel* NetworkChannel::createClient(QObject* parent)
     return new NetworkChannel(ClientChannel, new QTcpSocket(), parent);
 }
 
-void NetworkChannel::connectToHost(const QString& address, int port)
+void NetworkChannel::connectToHost(const std::string& address, int port)
 {
     if (channel_type_ == ServerChannel)
     {
@@ -92,19 +92,19 @@ void NetworkChannel::connectToHost(const QString& address, int port)
         return;
     }
 
-    socket_->connectToHost(address, port);
+    socket_->connectToHost(address.c_str(), port);
 }
 
-QString NetworkChannel::peerAddress() const
+std::string NetworkChannel::peerAddress() const
 {
     QHostAddress address = socket_->peerAddress();
 
     bool ok = false;
     QHostAddress ipv4_address(address.toIPv4Address(&ok));
     if (ok)
-        return ipv4_address.toString();
+        return ipv4_address.toString().toStdString();
 
-    return address.toString();
+    return address.toString().toStdString();
 }
 
 void NetworkChannel::readMessage()
@@ -193,7 +193,7 @@ void NetworkChannel::onError(QAbstractSocket::SocketError /* error */)
     emit errorOccurred(socket_->errorString());
 }
 
-void NetworkChannel::onBytesWritten(qint64 bytes)
+void NetworkChannel::onBytesWritten(int64_t bytes)
 {
     written_ += bytes;
 
@@ -201,7 +201,7 @@ void NetworkChannel::onBytesWritten(qint64 bytes)
 
     if (written_ < write_buffer.size())
     {
-        qint64 bytes_to_write = qMin(write_buffer.size() - written_, kMaxWriteSize);
+        int64_t bytes_to_write = qMin(write_buffer.size() - written_, kMaxWriteSize);
         socket_->write(write_buffer.constData() + written_, bytes_to_write);
     }
     else
@@ -221,7 +221,7 @@ void NetworkChannel::onReadyRead()
     if (!read_required_)
         return;
 
-    qint64 current;
+    int64_t current;
 
     for (;;)
     {

@@ -8,11 +8,9 @@
 #ifndef _ASPIA_HOST__HOST_CONFIG_MAIN_H
 #define _ASPIA_HOST__HOST_CONFIG_MAIN_H
 
-#include "core_export.h"
-
 namespace aspia {
 
-int CORE_EXPORT hostConfigMain(int argc, char *argv[]);
+int hostConfigMain(int argc, char *argv[]);
 
 } // namespace aspia
 

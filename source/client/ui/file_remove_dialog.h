@@ -28,7 +28,7 @@ public slots:
 private:
     Ui::FileRemoveDialog ui;
 
-    DISABLE_COPY(FileRemoveDialog)
+    Q_DISABLE_COPY(FileRemoveDialog)
 };
 
 } // namespace aspia

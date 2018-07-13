@@ -31,7 +31,7 @@ private:
 
     bool task_queue_building_ = true;
 
-    DISABLE_COPY(FileTransferDialog)
+    Q_DISABLE_COPY(FileTransferDialog)
 };
 
 } // namespace aspia

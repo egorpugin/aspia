@@ -26,7 +26,7 @@ HostProcess::~HostProcess()
 
 void HostProcess::start(uint32_t session_id,
                         Account account,
-                        const QString& program,
+                        const std::string& program,
                         const QStringList& arguments)
 {
     if (impl_->state_ != NotRunning)
@@ -75,12 +75,12 @@ void HostProcess::setAccount(Account account)
     impl_->account_ = account;
 }
 
-QString HostProcess::program() const
+std::string HostProcess::program() const
 {
     return impl_->program_;
 }
 
-void HostProcess::setProgram(const QString& program)
+void HostProcess::setProgram(const std::string& program)
 {
     if (impl_->state_ != NotRunning)
     {

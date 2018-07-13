@@ -21,11 +21,11 @@ UserDialog::UserDialog(QList<User>* user_list, User* user, QWidget* parent)
 {
     ui.setupUi(this);
 
-    ui.edit_username->setText(user_->name());
+    ui.edit_username->setText(user_->name().c_str());
 
-    if (!user->passwordHash().isEmpty())
+    if (!user->passwordHash().empty())
     {
-        QString text = tr("Double-click to change");
+        auto text = tr("Double-click to change");
 
         ui.edit_password->setText(text);
         ui.edit_password_repeat->setText(text);
@@ -48,7 +48,7 @@ UserDialog::UserDialog(QList<User>* user_list, User* user, QWidget* parent)
     ui.checkbox_disable_user->setChecked(!(user_->flags() & User::FLAG_ENABLED));
 
     auto add_session_type = [&](const QIcon& icon,
-                                const QString& name,
+                                const auto& name,
                                 proto::auth::SessionType session_type)
     {
         QTreeWidgetItem* item = new QTreeWidgetItem();
@@ -131,8 +131,8 @@ void UserDialog::onButtonBoxClicked(QAbstractButton* button)
 {
     if (ui.button_box->standardButton(button) == QDialogButtonBox::Ok)
     {
-        QString name = ui.edit_username->text();
-        if (!User::isValidName(name))
+        auto name = ui.edit_username->text();
+        if (!User::isValidName(name.toStdString()))
         {
             QMessageBox::warning(this,
                                  tr("Warning"),
@@ -142,11 +142,11 @@ void UserDialog::onButtonBoxClicked(QAbstractButton* button)
             return;
         }
 
-        if (name.compare(user_->name(), Qt::CaseInsensitive) != 0)
+        if (name.compare(user_->name().c_str(), Qt::CaseInsensitive) != 0)
         {
             for (const auto& user : *user_list_)
             {
-                if (name.compare(user.name(), Qt::CaseInsensitive) == 0)
+                if (name.compare(user.name().c_str(), Qt::CaseInsensitive) == 0)
                 {
                     QMessageBox::warning(this,
                                          tr("Warning"),
@@ -159,8 +159,8 @@ void UserDialog::onButtonBoxClicked(QAbstractButton* button)
 
         if (password_changed_)
         {
-            QString password = ui.edit_password->text();
-            QString password_repeat = ui.edit_password_repeat->text();
+            auto password = ui.edit_password->text();
+            auto password_repeat = ui.edit_password_repeat->text();
 
             if (password != password_repeat)
             {
@@ -171,8 +171,8 @@ void UserDialog::onButtonBoxClicked(QAbstractButton* button)
                 return;
             }
 
-            
-            if (!User::isValidPassword(password))
+
+            if (!User::isValidPassword(password.toStdString()))
             {
                 QMessageBox::warning(this,
                                      tr("Warning"),
@@ -182,7 +182,7 @@ void UserDialog::onButtonBoxClicked(QAbstractButton* button)
                 return;
             }
 
-            user_->setPassword(password);
+            user_->setPassword(password.toStdString());
         }
 
         uint32_t flags = 0;
@@ -197,7 +197,7 @@ void UserDialog::onButtonBoxClicked(QAbstractButton* button)
                 sessions |= item->data(0, Qt::UserRole).toInt();
         }
 
-        user_->setName(name);
+        user_->setName(name.toStdString());
         user_->setFlags(flags);
         user_->setSessions(sessions);
 

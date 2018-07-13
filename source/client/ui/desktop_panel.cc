@@ -62,7 +62,7 @@ DesktopPanel::DesktopPanel(proto::auth::SessionType session_type, QWidget* paren
     }
     else
     {
-        assert(session_type == proto::auth::SESSION_TYPE_DESKTOP_VIEW);
+        Q_ASSERT(session_type == proto::auth::SESSION_TYPE_DESKTOP_VIEW);
 
         ui.button_send_keys->hide();
         ui.button_ctrl_alt_del->hide();

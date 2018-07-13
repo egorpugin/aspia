@@ -9,14 +9,14 @@
 
 namespace aspia {
 
-DmiParser::DmiParser(QObject* parent, const QString& uuid)
+DmiParser::DmiParser(QObject* parent, const std::string& uuid)
     : Parser(parent, uuid)
 {
     // Nothing
 }
 
 // static
-Parser* DmiParser::create(QObject* parent, const QString& uuid)
+Parser* DmiParser::create(QObject* parent, const std::string& uuid)
 {
     return new DmiParser(parent, uuid);
 }
@@ -39,10 +39,10 @@ QDomElement DmiParser::toHtml()
     return QDomElement();
 }
 
-QString DmiParser::toText()
+std::string DmiParser::toText()
 {
     // TODO
-    return QString();
+    return std::string();
 }
 
 void DmiParser::updateData() const
@@ -50,7 +50,7 @@ void DmiParser::updateData() const
     // TODO
 }
 
-void DmiParser::readReply(const QString& uuid, const QByteArray& data)
+void DmiParser::readReply(const std::string& uuid, const QByteArray& data)
 {
     // TODO
 }

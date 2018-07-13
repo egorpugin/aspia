@@ -19,10 +19,10 @@ class Serializer : public QObject
     Q_OBJECT
 
 public:
-    QString categoryUuid() const { return category_uuid_; }
+    std::string categoryUuid() const { return category_uuid_; }
 
-    void setRequestUuid(const QString& uuid) { request_uuid_ = uuid; }
-    QString requestUuid() const { return request_uuid_; }
+    void setRequestUuid(const std::string& uuid) { request_uuid_ = uuid; }
+    std::string requestUuid() const { return request_uuid_; }
 
     void setParams(const QByteArray& params) { params_ = params; }
     QByteArray params() const { return params_; }
@@ -31,16 +31,16 @@ public slots:
     virtual void start() = 0;
 
 signals:
-    void replyReady(const QString& request_uuid, const QByteArray& data);
+    void replyReady(const std::string& request_uuid, const QByteArray& data);
     void finished();
 
 protected:
-    Serializer(QObject* parent, const QString& uuid);
+    Serializer(QObject* parent, const std::string& uuid);
     void onReady(const google::protobuf::MessageLite& message);
 
 private:
-    const QString category_uuid_;
-    QString request_uuid_;
+    const std::string category_uuid_;
+    std::string request_uuid_;
     QByteArray params_;
 };
 

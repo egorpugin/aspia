@@ -237,7 +237,7 @@ void FilePanel::onAddressItemChanged(int index)
         }
     }
 
-    FileRequest* request = FileRequest::fileListRequest(current_path_);
+    FileRequest* request = FileRequest::fileListRequest(current_path_.toStdString());
     connect(request, &FileRequest::replyReady, this, &FilePanel::reply);
     emit newRequest(request);
 }
@@ -286,7 +286,7 @@ void FilePanel::onFileNameChanged(FileItem* file_item)
             return;
         }
 
-        FileRequest* request = FileRequest::createDirectoryRequest(currentPath() + current_name);
+        FileRequest* request = FileRequest::createDirectoryRequest(currentPath().toStdString() + current_name.toStdString());
         connect(request, &FileRequest::replyReady, this, &FilePanel::reply);
         emit newRequest(request);
     }
@@ -295,8 +295,8 @@ void FilePanel::onFileNameChanged(FileItem* file_item)
         if (current_name == initial_name)
             return;
 
-        FileRequest* request = FileRequest::renameRequest(currentPath() + initial_name,
-                                                          currentPath() + current_name);
+        FileRequest* request = FileRequest::renameRequest(currentPath().toStdString() + initial_name.toStdString(),
+                                                          currentPath().toStdString() + current_name.toStdString());
         connect(request, &FileRequest::replyReady, this, &FilePanel::reply);
         emit newRequest(request);
     }

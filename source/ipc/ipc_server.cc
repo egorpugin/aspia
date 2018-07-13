@@ -56,7 +56,7 @@ void IpcServer::start()
 
     connect(server_, &QLocalServer::newConnection, this, &IpcServer::onNewConnection);
 
-    QString channel_id = generateUniqueChannelId();
+    auto channel_id = generateUniqueChannelId();
 
     if (!server_->listen(channel_id))
     {
@@ -66,7 +66,7 @@ void IpcServer::start()
         return;
     }
 
-    emit started(channel_id);
+    emit started(channel_id.toStdString());
 }
 
 void IpcServer::stop()

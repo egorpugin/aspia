@@ -12,7 +12,7 @@
 
 #include <QIcon>
 #include <QPair>
-#include <QString>
+#include "base/common.h"
 
 #include "protocol/file_transfer_session.pb.h"
 
@@ -22,14 +22,14 @@ class FilePlatformUtil
 {
 public:
     // Returns a pair of icons for the file type and a description of the file type.
-    static QPair<QIcon, QString> fileTypeInfo(const QString& file_name);
+    static QPair<QIcon, std::string> fileTypeInfo(const std::string& file_name);
 
     // The methods below return the appropriate icons.
     static QIcon computerIcon();
     static QIcon directoryIcon();
 
     static QIcon driveIcon(proto::file_transfer::DriveList::Item::Type type);
-    static proto::file_transfer::DriveList::Item::Type driveType(const QString& drive_path);
+    static proto::file_transfer::DriveList::Item::Type driveType(const std::string& drive_path);
 
 private:
     DISABLE_COPY(FilePlatformUtil)

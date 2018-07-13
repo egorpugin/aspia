@@ -167,13 +167,13 @@ HostProcess::ErrorCode createLoggedOnUserToken(DWORD session_id, ScopedHandle* t
     return error_code;
 }
 
-QString createCommandLine(const QString& program, const QStringList& arguments)
+auto createCommandLine(const QString& program, const QStringList& arguments)
 {
     QString args;
 
     if (!program.isEmpty())
     {
-        QString program_name = program;
+        auto program_name = program;
 
         if (!program_name.startsWith(QLatin1Char('\"')) &&
             !program_name.endsWith(QLatin1Char('\"')) &&
@@ -189,7 +189,7 @@ QString createCommandLine(const QString& program, const QStringList& arguments)
 
     for (int i = 0; i < arguments.size(); ++i)
     {
-        QString tmp = arguments.at(i);
+        auto tmp = arguments.at(i);
 
         // Quotes are escaped and their preceding backslashes are doubled.
         tmp.replace(QRegExp(QLatin1String("(\\\\*)\"")), QLatin1String("\\1\\1\\\""));
@@ -299,11 +299,11 @@ bool HostProcessImpl::startProcessWithToken(HANDLE token)
     PROCESS_INFORMATION process_info;
     memset(&process_info, 0, sizeof(process_info));
 
-    QString command_line = createCommandLine(program_, arguments_);
+    auto command_line = createCommandLine(program_.c_str(), arguments_).toStdWString();
 
     if (!CreateProcessAsUserW(token,
                               nullptr,
-                              const_cast<wchar_t*>(qUtf16Printable(command_line)),
+                              const_cast<wchar_t*>(command_line.c_str()),
                               nullptr,
                               nullptr,
                               FALSE,

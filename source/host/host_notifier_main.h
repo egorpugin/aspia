@@ -8,11 +8,9 @@
 #ifndef _ASPIA_HOST__HOST_NOTIFIER_MAIN_H
 #define _ASPIA_HOST__HOST_NOTIFIER_MAIN_H
 
-#include "core_export.h"
-
 namespace aspia {
 
-int CORE_EXPORT hostNotifierMain(int argc, char *argv[]);
+int hostNotifierMain(int argc, char *argv[]);
 
 } // namespace aspia
 

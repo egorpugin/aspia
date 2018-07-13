@@ -88,7 +88,7 @@ void SystemInfoWindow::onCategoryListReceived(const proto::system_info::Reply& r
 
         for (const auto& category : parent_group.childCategoryList())
         {
-            if (supported_categories.contains(category.uuid()))
+            if (supported_categories.contains(category.uuid().c_str()))
                 items.append(new CategoryTreeItem(category));
         }
 

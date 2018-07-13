@@ -9,7 +9,7 @@
 
 namespace aspia {
 
-Serializer::Serializer(QObject* parent, const QString& uuid)
+Serializer::Serializer(QObject* parent, const std::string& uuid)
     : QObject(parent),
       category_uuid_(uuid)
 {

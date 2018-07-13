@@ -34,7 +34,7 @@ public:
     NetworkChannel* networkChannel() { return network_channel_; }
     proto::auth::Status status() const { return status_; }
     proto::auth::SessionType sessionType() const { return session_type_; }
-    QString userName() const { return user_name_; }
+    std::string userName() const { return user_name_; }
 
 public slots:
     void start();
@@ -59,7 +59,7 @@ private:
     void writeServerChallenge(const QByteArray& nonce);
     void writeLogonResult(proto::auth::Status status);
 
-    proto::auth::Status doBasicAuthorization(const QString& user_name,
+    proto::auth::Status doBasicAuthorization(const std::string& user_name,
                                              const QByteArray& session_key,
                                              proto::auth::SessionType session_type);
 
@@ -68,7 +68,7 @@ private:
     QList<User> user_list_;
     QPointer<NetworkChannel> network_channel_;
 
-    QString user_name_;
+    std::string user_name_;
     QByteArray nonce_;
     int timer_id_ = 0;
 

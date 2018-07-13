@@ -12,7 +12,7 @@
 
 #include <QObject>
 #include <QPointer>
-#include <QString>
+#include "base/common.h"
 
 #include "protocol/file_transfer_session.pb.h"
 
@@ -27,12 +27,12 @@ public:
     void sendReply(const proto::file_transfer::Reply& reply);
 
     static FileRequest* driveListRequest();
-    static FileRequest* fileListRequest(const QString& path);
-    static FileRequest* createDirectoryRequest(const QString& path);
-    static FileRequest* renameRequest(const QString& old_name, const QString& new_name);
-    static FileRequest* removeRequest(const QString& path);
-    static FileRequest* downloadRequest(const QString& file_path);
-    static FileRequest* uploadRequest(const QString& file_path, bool overwrite);
+    static FileRequest* fileListRequest(const std::string& path);
+    static FileRequest* createDirectoryRequest(const std::string& path);
+    static FileRequest* renameRequest(const std::string& old_name, const std::string& new_name);
+    static FileRequest* removeRequest(const std::string& path);
+    static FileRequest* downloadRequest(const std::string& file_path);
+    static FileRequest* uploadRequest(const std::string& file_path, bool overwrite);
     static FileRequest* packetRequest();
     static FileRequest* packet(const proto::file_transfer::Packet& packet);
 

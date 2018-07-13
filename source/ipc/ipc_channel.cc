@@ -49,9 +49,9 @@ IpcChannel* IpcChannel::createClient(QObject* parent)
     return new IpcChannel(new QLocalSocket(), parent);
 }
 
-void IpcChannel::connectToServer(const QString& channel_name)
+void IpcChannel::connectToServer(const std::string& channel_name)
 {
-    socket_->connectToServer(channel_name);
+    socket_->connectToServer(channel_name.c_str());
 }
 
 void IpcChannel::stop()
@@ -91,7 +91,7 @@ void IpcChannel::onError(QLocalSocket::LocalSocketError /* socket_error */)
     emit errorOccurred();
 }
 
-void IpcChannel::onBytesWritten(qint64 bytes)
+void IpcChannel::onBytesWritten(int64_t bytes)
 {
     const QByteArray& write_buffer = write_queue_.front().second;
 
@@ -127,7 +127,7 @@ void IpcChannel::onReadyRead()
     if (!read_required_)
         return;
 
-    qint64 current;
+    int64_t current;
 
     for (;;)
     {

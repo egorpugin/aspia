@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CLIENT__CLIENT_SESSION_SYSTEM_INFO_H
 #define _ASPIA_CLIENT__CLIENT_SESSION_SYSTEM_INFO_H
 
-#include "base/common.h"
-
 #include "client/client_session.h"
 #include "client/connect_data.h"
 #include "host/system_info_request.h"
@@ -48,7 +46,7 @@ private:
     std::unique_ptr<SystemInfoWindow> window_;
     std::list<std::unique_ptr<SystemInfoRequest>> requests_;
 
-    DISABLE_COPY(ClientSessionSystemInfo)
+    Q_DISABLE_COPY(ClientSessionSystemInfo)
 };
 
 } // namespace aspia

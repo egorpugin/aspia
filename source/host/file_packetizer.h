@@ -26,7 +26,7 @@ public:
     // Creates an instance of the class.
     // Parameter |file_path| contains the full path to the file.
     // If the specified file can not be opened for reading, then returns nullptr.
-    static std::unique_ptr<FilePacketizer> create(const QString& file_path);
+    static std::unique_ptr<FilePacketizer> create(const std::string& file_path);
 
     // Creates a packet for transferring.
     std::unique_ptr<proto::file_transfer::Packet> readNextPacket();
@@ -36,8 +36,8 @@ private:
 
     QPointer<QFile> file_;
 
-    qint64 file_size_ = 0;
-    qint64 left_size_ = 0;
+    int64_t file_size_ = 0;
+    int64_t left_size_ = 0;
 
     DISABLE_COPY(FilePacketizer)
 };

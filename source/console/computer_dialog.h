@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__COMPUTER_DIALOG_H
 #define _ASPIA_CONSOLE__COMPUTER_DIALOG_H
 
-#include "base/common.h"
-
 #include "protocol/address_book.pb.h"
 #include "ui_computer_dialog.h"
 
@@ -44,7 +42,7 @@ private:
     const Mode mode_;
     proto::address_book::Computer* computer_;
 
-    DISABLE_COPY(ComputerDialog)
+    Q_DISABLE_COPY(ComputerDialog)
 };
 
 } // namespace aspia

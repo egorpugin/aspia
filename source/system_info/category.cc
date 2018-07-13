@@ -39,9 +39,9 @@ namespace aspia {
 
 #define DECLARE_END() { 0 }
 
-typedef Serializer* (*CreateSerializerFunc)(QObject* parent, const QString& uuid);
-typedef Parser* (*CreateParserFunc)(QObject* parent, const QString& uuid);
-typedef Form* (*CreateFormFunc)(QWidget* parent, const QString& uuid);
+typedef Serializer* (*CreateSerializerFunc)(QObject* parent, const std::string& uuid);
+typedef Parser* (*CreateParserFunc)(QObject* parent, const std::string& uuid);
+typedef Form* (*CreateFormFunc)(QWidget* parent, const std::string& uuid);
 
 struct CategoryList
 {
@@ -140,9 +140,9 @@ QIcon CategoryGroup::icon() const
     return QIcon(current_->icon);
 }
 
-QString CategoryGroup::name() const
+std::string CategoryGroup::name() const
 {
-    return QCoreApplication::translate("CategoryName", current_->name);
+    return QCoreApplication::translate("CategoryName", current_->name).toStdString();
 }
 
 QList<CategoryGroup> CategoryGroup::childGroupList() const
@@ -228,12 +228,12 @@ QIcon Category::icon() const
     return QIcon(current_->icon);
 }
 
-QString Category::name() const
+std::string Category::name() const
 {
-    return QCoreApplication::translate("CategoryName", current_->name);
+    return QCoreApplication::translate("CategoryName", current_->name).toStdString();
 }
 
-QString Category::uuid() const
+std::string Category::uuid() const
 {
     return current_->uuid;
 }

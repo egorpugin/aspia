@@ -40,7 +40,7 @@ ServiceController& ServiceController::operator=(ServiceController&& other) noexc
 ServiceController::~ServiceController() = default;
 
 // static
-ServiceController ServiceController::open(const QString& name)
+ServiceController ServiceController::open(const std::string& name)
 {
     ScopedScHandle sc_manager(OpenSCManagerW(nullptr, nullptr, SC_MANAGER_ALL_ACCESS));
     if (!sc_manager.isValid())
@@ -50,7 +50,7 @@ ServiceController ServiceController::open(const QString& name)
     }
 
     ScopedScHandle service(OpenServiceW(sc_manager,
-                                        qUtf16Printable(name),
+                                        qUtf16Printable(name.c_str()),
                                         SERVICE_ALL_ACCESS));
     if (!service.isValid())
     {
@@ -62,9 +62,9 @@ ServiceController ServiceController::open(const QString& name)
 }
 
 // static
-ServiceController ServiceController::install(const QString& name,
-                                             const QString& display_name,
-                                             const QString& file_path)
+ServiceController ServiceController::install(const std::string& name,
+                                             const std::string& display_name,
+                                             const std::string& file_path)
 {
     ScopedScHandle sc_manager(OpenSCManagerW(nullptr, nullptr, SC_MANAGER_ALL_ACCESS));
     if (!sc_manager.isValid())
@@ -73,17 +73,17 @@ ServiceController ServiceController::install(const QString& name,
         return ServiceController();
     }
 
-    QString normalized_file_path = file_path;
-    normalized_file_path.replace(QLatin1Char('/'), QLatin1Char('\\'));
+    std::string normalized_file_path = file_path;
+    std::replace(normalized_file_path.begin(), normalized_file_path.end(), '/', '\\');
 
     ScopedScHandle service(CreateServiceW(sc_manager,
-                                          qUtf16Printable(name),
-                                          qUtf16Printable(display_name),
+                                          qUtf16Printable(name.c_str()),
+                                          qUtf16Printable(display_name.c_str()),
                                           SERVICE_ALL_ACCESS,
                                           SERVICE_WIN32_OWN_PROCESS,
                                           SERVICE_AUTO_START,
                                           SERVICE_ERROR_NORMAL,
-                                          qUtf16Printable(normalized_file_path),
+                                          qUtf16Printable(normalized_file_path.c_str()),
                                           nullptr,
                                           nullptr,
                                           nullptr,
@@ -116,7 +116,7 @@ ServiceController ServiceController::install(const QString& name,
 }
 
 // static
-bool ServiceController::isInstalled(const QString& name)
+bool ServiceController::isInstalled(const std::string& name)
 {
     ScopedScHandle sc_manager(OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT));
     if (!sc_manager.isValid())
@@ -126,7 +126,7 @@ bool ServiceController::isInstalled(const QString& name)
     }
 
     ScopedScHandle service(OpenServiceW(sc_manager,
-                                        qUtf16Printable(name),
+                                        qUtf16Printable(name.c_str()),
                                         SERVICE_QUERY_STATUS));
     if (!service.isValid())
     {
@@ -141,10 +141,10 @@ bool ServiceController::isInstalled(const QString& name)
     return true;
 }
 
-bool ServiceController::setDescription(const QString& description)
+bool ServiceController::setDescription(const std::string& description)
 {
     SERVICE_DESCRIPTIONW service_description;
-    service_description.lpDescription = const_cast<LPWSTR>(qUtf16Printable(description));
+    service_description.lpDescription = const_cast<LPWSTR>(qUtf16Printable(description.c_str()));
 
     // Set the service description.
     if (!ChangeServiceConfig2W(service_, SERVICE_CONFIG_DESCRIPTION, &service_description))
@@ -156,7 +156,7 @@ bool ServiceController::setDescription(const QString& description)
     return true;
 }
 
-QString ServiceController::description() const
+std::string ServiceController::description() const
 {
     DWORD bytes_needed = 0;
 
@@ -164,11 +164,11 @@ QString ServiceController::description() const
         GetLastError() != ERROR_INSUFFICIENT_BUFFER)
     {
         qWarning("QueryServiceConfig2W: unexpected result");
-        return QString();
+        return std::string();
     }
 
     if (!bytes_needed)
-        return QString();
+        return std::string();
 
     std::unique_ptr<uint8_t[]> buffer = std::make_unique<uint8_t[]>(bytes_needed);
 
@@ -176,18 +176,18 @@ QString ServiceController::description() const
                              &bytes_needed))
     {
         qWarningErrno("QueryServiceConfig2W failed");
-        return QString();
+        return std::string();
     }
 
     SERVICE_DESCRIPTION* service_description =
         reinterpret_cast<SERVICE_DESCRIPTION*>(buffer.get());
     if (!service_description->lpDescription)
-        return QString();
+        return std::string();
 
-    return QString::fromUtf16(reinterpret_cast<const ushort*>(service_description->lpDescription));
+    return to_string(service_description->lpDescription);
 }
 
-QString ServiceController::filePath() const
+std::string ServiceController::filePath() const
 {
     DWORD bytes_needed = 0;
 
@@ -195,11 +195,11 @@ QString ServiceController::filePath() const
         GetLastError() != ERROR_INSUFFICIENT_BUFFER)
     {
         qWarning("QueryServiceConfigW: unexpected result");
-        return QString();
+        return std::string();
     }
 
     if (!bytes_needed)
-        return QString();
+        return std::string();
 
     std::unique_ptr<uint8_t[]> buffer = std::make_unique<uint8_t[]>(bytes_needed);
     QUERY_SERVICE_CONFIGW* service_config = reinterpret_cast<QUERY_SERVICE_CONFIGW*>(buffer.get());
@@ -207,13 +207,13 @@ QString ServiceController::filePath() const
     if (!QueryServiceConfigW(service_, service_config, bytes_needed, &bytes_needed))
     {
         qWarningErrno("QueryServiceConfigW failed");
-        return QString();
+        return std::string();
     }
 
     if (!service_config->lpBinaryPathName)
-        return QString();
+        return std::string();
 
-    return QString::fromUtf16(reinterpret_cast<const ushort*>(service_config->lpBinaryPathName));
+    return to_string(service_config->lpBinaryPathName);
 }
 
 bool ServiceController::isValid() const

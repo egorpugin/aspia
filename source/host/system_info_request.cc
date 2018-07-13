@@ -14,7 +14,7 @@ namespace aspia {
 SystemInfoRequest::SystemInfoRequest(proto::system_info::Request&& request)
     : request_(std::move(request))
 {
-    QString request_uuid = QUuid::createUuid().toString();
+    auto request_uuid = QUuid::createUuid().toString();
     request_.set_request_uuid(request_uuid.toStdString());
 }
 
@@ -27,10 +27,10 @@ SystemInfoRequest* SystemInfoRequest::categoryList()
 }
 
 // static
-SystemInfoRequest* SystemInfoRequest::category(const QString& uuid, const QByteArray& params)
+SystemInfoRequest* SystemInfoRequest::category(const std::string& uuid, const QByteArray& params)
 {
     proto::system_info::Request request;
-    request.mutable_category_request()->set_uuid(uuid.toStdString());
+    request.mutable_category_request()->set_uuid(uuid);
     request.mutable_category_request()->set_params(params.toStdString());
     return new SystemInfoRequest(std::move(request));
 }

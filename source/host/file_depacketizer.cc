@@ -18,14 +18,14 @@ FileDepacketizer::FileDepacketizer(QPointer<QFile>& file)
 
 // static
 std::unique_ptr<FileDepacketizer> FileDepacketizer::create(
-    const QString& file_path, bool overwrite)
+    const std::string& file_path, bool overwrite)
 {
     QFile::OpenMode mode = QFile::WriteOnly;
 
     if (overwrite)
         mode |= QFile::Truncate;
 
-    QPointer<QFile> file = new QFile(file_path);
+    QPointer<QFile> file = new QFile(file_path.c_str());
 
     if (!file->open(mode))
         return nullptr;

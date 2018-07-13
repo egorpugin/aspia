@@ -10,13 +10,13 @@
 
 #include "base/common.h"
 
-#include <QString>
+#include "base/common.h"
 
 #include "base/win/scoped_object.h"
 
 namespace aspia {
 
-class ServiceController
+class ASPIA_BASE_API ServiceController
 {
 public:
     ServiceController();
@@ -26,16 +26,16 @@ public:
 
     virtual ~ServiceController();
 
-    static ServiceController open(const QString& name);
-    static ServiceController install(const QString& name,
-                                     const QString& display_name,
-                                     const QString& file_path);
-    static bool isInstalled(const QString& name);
+    static ServiceController open(const std::string& name);
+    static ServiceController install(const std::string& name,
+                                     const std::string& display_name,
+                                     const std::string& file_path);
+    static bool isInstalled(const std::string& name);
 
-    bool setDescription(const QString& description);
-    QString description() const;
+    bool setDescription(const std::string& description);
+    std::string description() const;
 
-    QString filePath() const;
+    std::string filePath() const;
 
     bool isValid() const;
     bool isRunning() const;

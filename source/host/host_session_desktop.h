@@ -23,7 +23,7 @@ class HostSessionDesktop : public HostSession
     Q_OBJECT
 
 public:
-    HostSessionDesktop(proto::auth::SessionType session_type, const QString& channel_id);
+    HostSessionDesktop(proto::auth::SessionType session_type, const std::string& channel_id);
     ~HostSessionDesktop() = default;
 
 public slots:

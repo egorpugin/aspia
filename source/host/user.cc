@@ -8,6 +8,7 @@
 #include "host/user.h"
 
 #include <QCryptographicHash>
+#include <qchar.h>
 
 #include "crypto/secure_memory.h"
 
@@ -33,7 +34,7 @@ bool isValidUserNameChar(const QChar& username_char)
     return false;
 }
 
-bool isValidPasswordHash(const QByteArray& password_hash)
+bool isValidPasswordHash(const std::string& password_hash)
 {
     if (password_hash.size() != User::kPasswordHashLength)
         return false;
@@ -41,15 +42,15 @@ bool isValidPasswordHash(const QByteArray& password_hash)
     return true;
 }
 
-QByteArray createPasswordHash(const QString& password)
+std::string createPasswordHash(const std::string& password)
 {
     static const int kIterCount = 100000;
 
-    QByteArray data = password.toUtf8();
+    auto data = password;
 
     for (int i = 0; i < kIterCount; ++i)
     {
-        data = QCryptographicHash::hash(data, QCryptographicHash::Sha512);
+        data = QCryptographicHash::hash(data.c_str(), QCryptographicHash::Sha512);
     }
 
     return data;
@@ -64,7 +65,7 @@ User::~User()
 }
 
 // static
-bool User::isValidName(const QString& value)
+bool User::isValidName(const std::string& value)
 {
     int length = value.length();
 
@@ -81,7 +82,7 @@ bool User::isValidName(const QString& value)
 }
 
 // static
-bool User::isValidPassword(const QString& value)
+bool User::isValidPassword(const std::string& value)
 {
     int length = value.length();
 
@@ -91,7 +92,7 @@ bool User::isValidPassword(const QString& value)
     return true;
 }
 
-bool User::setName(const QString& value)
+bool User::setName(const std::string& value)
 {
     if (!isValidName(value))
         return false;
@@ -100,7 +101,7 @@ bool User::setName(const QString& value)
     return true;
 }
 
-bool User::setPassword(const QString& value)
+bool User::setPassword(const std::string& value)
 {
     if (!isValidPassword(value))
         return false;
@@ -109,7 +110,7 @@ bool User::setPassword(const QString& value)
     return true;
 }
 
-bool User::setPasswordHash(const QByteArray& value)
+bool User::setPasswordHash(const std::string& value)
 {
     if (!isValidPasswordHash(value))
         return false;

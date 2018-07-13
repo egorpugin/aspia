@@ -76,12 +76,11 @@ FileItem::FileItem(const proto::file_transfer::FileList::Item& item)
     }
     else
     {
-        QPair<QIcon, QString> type_info = FilePlatformUtil::fileTypeInfo(name_);
+        auto type_info = FilePlatformUtil::fileTypeInfo(name_.toStdString());
 
         setIcon(0, type_info.first);
         setText(1, sizeToString(item.size()));
-        setText(2, type_info.second);
-        
+        setText(2, type_info.second.c_str());
     }
 
     setText(3, QDateTime::fromSecsSinceEpoch(

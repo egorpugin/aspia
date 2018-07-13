@@ -15,6 +15,12 @@
 #include "codec/video_util.h"
 #include "desktop_capture/desktop_frame.h"
 
+extern "C" {
+#define VPX_CODEC_DISABLE_COMPAT 1
+#include <vpx/vpx_encoder.h>
+#include <vpx/vp8cx.h>
+} // extern "C"
+
 namespace aspia {
 
 namespace {
@@ -76,36 +82,42 @@ std::unique_ptr<VideoEncoderVPX> VideoEncoderVPX::createVP9()
 VideoEncoderVPX::VideoEncoderVPX(proto::desktop::VideoEncoding encoding)
     : encoding_(encoding)
 {
-    memset(&active_map_, 0, sizeof(active_map_));
-    memset(&image_, 0, sizeof(image_));
+    active_map_ = (vpx_active_map_t*)calloc(sizeof(vpx_active_map_t), 1);
+    image_ = (vpx_image_t*)calloc(sizeof(vpx_image_t), 1);
+}
+
+VideoEncoderVPX::~VideoEncoderVPX()
+{
+    free(active_map_);
+    free(image_);
 }
 
 void VideoEncoderVPX::createImage()
 {
     memset(&image_, 0, sizeof(image_));
 
-    image_.d_w = image_.w = screen_size_.width();
-    image_.d_h = image_.h = screen_size_.height();
+    image_->d_w = image_->w = screen_size_.width();
+    image_->d_h = image_->h = screen_size_.height();
 
     if (encoding_ == proto::desktop::VIDEO_ENCODING_VP8)
     {
-        image_.fmt = VPX_IMG_FMT_YV12;
-        image_.x_chroma_shift = 1;
-        image_.y_chroma_shift = 1;
+        image_->fmt = VPX_IMG_FMT_YV12;
+        image_->x_chroma_shift = 1;
+        image_->y_chroma_shift = 1;
     }
     else if (encoding_ == proto::desktop::VIDEO_ENCODING_VP9)
     {
-        image_.fmt = VPX_IMG_FMT_I444;
-        image_.x_chroma_shift = 0;
-        image_.y_chroma_shift = 0;
+        image_->fmt = VPX_IMG_FMT_I444;
+        image_->x_chroma_shift = 0;
+        image_->y_chroma_shift = 0;
     }
 
     //
     // libyuv's fast-path requires 16-byte aligned pointers and strides, so pad
     // the Y, U and V planes' strides to multiples of 16 bytes.
     //
-    const int y_stride = ((image_.w - 1) & ~15) + 16;
-    const int uv_unaligned_stride = y_stride >> image_.x_chroma_shift;
+    const int y_stride = ((image_->w - 1) & ~15) + 16;
+    const int uv_unaligned_stride = y_stride >> image_->x_chroma_shift;
     const int uv_stride = ((uv_unaligned_stride - 1) & ~15) + 16;
 
     //
@@ -115,9 +127,9 @@ void VideoEncoderVPX::createImage()
     // Assuming macroblocks are 16x16, aligning the planes' strides above also
     // macroblock aligned them.
     //
-    const int y_rows = ((image_.h - 1) & ~(kMacroBlockSize - 1)) + kMacroBlockSize;
+    const int y_rows = ((image_->h - 1) & ~(kMacroBlockSize - 1)) + kMacroBlockSize;
 
-    const int uv_rows = y_rows >> image_.y_chroma_shift;
+    const int uv_rows = y_rows >> image_->y_chroma_shift;
 
     // Allocate a YUV buffer large enough for the aligned data & padding.
     const int buffer_size = y_stride * y_rows + (2 * uv_stride) * uv_rows;
@@ -128,23 +140,23 @@ void VideoEncoderVPX::createImage()
     memset(yuv_image_.get(), 128, buffer_size);
 
     // Fill in the information
-    image_.planes[0] = yuv_image_.get();
-    image_.planes[1] = image_.planes[0] + y_stride * y_rows;
-    image_.planes[2] = image_.planes[1] + uv_stride * uv_rows;
+    image_->planes[0] = yuv_image_.get();
+    image_->planes[1] = image_->planes[0] + y_stride * y_rows;
+    image_->planes[2] = image_->planes[1] + uv_stride * uv_rows;
 
-    image_.stride[0] = y_stride;
-    image_.stride[1] = image_.stride[2] = uv_stride;
+    image_->stride[0] = y_stride;
+    image_->stride[1] = image_->stride[2] = uv_stride;
 }
 
 void VideoEncoderVPX::createActiveMap()
 {
-    active_map_.cols = (screen_size_.width() + kMacroBlockSize - 1) / kMacroBlockSize;
-    active_map_.rows = (screen_size_.height() + kMacroBlockSize - 1) / kMacroBlockSize;
-    active_map_size_ = active_map_.cols * active_map_.rows;
+    active_map_->cols = (screen_size_.width() + kMacroBlockSize - 1) / kMacroBlockSize;
+    active_map_->rows = (screen_size_.height() + kMacroBlockSize - 1) / kMacroBlockSize;
+    active_map_size_ = active_map_->cols * active_map_->rows;
     active_map_buffer_ = std::make_unique<uint8_t[]>(active_map_size_);
 
     memset(active_map_buffer_.get(), 0, active_map_size_);
-    active_map_.active_map = active_map_buffer_.get();
+    active_map_->active_map = active_map_buffer_.get();
 }
 
 void VideoEncoderVPX::createVp8Codec()
@@ -251,7 +263,7 @@ void VideoEncoderVPX::setActiveMap(const QRect& rect)
     int right  = (rect.right() - 1) / kMacroBlockSize;
     int bottom = (rect.bottom() - 1) / kMacroBlockSize;
 
-    uint8_t* map = active_map_.active_map + top * active_map_.cols;
+    uint8_t* map = active_map_->active_map + top * active_map_->cols;
 
     for (int y = top; y <= bottom; ++y)
     {
@@ -260,22 +272,22 @@ void VideoEncoderVPX::setActiveMap(const QRect& rect)
             map[x] = 1;
         }
 
-        map += active_map_.cols;
+        map += active_map_->cols;
     }
 }
 
 void VideoEncoderVPX::prepareImageAndActiveMap(const DesktopFrame* frame,
                                                proto::desktop::VideoPacket* packet)
 {
-    memset(active_map_.active_map, 0, active_map_size_);
+    memset(active_map_->active_map, 0, active_map_size_);
 
-    int y_stride = image_.stride[0];
-    int uv_stride = image_.stride[1];
-    uint8_t* y_data = image_.planes[0];
-    uint8_t* u_data = image_.planes[1];
-    uint8_t* v_data = image_.planes[2];
+    int y_stride = image_->stride[0];
+    int uv_stride = image_->stride[1];
+    uint8_t* y_data = image_->planes[0];
+    uint8_t* u_data = image_->planes[1];
+    uint8_t* v_data = image_->planes[2];
 
-    switch (image_.fmt)
+    switch (image_->fmt)
     {
         case VPX_IMG_FMT_YV12:
         {
@@ -319,7 +331,7 @@ void VideoEncoderVPX::prepareImageAndActiveMap(const DesktopFrame* frame,
         break;
 
         default:
-            qFatal("Unsupported image format: %d", image_.fmt);
+            qFatal("Unsupported image format: %d", image_->fmt);
             break;
     }
 }
@@ -358,11 +370,11 @@ std::unique_ptr<proto::desktop::VideoPacket> VideoEncoderVPX::encode(const Deskt
     prepareImageAndActiveMap(frame, packet.get());
 
     // Apply active map to the encoder.
-    vpx_codec_err_t ret = vpx_codec_control(codec_.get(), VP8E_SET_ACTIVEMAP, &active_map_);
+    vpx_codec_err_t ret = vpx_codec_control(codec_.get(), VP8E_SET_ACTIVEMAP, active_map_);
     assert(ret == VPX_CODEC_OK);
 
     // Do the actual encoding.
-    ret = vpx_codec_encode(codec_.get(), &image_, 0, 1, 0, VPX_DL_REALTIME);
+    ret = vpx_codec_encode(codec_.get(), image_, 0, 1, 0, VPX_DL_REALTIME);
     assert(ret == VPX_CODEC_OK);
 
     // Read the encoded data.

@@ -5,14 +5,11 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__COMPUTER_FACTORY_H
-#define _ASPIA_CLIENT__COMPUTER_FACTORY_H
+#pragma once
 
-#include "base/common.h"
+#include <base/common.h>
 
 #include "protocol/address_book.pb.h"
-
-#include <qglobal.h>
 
 namespace aspia {
 
@@ -32,5 +29,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__COMPUTER_FACTORY_H

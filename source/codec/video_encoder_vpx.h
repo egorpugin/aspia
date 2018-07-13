@@ -12,21 +12,18 @@
 
 #include <QRect>
 
-extern "C" {
-#define VPX_CODEC_DISABLE_COMPAT 1
-#include <vpx/vpx_encoder.h>
-#include <vpx/vp8cx.h>
-} // extern "C"
-
 #include "codec/scoped_vpx_codec.h"
 #include "codec/video_encoder.h"
+
+typedef struct vpx_active_map vpx_active_map_t;
+typedef struct vpx_image vpx_image_t;
 
 namespace aspia {
 
 class VideoEncoderVPX : public VideoEncoder
 {
 public:
-    ~VideoEncoderVPX() = default;
+    ~VideoEncoderVPX();
 
     static std::unique_ptr<VideoEncoderVPX> createVP8();
     static std::unique_ptr<VideoEncoderVPX> createVP9();
@@ -49,11 +46,11 @@ private:
     QSize screen_size_;
 
     ScopedVpxCodec codec_ = nullptr;
-    vpx_image_t image_;
+    vpx_image_t *image_;
 
     size_t active_map_size_ = 0;
 
-    vpx_active_map_t active_map_;
+    vpx_active_map_t *active_map_;
     std::unique_ptr<uint8_t[]> active_map_buffer_;
 
     // Buffer for storing the yuv image.

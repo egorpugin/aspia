@@ -52,7 +52,7 @@ private:
     QQueue<FileRemoveTask> pending_tasks_;
     QQueue<FileRemoveTask> tasks_;
 
-    DISABLE_COPY(FileRemoveQueueBuilder)
+    Q_DISABLE_COPY(FileRemoveQueueBuilder)
 };
 
 } // namespace aspia

@@ -23,7 +23,7 @@ class FileDepacketizer
 public:
     ~FileDepacketizer() = default;
 
-    static std::unique_ptr<FileDepacketizer> create(const QString& file_path, bool overwrite);
+    static std::unique_ptr<FileDepacketizer> create(const std::string& file_path, bool overwrite);
 
     // Reads the packet and writes its contents to a file.
     bool writeNextPacket(const proto::file_transfer::Packet& packet);
@@ -33,8 +33,8 @@ private:
 
     QPointer<QFile> file_;
 
-    qint64 file_size_ = 0;
-    qint64 left_size_ = 0;
+    int64_t file_size_ = 0;
+    int64_t left_size_ = 0;
 
     DISABLE_COPY(FileDepacketizer)
 };

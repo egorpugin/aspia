@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "network/firewall_manager.h"
+#include "firewall_manager.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -18,11 +18,11 @@
 
 namespace aspia {
 
-FirewallManager::FirewallManager(const QString& application_path)
+FirewallManager::FirewallManager(const std::string& application_path)
     : application_path_(application_path)
 {
     // Firewall manager does not work with the wrong path separators.
-    application_path_.replace(QLatin1Char('/'), QLatin1Char('\\'));
+    std::replace(application_path_.begin(), application_path_.end(), '/', '\\');
 
     // Retrieve INetFwPolicy2
     HRESULT hr = CoCreateInstance(CLSID_NetFwPolicy2, nullptr, CLSCTX_ALL,
@@ -82,14 +82,14 @@ bool FirewallManager::isFirewallEnabled() const
 
 bool FirewallManager::hasAnyRule()
 {
-    QVector<Microsoft::WRL::ComPtr<INetFwRule>> rules;
+    std::vector<Microsoft::WRL::ComPtr<INetFwRule>> rules;
     allRules(&rules);
 
-    return !rules.isEmpty();
+    return !rules.empty();
 }
 
-bool FirewallManager::addTcpRule(const QString& rule_name,
-                                 const QString& description,
+bool FirewallManager::addTcpRule(const std::string& rule_name,
+                                 const std::string& description,
                                  int port)
 {
     // Delete the rule. According MDSN |INetFwRules::Add| should replace rule with same
@@ -106,9 +106,9 @@ bool FirewallManager::addTcpRule(const QString& rule_name,
         return false;
     }
 
-    rule->put_Name(_bstr_t(qUtf16Printable(rule_name)));
-    rule->put_Description(_bstr_t(qUtf16Printable(description)));
-    rule->put_ApplicationName(_bstr_t(qUtf16Printable(application_path_)));
+    rule->put_Name(_bstr_t(rule_name.c_str()));
+    rule->put_Description(_bstr_t(description.c_str()));
+    rule->put_ApplicationName(_bstr_t(application_path_.c_str()));
     rule->put_Protocol(NET_FW_IP_PROTOCOL_TCP);
     rule->put_Direction(NET_FW_RULE_DIR_IN);
     rule->put_Enabled(VARIANT_TRUE);
@@ -126,9 +126,9 @@ bool FirewallManager::addTcpRule(const QString& rule_name,
     return true;
 }
 
-void FirewallManager::deleteRuleByName(const QString& rule_name)
+void FirewallManager::deleteRuleByName(const std::string& rule_name)
 {
-    QVector<Microsoft::WRL::ComPtr<INetFwRule>> rules;
+    std::vector<Microsoft::WRL::ComPtr<INetFwRule>> rules;
     allRules(&rules);
 
     for (const auto& rule : rules)
@@ -145,24 +145,23 @@ void FirewallManager::deleteRuleByName(const QString& rule_name)
         if (!bstr_rule_name)
             continue;
 
-        QString name = QString::fromUtf16(reinterpret_cast<const ushort*>(
-            static_cast<const wchar_t*>(bstr_rule_name)));
+        std::string name = _com_util::ConvertBSTRToString(bstr_rule_name);
 
-        if (name.compare(rule_name, Qt::CaseInsensitive) == 0)
+        if (stricmp(name.c_str(), rule_name.c_str()) != 0)
             deleteRule(rule);
     }
 }
 
 void FirewallManager::deleteAllRules()
 {
-    QVector<Microsoft::WRL::ComPtr<INetFwRule>> rules;
+    std::vector<Microsoft::WRL::ComPtr<INetFwRule>> rules;
     allRules(&rules);
 
     for (const auto& rule : rules)
         deleteRule(rule);
 }
 
-void FirewallManager::allRules(QVector<Microsoft::WRL::ComPtr<INetFwRule>>* rules)
+void FirewallManager::allRules(std::vector<Microsoft::WRL::ComPtr<INetFwRule>>* rules)
 {
     Microsoft::WRL::ComPtr<IUnknown> rules_enum_unknown;
 
@@ -217,10 +216,9 @@ void FirewallManager::allRules(QVector<Microsoft::WRL::ComPtr<INetFwRule>>* rule
         if (!bstr_path)
             continue;
 
-        QString path = QString::fromUtf16(reinterpret_cast<const ushort*>(
-            static_cast<const wchar_t*>(bstr_path)));
+        std::string path = _com_util::ConvertBSTRToString(bstr_path);
 
-        if (path.compare(application_path_, Qt::CaseInsensitive) != 0)
+        if (stricmp(path.c_str(), application_path_.c_str()) != 0)
             continue;
 
         rules->push_back(rule);

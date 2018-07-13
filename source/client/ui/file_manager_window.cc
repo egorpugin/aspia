@@ -69,7 +69,7 @@ void FileManagerWindow::removeItems(FilePanel* sender, const QList<FileRemover::
     }
     else
     {
-        assert(sender == ui.remote_panel);
+        Q_ASSERT(sender == ui.remote_panel);
         connect(remover, &FileRemover::newRequest, this, &FileManagerWindow::remoteRequest);
     }
 
@@ -103,7 +103,7 @@ void FileManagerWindow::sendItems(FilePanel* sender, const QList<FileTransfer::I
     }
     else
     {
-        assert(sender == ui.remote_panel);
+        Q_ASSERT(sender == ui.remote_panel);
 
         transferItems(FileTransfer::Downloader,
                       ui.remote_panel->currentPath(),
@@ -123,7 +123,7 @@ void FileManagerWindow::receiveItems(FilePanel* sender, const QList<FileTransfer
     }
     else
     {
-        assert(sender == ui.remote_panel);
+        Q_ASSERT(sender == ui.remote_panel);
 
         transferItems(FileTransfer::Uploader,
                       ui.local_panel->currentPath(),
@@ -146,7 +146,7 @@ void FileManagerWindow::transferItems(FileTransfer::Type type,
     }
     else
     {
-        assert(type == FileTransfer::Downloader);
+        Q_ASSERT(type == FileTransfer::Downloader);
         connect(transfer, &FileTransfer::finished, ui.local_panel, &FilePanel::refresh);
     }
 

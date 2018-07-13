@@ -17,7 +17,7 @@ class QTranslator;
 
 namespace aspia {
 
-class LocaleLoader
+class ASPIA_BASE_API LocaleLoader
 {
 public:
     LocaleLoader();
@@ -25,9 +25,9 @@ public:
 
     QStringList localeList() const;
     QStringList sortedLocaleList() const;
-    QStringList fileList(const QString& locale_name) const;
-    bool contains(const QString& locale_name) const;
-    void installTranslators(const QString& locale_name);
+    QStringList fileList(const std::string& locale_name) const;
+    bool contains(const std::string& locale_name) const;
+    void installTranslators(const std::string& locale_name);
 
     static QString translationsDir();
 

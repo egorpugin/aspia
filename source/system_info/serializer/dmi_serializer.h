@@ -19,13 +19,13 @@ class DmiSerializer : public Serializer
     Q_OBJECT
 
 public:
-    static Serializer* create(QObject* parent, const QString& uuid);
+    static Serializer* create(QObject* parent, const std::string& uuid);
 
 public slots:
     void start() override;
 
 protected:
-    DmiSerializer(QObject* parent, const QString& uuid);
+    DmiSerializer(QObject* parent, const std::string& uuid);
 
 private:
     DISABLE_COPY(DmiSerializer)

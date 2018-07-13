@@ -23,7 +23,7 @@ public:
     explicit HostNotifierWindow(QWidget* parent = nullptr);
     ~HostNotifierWindow() = default;
 
-    void setChannelId(const QString& channel_id);
+    void setChannelId(const std::string& channel_id);
 
 public slots:
     void sessionOpen(const proto::notifier::Session& session);
@@ -52,9 +52,9 @@ private:
     QRect window_rect_;
 
     QPointer<HostNotifier> notifier_;
-    QString channel_id_;
+    std::string channel_id_;
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
     quintptr taskbar_create_message_ = 0;
 #endif
 

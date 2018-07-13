@@ -51,7 +51,7 @@ Client::Client(const ConnectData& connect_data, QObject* parent)
     status_dialog_->activateWindow();
 
     status_dialog_->addStatus(tr("Attempt to connect to %1:%2.").arg(address).arg(port));
-    network_channel_->connectToHost(address, port);
+    network_channel_->connectToHost(address.toStdString(), port);
 }
 
 void Client::onChannelConnected()

@@ -7,7 +7,7 @@
 
 #include "host/host_session_desktop.h"
 
-#include "base/clipboard.h"
+#include "base_client/clipboard.h"
 #include "base/message_serialization.h"
 #include "host/input_injector.h"
 #include "host/screen_updater.h"
@@ -32,7 +32,7 @@ enum MessageId { ScreenUpdateMessage };
 } // namespace
 
 HostSessionDesktop::HostSessionDesktop(proto::auth::SessionType session_type,
-                                       const QString& channel_id)
+                                       const std::string& channel_id)
     : HostSession(channel_id),
       session_type_(session_type)
 {

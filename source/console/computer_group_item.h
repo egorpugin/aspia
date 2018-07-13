@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__COMPUTER_GROUP_ITEM_H
 #define _ASPIA_CONSOLE__COMPUTER_GROUP_ITEM_H
 
-#include "base/common.h"
-
 #include "console/computer_item.h"
 #include "protocol/address_book.pb.h"
 
@@ -42,7 +40,7 @@ private:
 
     proto::address_book::ComputerGroup* computer_group_;
 
-    DISABLE_COPY(ComputerGroupItem)
+    Q_DISABLE_COPY(ComputerGroupItem)
 };
 
 } // namespace aspia

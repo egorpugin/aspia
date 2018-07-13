@@ -31,7 +31,7 @@ typedef struct
     int qt_keycode;
 } KeycodeMapEntry;
 
-class KeycodeConverter
+class ASPIA_BASE_API KeycodeConverter
 {
 public:
     // Return the value that identifies an invalid native keycode.

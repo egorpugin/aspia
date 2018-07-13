@@ -79,7 +79,7 @@ AddressBookDialog::AddressBookDialog(QWidget* parent, proto::address_book::File*
     }
     else
     {
-        assert(file->encryption_type() == proto::address_book::ENCRYPTION_TYPE_NONE);
+        Q_ASSERT(file->encryption_type() == proto::address_book::ENCRYPTION_TYPE_NONE);
 
         ui.edit_password->setEnabled(false);
 

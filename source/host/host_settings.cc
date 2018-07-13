@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "build_config.h"
+#include "base/errno_logging.h"
 #include "host/host_settings.h"
 
 #include <QDebug>
@@ -24,19 +24,19 @@ bool HostSettings::isWritable() const
 }
 
 // static
-QString HostSettings::defaultLocale()
+std::string HostSettings::defaultLocale()
 {
-    return QStringLiteral("en");
+    return "en";
 }
 
-QString HostSettings::locale() const
+std::string HostSettings::locale() const
 {
-    return settings_.value(QStringLiteral("Locale"), defaultLocale()).toString();
+    return settings_.value(QStringLiteral("Locale"), defaultLocale().c_str()).toString().toStdString();
 }
 
-void HostSettings::setLocale(const QString& locale)
+void HostSettings::setLocale(const std::string& locale)
 {
-    settings_.setValue(QStringLiteral("Locale"), locale);
+    settings_.setValue(QStringLiteral("Locale"), locale.c_str());
 }
 
 int HostSettings::tcpPort() const
@@ -64,14 +64,14 @@ QList<User> HostSettings::userList() const
 
         User user;
 
-        QString user_name = settings_.value(QStringLiteral("UserName")).toString();
+        std::string user_name = settings_.value(QStringLiteral("UserName")).toString().toStdString();
         if (!user.setName(user_name))
         {
             qDebug() << "Invalid user name: " << user_name << ". The list of users is corrupted";
             return QList<User>();
         }
 
-        QByteArray password_hash = settings_.value(QStringLiteral("PasswordHash")).toByteArray();
+        auto password_hash = settings_.value(QStringLiteral("PasswordHash")).toString().toStdString();
         if (!user.setPasswordHash(password_hash))
         {
             qDebug() << "Invalid password hash: " << password_hash
@@ -103,8 +103,8 @@ bool HostSettings::setUserList(const QList<User>& user_list)
 
         const User& user = user_list.at(i);
 
-        settings_.setValue(QStringLiteral("UserName"), user.name());
-        settings_.setValue(QStringLiteral("PasswordHash"), user.passwordHash());
+        settings_.setValue(QStringLiteral("UserName"), user.name().c_str());
+        settings_.setValue(QStringLiteral("PasswordHash"), user.passwordHash().c_str());
         settings_.setValue(QStringLiteral("Flags"), user.flags());
         settings_.setValue(QStringLiteral("Sessions"), user.sessions());
     }

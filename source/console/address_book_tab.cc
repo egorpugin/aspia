@@ -157,8 +157,8 @@ AddressBookTab::~AddressBookTab()
     cleanupData(&data_);
     cleanupFile(&file_);
 
-    secureMemZero(&file_path_);
-    secureMemZero(&key_);
+    secureMemZero(&file_path_.toStdString());
+    secureMemZero(&key_.toStdString());
 }
 
 // static
@@ -207,7 +207,7 @@ AddressBookTab* AddressBookTab::openFromFile(const QString& file_path, QWidget* 
         return nullptr;
     }
 
-    secureMemZero(&buffer);
+    secureMemZero(&buffer.toStdString());
 
     proto::address_book::Data address_book_data;
     QByteArray key;
@@ -252,7 +252,7 @@ AddressBookTab* AddressBookTab::openFromFile(const QString& file_path, QWidget* 
                 return nullptr;
             }
 
-            secureMemZero(&decrypted_data);
+            secureMemZero(&decrypted_data.toStdString());
         }
         break;
 
@@ -618,7 +618,7 @@ bool AddressBookTab::saveToFile(const QString& file_path)
         {
             QByteArray encrypted_data = DataEncryptor::encrypt(serialized_data, key_);
             file_.set_data(encrypted_data.constData(), encrypted_data.size());
-            secureMemZero(&encrypted_data);
+            secureMemZero(&encrypted_data.toStdString());
         }
         break;
 
@@ -627,7 +627,7 @@ bool AddressBookTab::saveToFile(const QString& file_path)
             return false;
     }
 
-    secureMemZero(&serialized_data);
+    secureMemZero(&serialized_data.toStdString());
 
     QString path = file_path;
     if (path.isEmpty())
@@ -655,7 +655,7 @@ bool AddressBookTab::saveToFile(const QString& file_path)
 
     qint64 bytes_written = file.write(buffer);
 
-    secureMemZero(&buffer);
+    secureMemZero(&buffer.toStdString());
 
     if (bytes_written != buffer.size())
     {

@@ -47,7 +47,7 @@ void FileTransfer::start(const QString& source_path,
     }
     else
     {
-        assert(type_ == Uploader);
+        Q_ASSERT(type_ == Uploader);
         connect(builder_, &FileTransferQueueBuilder::newRequest, this, &FileTransfer::localRequest);
     }
 
@@ -174,7 +174,7 @@ void FileTransfer::sourceReply(const proto::file_transfer::Request& request,
             return;
         }
 
-        FileRequest* request = FileRequest::uploadRequest(currentTask().targetPath(),
+        FileRequest* request = FileRequest::uploadRequest(currentTask().targetPath().toStdString(),
                                                           currentTask().overwrite());
         connect(request, &FileRequest::replyReady, this, &FileTransfer::targetReply);
         targetRequest(request);
@@ -207,7 +207,7 @@ void FileTransfer::taskQueueError(const QString& message)
 
 void FileTransfer::taskQueueReady()
 {
-    assert(builder_ != nullptr);
+    Q_ASSERT(builder_ != nullptr);
 
     tasks_ = builder_->taskQueue();
 
@@ -264,13 +264,13 @@ void FileTransfer::processTask(bool overwrite)
 
     if (task.isDirectory())
     {
-        FileRequest* request = FileRequest::createDirectoryRequest(task.targetPath());
+        FileRequest* request = FileRequest::createDirectoryRequest(task.targetPath().toStdString());
         connect(request, &FileRequest::replyReady, this, &FileTransfer::targetReply);
         targetRequest(request);
     }
     else
     {
-        FileRequest* request = FileRequest::FileRequest::downloadRequest(task.sourcePath());
+        FileRequest* request = FileRequest::FileRequest::downloadRequest(task.sourcePath().toStdString());
         connect(request, &FileRequest::replyReady, this, &FileTransfer::sourceReply);
         sourceRequest(request);
     }
@@ -313,7 +313,7 @@ void FileTransfer::sourceRequest(FileRequest* request)
     }
     else
     {
-        assert(type_ == Uploader);
+        Q_ASSERT(type_ == Uploader);
         emit localRequest(request);
     }
 }
@@ -326,7 +326,7 @@ void FileTransfer::targetRequest(FileRequest* request)
     }
     else
     {
-        assert(type_ == Uploader);
+        Q_ASSERT(type_ == Uploader);
         emit remoteRequest(request);
     }
 }

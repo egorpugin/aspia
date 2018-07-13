@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CLIENT__UI__FILE_ITEM_DELEGATE_H
 #define _ASPIA_CLIENT__UI__FILE_ITEM_DELEGATE_H
 
-#include "base/common.h"
-
 #include <QStyledItemDelegate>
 
 namespace aspia {
@@ -31,7 +29,7 @@ public:
     }
 
 private:
-    DISABLE_COPY(FileReadOnlyColumnDelegate)
+    Q_DISABLE_COPY(FileReadOnlyColumnDelegate)
 };
 
 class FileColumnDelegate : public QStyledItemDelegate
@@ -59,7 +57,7 @@ signals:
     void editingFinished(const QModelIndex& index) const;
 
 private:
-    DISABLE_COPY(FileColumnDelegate)
+    Q_DISABLE_COPY(FileColumnDelegate)
 };
 
 } // namespace aspia

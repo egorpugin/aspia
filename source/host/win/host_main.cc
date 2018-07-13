@@ -24,7 +24,7 @@ namespace aspia {
 int hostMain(int argc, char *argv[])
 {
     FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName());
+    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
 
     // At the end of the user's session, the program ends later than the others.
     SetProcessShutdownParameters(0, SHUTDOWN_NORETRY);
@@ -39,7 +39,7 @@ int hostMain(int argc, char *argv[])
                                          QStringLiteral("channel_id"));
 
     QCommandLineOption session_type_option(QStringLiteral("session_type"),
-                                           QString(),
+        QString(),
                                            QStringLiteral("session_type"));
 
     QCommandLineParser parser;
@@ -52,8 +52,8 @@ int hostMain(int argc, char *argv[])
         return 1;
     }
 
-    QString channel_id = parser.value(channel_id_option);
-    QString session_type = parser.value(session_type_option);
+    auto channel_id = parser.value(channel_id_option).toStdString();
+    auto session_type = parser.value(session_type_option).toStdString();
 
     QPointer<HostSession> session = HostSession::create(session_type, channel_id);
     if (session.isNull())

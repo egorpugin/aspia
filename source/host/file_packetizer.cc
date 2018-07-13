@@ -14,7 +14,7 @@ namespace {
 // When transferring a file is divided into parts and each part is
 // transmitted separately.
 // This parameter specifies the size of the part.
-constexpr qint64 kPacketPartSize = 16 * 1024; // 16 kB
+constexpr int64_t kPacketPartSize = 16 * 1024; // 16 kB
 
 char* GetOutputBuffer(proto::file_transfer::Packet* packet, size_t size)
 {
@@ -31,9 +31,9 @@ FilePacketizer::FilePacketizer(QPointer<QFile>& file)
     left_size_ = file_size_;
 }
 
-std::unique_ptr<FilePacketizer> FilePacketizer::create(const QString& file_path)
+std::unique_ptr<FilePacketizer> FilePacketizer::create(const std::string& file_path)
 {
-    QPointer<QFile> file = new QFile(file_path);
+    QPointer<QFile> file = new QFile(file_path.c_str());
 
     if (!file->open(QFile::ReadOnly))
         return nullptr;
@@ -52,7 +52,7 @@ std::unique_ptr<proto::file_transfer::Packet> FilePacketizer::readNextPacket()
     // All file packets must have the flag.
     packet->set_flags(proto::file_transfer::Packet::FLAG_PACKET);
 
-    qint64 packet_buffer_size = kPacketPartSize;
+    int64_t packet_buffer_size = kPacketPartSize;
 
     if (left_size_ < kPacketPartSize)
         packet_buffer_size = static_cast<size_t>(left_size_);

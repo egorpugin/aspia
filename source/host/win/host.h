@@ -45,13 +45,13 @@ public:
     proto::auth::SessionType sessionType() const { return session_type_; }
     void setSessionType(proto::auth::SessionType session_type);
 
-    QString userName() const { return user_name_; }
-    void setUserName(const QString& user_name);
+    std::string userName() const { return user_name_; }
+    void setUserName(const std::string& user_name);
 
-    QString uuid() const { return uuid_; }
-    void setUuid(const QString& uuid);
+    std::string uuid() const { return uuid_; }
+    void setUuid(const std::string& uuid);
 
-    QString remoteAddress() const;
+    std::string remoteAddress() const;
 
     bool start();
 
@@ -71,7 +71,7 @@ private slots:
     void networkMessageReceived(const QByteArray& buffer);
     void ipcMessageWritten(int message_id);
     void ipcMessageReceived(const QByteArray& buffer);
-    void ipcServerStarted(const QString& channel_id);
+    void ipcServerStarted(const std::string& channel_id);
     void ipcNewConnection(IpcChannel* channel);
     void attachSession(uint32_t session_id);
     void dettachSession();
@@ -82,8 +82,8 @@ private:
     static const uint32_t kInvalidSessionId = 0xFFFFFFFF;
 
     proto::auth::SessionType session_type_ = proto::auth::SESSION_TYPE_UNKNOWN;
-    QString user_name_;
-    QString uuid_;
+    std::string user_name_;
+    std::string uuid_;
 
     uint32_t session_id_ = kInvalidSessionId;
     int attach_timer_id_ = 0;

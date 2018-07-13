@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QUuid>
 
+#include "base/errno_logging.h"
 #include "base/message_serialization.h"
 #include "host/win/host.h"
 #include "host/host_user_authorizer.h"
@@ -94,11 +95,11 @@ bool HostServer::start(int port, const QList<User>& user_list)
         qWarning("Empty user list");
     }
 
-    FirewallManager firewall(QCoreApplication::applicationFilePath());
+    FirewallManager firewall(QCoreApplication::applicationFilePath().toStdString());
     if (firewall.isValid())
     {
         if (firewall.addTcpRule(kFirewallRuleName,
-                                tr("Allow incoming TCP connections"),
+                                tr("Allow incoming TCP connections").toStdString(),
                                 port))
         {
             qInfo("Rule is added to the firewall");
@@ -134,7 +135,7 @@ void HostServer::stop()
 
     user_list_.clear();
 
-    FirewallManager firewall(QCoreApplication::applicationFilePath());
+    FirewallManager firewall(QCoreApplication::applicationFilePath().toStdString());
     if (firewall.isValid())
         firewall.deleteRuleByName(kFirewallRuleName);
 
@@ -233,7 +234,7 @@ void HostServer::onAuthorizationFinished(HostUserAuthorizer* authorizer)
     host->setNetworkChannel(authorizer->networkChannel());
     host->setSessionType(authorizer->sessionType());
     host->setUserName(authorizer->userName());
-    host->setUuid(QUuid::createUuid().toString());
+    host->setUuid(QUuid::createUuid().toString().toStdString());
 
     connect(this, &HostServer::sessionChanged, host.data(), &Host::sessionChanged);
     connect(host.data(), &Host::finished, this, &HostServer::onHostFinished, Qt::QueuedConnection);
@@ -270,7 +271,7 @@ void HostServer::onHostFinished(Host* host)
     }
 }
 
-void HostServer::onIpcServerStarted(const QString& channel_id)
+void HostServer::onIpcServerStarted(const std::string& channel_id)
 {
     assert(notifier_state_ == NotifierState::Starting);
 
@@ -279,9 +280,9 @@ void HostServer::onIpcServerStarted(const QString& channel_id)
     notifier_process_->setAccount(HostProcess::User);
     notifier_process_->setSessionId(WTSGetActiveConsoleSessionId());
     notifier_process_->setProgram(
-        QCoreApplication::applicationDirPath() + QLatin1Char('/') + kNotifierFileName);
+        QCoreApplication::applicationDirPath().toStdString() + '/' + kNotifierFileName);
     notifier_process_->setArguments(
-        QStringList() << QStringLiteral("--channel_id") << channel_id);
+        QStringList() << QStringLiteral("--channel_id") << channel_id.c_str());
 
     connect(notifier_process_, &HostProcess::errorOccurred,
             this, &HostServer::onNotifierProcessError);
@@ -363,7 +364,7 @@ void HostServer::onIpcMessageReceived(const QByteArray& buffer)
     {
         qInfo("Command to terminate the session from the notifier is received");
 
-        QString uuid = QString::fromStdString(message.kill_session().uuid());
+        auto uuid = QString::fromStdString(message.kill_session().uuid()).toStdString();
 
         for (const auto& session : session_list_)
         {
@@ -430,9 +431,9 @@ void HostServer::sessionToNotifier(const Host& host)
     proto::notifier::ServiceToNotifier message;
 
     proto::notifier::Session* session = message.mutable_session();
-    session->set_uuid(host.uuid().toStdString());
-    session->set_remote_address(host.remoteAddress().toStdString());
-    session->set_username(host.userName().toStdString());
+    session->set_uuid(host.uuid());
+    session->set_remote_address(host.remoteAddress());
+    session->set_username(host.userName());
     session->set_session_type(host.sessionType());
 
     ipc_channel_->writeMessage(-1, serializeMessage(message));
@@ -444,7 +445,7 @@ void HostServer::sessionCloseToNotifier(const Host& host)
         return;
 
     proto::notifier::ServiceToNotifier message;
-    message.mutable_session_close()->set_uuid(host.uuid().toStdString());
+    message.mutable_session_close()->set_uuid(host.uuid());
     ipc_channel_->writeMessage(-1, serializeMessage(message));
 }
 

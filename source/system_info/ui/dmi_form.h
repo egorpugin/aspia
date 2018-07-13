@@ -21,13 +21,13 @@ class DmiForm : public Form
     Q_OBJECT
 
 public:
-    static Form* create(QWidget* parent, const QString& uuid);
+    static Form* create(QWidget* parent, const std::string& uuid);
 
 public slots:
-    void readReply(const QString& uuid, const QByteArray& data) override;
+    void readReply(const std::string& uuid, const QByteArray& data) override;
 
 protected:
-    DmiForm(QWidget* parent, const QString& uuid);
+    DmiForm(QWidget* parent, const std::string& uuid);
 
 private:
     Ui::DmiForm ui;

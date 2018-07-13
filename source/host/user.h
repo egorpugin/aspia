@@ -8,7 +8,7 @@
 #ifndef _ASPIA_HOST__USER_H
 #define _ASPIA_HOST__USER_H
 
-#include <QString>
+#include "base/common.h"
 
 namespace aspia {
 
@@ -24,15 +24,15 @@ public:
     static const int kMaxPasswordLength = 64;
     static const int kPasswordHashLength = 64;
 
-    static bool isValidName(const QString& value);
-    static bool isValidPassword(const QString& value);
+    static bool isValidName(const std::string& value);
+    static bool isValidPassword(const std::string& value);
 
-    bool setName(const QString& value);
-    const QString& name() const { return name_; }
+    bool setName(const std::string& value);
+    const std::string& name() const { return name_; }
 
-    bool setPassword(const QString& value);
-    bool setPasswordHash(const QByteArray& value);
-    const QByteArray& passwordHash() const { return password_hash_; }
+    bool setPassword(const std::string& value);
+    bool setPasswordHash(const std::string& value);
+    const std::string& passwordHash() const { return password_hash_; }
 
     void setFlags(uint32_t value);
     uint32_t flags() const { return flags_; }
@@ -41,8 +41,8 @@ public:
     uint32_t sessions() const { return sessions_; }
 
 private:
-    QString name_;
-    QByteArray password_hash_;
+    std::string name_;
+    std::string password_hash_;
     uint32_t flags_ = 0;
     uint32_t sessions_ = 0;
 };

@@ -21,16 +21,16 @@ class Form : public QWidget
 public:
     virtual ~Form() = default;
 
-    QString uuid() const { return uuid_; }
+    std::string uuid() const { return uuid_; }
 
 public slots:
-    virtual void readReply(const QString& uuid, const QByteArray& data) = 0;
+    virtual void readReply(const std::string& uuid, const QByteArray& data) = 0;
 
 signals:
     void sendRequest(SystemInfoRequest* request);
 
 protected:
-    Form(QWidget* parent, const QString& uuid)
+    Form(QWidget* parent, const std::string& uuid)
         : QWidget(parent),
           uuid_(uuid)
     {
@@ -38,7 +38,7 @@ protected:
     }
 
 private:
-    const QString uuid_;
+    const std::string uuid_;
 };
 
 } // namespace aspia

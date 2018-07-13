@@ -19,7 +19,7 @@ class HostSessionSystemInfo : public HostSession
     Q_OBJECT
 
 public:
-    explicit HostSessionSystemInfo(const QString& channel_id);
+    explicit HostSessionSystemInfo(const std::string& channel_id);
     ~HostSessionSystemInfo() = default;
 
 public slots:

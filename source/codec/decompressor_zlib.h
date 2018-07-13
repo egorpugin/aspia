@@ -9,10 +9,9 @@
 #define _ASPIA_CODEC__DECOMPRESSOR_ZLIB_H
 
 #include "base/common.h"
-
-#include <zlib-ng.h>
-
 #include "codec/decompressor.h"
+
+typedef struct zng_stream_s zng_stream;
 
 namespace aspia {
 
@@ -33,7 +32,7 @@ public:
                  size_t* written) override;
 
 private:
-    zng_stream stream_;
+    zng_stream *stream_;
 
     DISABLE_COPY(DecompressorZLIB)
 };

@@ -46,7 +46,7 @@ private:
 
     Ui::FileManagerWindow ui;
 
-    DISABLE_COPY(FileManagerWindow)
+    Q_DISABLE_COPY(FileManagerWindow)
 };
 
 } // namespace aspia

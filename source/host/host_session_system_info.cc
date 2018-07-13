@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QThread>
 
+#include "base/errno_logging.h"
 #include "base/message_serialization.h"
 
 namespace aspia {
@@ -20,7 +21,7 @@ enum MessageId { ReplyMessageId };
 
 } // namespace
 
-HostSessionSystemInfo::HostSessionSystemInfo(const QString& channel_id)
+HostSessionSystemInfo::HostSessionSystemInfo(const std::string& channel_id)
     : HostSession(channel_id)
 {
     // Nothing
@@ -76,7 +77,7 @@ void HostSessionSystemInfo::readCategoryListRequest(
     reply.set_request_uuid(request_uuid);
 
     for (const auto& category : category_list_)
-        reply.mutable_category_list()->add_uuid(category.uuid().toStdString());
+        reply.mutable_category_list()->add_uuid(category.uuid());
 
     emit writeMessage(ReplyMessageId, serializeMessage(reply));
 }
@@ -85,26 +86,26 @@ void HostSessionSystemInfo::readCategoryRequest(
     const std::string& request_uuid,
     const proto::system_info::CategoryRequest& request)
 {
-    QString category_uuid = QString::fromStdString(request.uuid());
+    auto category_uuid = QString::fromStdString(request.uuid());
 
     for (const auto& category : category_list_)
     {
-        if (category.uuid() == category_uuid)
+        if (category.uuid() == category_uuid.toStdString())
         {
             QThread* thread = new QThread(this);
 
             Serializer* serializer = category.serializer(nullptr);
-            serializer->setRequestUuid(QString::fromStdString(request_uuid));
+            serializer->setRequestUuid(request_uuid);
             serializer->setParams(QByteArray::fromStdString(request.params()));
             serializer->moveToThread(thread);
 
             connect(serializer, &Serializer::finished, thread, &QThread::quit);
             connect(serializer, &Serializer::finished, serializer, &Serializer::deleteLater);
-            connect(serializer, &Serializer::replyReady, [&](const QString& request_uuid,
+            connect(serializer, &Serializer::replyReady, [&](const std::string& request_uuid,
                                                              const QByteArray& data)
             {
                 proto::system_info::Reply reply;
-                reply.set_request_uuid(request_uuid.toStdString());
+                reply.set_request_uuid(request_uuid);
                 reply.mutable_category()->set_data(data.toStdString());
 
                 emit writeMessage(ReplyMessageId, serializeMessage(reply));

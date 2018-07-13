@@ -8,9 +8,15 @@ local_settings:
         vs2017_64:
             generator: Visual Studio 15 2017 Win64
             #cxx_flags: /W0
+        vs_preview:
+            env:
+                VS150COMNTOOLS: c:/Program Files (x86)/Microsoft Visual Studio/Preview/Community/
 
+root_project: pvt.egorpugin.aspia
 common_settings:
     c++: 17
+    create_default_api: true
+    default_api_start: aspia
     root_dir: source
     options:
         any:
@@ -31,11 +37,51 @@ projects:
         executable_type: win32
         rc_enabled: false
         files:
-            - console/entry_point.cc
-            - console/console.rc
+            - console/.*
         dependencies:
+            - client
             - core
+            - crypto
+            - network
+            - protocols
+            - system_info
+
+            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+              ref: WIDGETS
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+              ref: UIC_COMMAND
+              version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/console/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
 
     host_config:
         executable_type: win32
@@ -45,15 +91,21 @@ projects:
             - host/host_config.rc
         dependencies:
             - core
+            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
 
     host_service:
+        executable_type: win32
         rc_enabled: false
         files:
             - host/win/host_service_entry_point.cc
             - host/win/host_service.rc
         dependencies:
             - core
+            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
+            - pvt.cppan.demo.qtproject.qt.base.winmain: 5
 
     host:
         executable_type: win32
@@ -63,6 +115,8 @@ projects:
             - host/win/host.rc
         dependencies:
             - core
+            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
 
     host_notifier:
@@ -73,46 +127,309 @@ projects:
             - host/host_notifier.rc
         dependencies:
             - core
+            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+
+    protocols:
+        type: lib
+        static_only: true
+        custom: true
+        files:
+            - protocol/.*
+        dependencies:
+            - pvt.cppan.demo.google.protobuf.protobuf: 3
+            - name: pvt.cppan.demo.google.protobuf.protoc
+              version: 3
+        post_sources: |
+            file(GLOB_RECURSE protos "${SDIR}/protocol/*.proto")
+            foreach(f ${protos})
+                cppan_genpb(${f})
+            endforeach()
+
+    resources:
+        type: lib
+        static_only: true
+        custom: true
+        files:
+            - resources/.*
+
+        dependencies:
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.rcc
+              ref: RCC_COMMAND
+              version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            #
+            set(Qt5Core_RCC_EXECUTABLE ${RCC_COMMAND})
+            qt5_add_resources(rcc ${SDIR}/resources/resources.qrc)
+            set(src ${src} ${rcc})
+
+
+    base:
+        type: lib
+        files:
+            - base/.*
+        dependencies:
+            - protocols
+            - pvt.cppan.demo.qtproject.qt.base.core: 5
+
+    codec:
+        type: lib
+        files:
+            - codec/.*
+        dependencies:
+            public:
+                - base
+                - pvt.cppan.demo.qtproject.qt.base.gui: 5
+            private:
+                - pvt.cppan.demo.dead2.zlib_ng: develop
+                - pvt.cppan.demo.chromium.libyuv.libyuv: master
+                - pvt.cppan.demo.webmproject.vpx: 1
+
+    crypto:
+        type: lib
+        files:
+            - crypto/.*
+        dependencies:
+            public:
+                - base
+            private:
+                - pvt.cppan.demo.jedisct1.libsodium: 1
+
+    desktop_capture:
+        type: lib
+        files:
+            - desktop_capture/.*
+        dependencies:
+            public:
+                - base
+                - pvt.cppan.demo.qtproject.qt.base.gui: 5
+            private:
+                - pvt.cppan.demo.mysticial.featuredetector: master
+
+    network:
+        type: lib
+        files:
+            - network/.*
+        dependencies:
+            private:
+                - pvt.cppan.demo.qtproject.qt.base.network: 5
+
+            public:
+                - base
+
+                - name: pvt.cppan.demo.qtproject.qt.base.widgets
+                  ref: WIDGETS
+                  version: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.core
+                  ref: CORE
+                  version: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+                  ref: MOC_COMMAND
+                  version: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+                  ref: UIC_COMMAND
+                  version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/network/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
+    ipc:
+        type: lib
+        files:
+            - ipc/.*
+        dependencies:
+            private:
+                - pvt.cppan.demo.qtproject.qt.base.network: 5
+            public:
+                - base
+
+                - name: pvt.cppan.demo.qtproject.qt.base.widgets
+                  ref: WIDGETS
+                  version: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.core
+                  ref: CORE
+                  version: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+                  ref: MOC_COMMAND
+                  version: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+                  ref: UIC_COMMAND
+                  version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/ipc/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
+    client:
+        type: lib
+        files:
+            - base_client/.*
+            - client/.*
+
+        dependencies:
+            - base
+            - network
+            - resources
+
+            - pvt.cppan.demo.qtproject.qt.base.xml: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+              ref: WIDGETS
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+              ref: UIC_COMMAND
+              version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/client/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
+    system_info:
+        type: lib
+        files:
+            - system_info/.*
+        dependencies:
+            - base
+
+            - pvt.cppan.demo.qtproject.qt.base.xml: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+              ref: WIDGETS
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+              ref: UIC_COMMAND
+              version: 5
+            - pvt.cppan.demo.google.protobuf.protobuf: 3
+            - name: pvt.cppan.demo.google.protobuf.protoc
+              version: 3
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/system_info/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
+            #
+            file(GLOB_RECURSE protos "${SDIR}/system_info/*.proto")
+            foreach(f ${protos})
+                cppan_genpb(${f})
+            endforeach()
+
+
+
 
     core:
         type: lib
-        shared_only: true
+        #shared_only: true
         files:
-            - "[^/]*\\.cc"
-            - "[^/]*\\.h"
-            - .*\.rc
-            - base/.*
-            - client/.*
-            - codec/.*
-            - console/.*
-            - crypto/.*
-            - desktop_capture/.*
             - host/.*
-            - ipc/.*
-            - network/.*
-            - protocol/.*
-            - resources/.*
-            - system_info/.*
 
         exclude_from_build:
             - .*entry_point.cc$
             - .*manifest$
             - .*rc$
 
-        dependencies:
-            - pvt.cppan.demo.google.protobuf.protobuf: 3
-            - name: pvt.cppan.demo.google.protobuf.protoc
-              version: 3
-            - pvt.cppan.demo.dead2.zlib_ng: develop
-            - pvt.cppan.demo.jedisct1.libsodium: 1
-            - pvt.cppan.demo.chromium.libyuv.libyuv: master
-            - pvt.cppan.demo.webmproject.vpx: 1
+        options:
+            any:
+                link_libraries:
+                    win32:
+                        public:
+                            - Wtsapi32
+                            - sas
+                            - comsuppw
 
-            - pvt.cppan.demo.qtproject.qt.base.network: 5
-            - pvt.cppan.demo.qtproject.qt.base.xml: 5
-            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
-            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
+        dependencies:
+            - base
+            - client
+            - codec
+            - crypto
+            - desktop_capture
+            - ipc
+            - network
+            - resources
+            - system_info
+
             - pvt.cppan.demo.qtproject.qt.winextras: 5
             - name: pvt.cppan.demo.qtproject.qt.base.widgets
               ref: WIDGETS
@@ -123,21 +440,10 @@ projects:
             - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
               ref: MOC_COMMAND
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.rcc
-              ref: RCC_COMMAND
-              version: 5
             - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
               ref: UIC_COMMAND
               version: 5
 
-        options:
-            any:
-                link_libraries:
-                    win32:
-                        public:
-                            - Wtsapi32
-                            - sas
-                            - comsuppw
 
 
         post_sources: |
@@ -155,34 +461,8 @@ projects:
 
             #
             include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
-            file(GLOB_RECURSE uis "${SDIR}/*.ui")
+            file(GLOB_RECURSE uis "${SDIR}/host/*.ui")
             set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
             qt5_wrap_ui(uic ${uis})
             set(src ${src} ${uic})
-
-            #
-            set(Qt5Core_RCC_EXECUTABLE ${RCC_COMMAND})
-            qt5_add_resources(rcc ${SDIR}/resources/resources.qrc)
-            set(src ${src} ${rcc})
-
-            #
-            macro(genpb f)
-                get_filename_component(n ${f} NAME_WE)
-                get_filename_component(d ${f} DIRECTORY)
-                string(REPLACE "${SDIR}" "" d2 "${d}")
-                set(n ${d2}/${n})
-                add_custom_command(
-                    OUTPUT
-                        ${BDIR}/${n}.pb.cc
-                        ${BDIR}/${n}.pb.h
-                    COMMAND
-                        pvt.cppan.demo.google.protobuf.protoc ${f} --cpp_out=${BDIR}/${d2} -I ${d}
-                )
-                set(src ${src} ${BDIR}/${n}.pb.cc ${BDIR}/${n}.pb.h)
-            endmacro()
-
-            file(GLOB_RECURSE protos "${SDIR}/*.proto")
-            foreach(f ${protos})
-                genpb(${f})
-            endforeach()
 

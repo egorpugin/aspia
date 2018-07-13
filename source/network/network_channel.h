@@ -45,10 +45,10 @@ public:
 
     static NetworkChannel* createClient(QObject* parent = nullptr);
 
-    void connectToHost(const QString& address, int port);
+    void connectToHost(const std::string& address, int port);
 
     ChannelState channelState() const { return channel_state_; }
-    QString peerAddress() const;
+    std::string peerAddress() const;
 
 signals:
     void connected();
@@ -76,7 +76,7 @@ private slots:
     void onConnected();
     void onDisconnected();
     void onError(QAbstractSocket::SocketError error);
-    void onBytesWritten(qint64 bytes);
+    void onBytesWritten(int64_t bytes);
     void onReadyRead();
     void onMessageWritten(int message_id);
     void onMessageReceived(const QByteArray& buffer);
@@ -98,13 +98,13 @@ private:
     std::unique_ptr<Encryptor> encryptor_;
 
     std::queue<std::pair<int, QByteArray>> write_queue_;
-    qint64 written_ = 0;
+    int64_t written_ = 0;
 
     bool read_required_ = false;
     bool read_size_received_ = false;
     QByteArray read_buffer_;
     int read_size_ = 0;
-    qint64 read_ = 0;
+    int64_t read_ = 0;
 
     int pinger_timer_id_ = 0;
 

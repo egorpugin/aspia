@@ -16,12 +16,12 @@ namespace {
 
 enum MessageId { ConfigMessageId };
 
-const uint32_t kSupportedVideoEncodings =
+const quint32 kSupportedVideoEncodings =
     proto::desktop::VIDEO_ENCODING_ZLIB |
     proto::desktop::VIDEO_ENCODING_VP8 |
     proto::desktop::VIDEO_ENCODING_VP9;
 
-const uint32_t kSupportedFeatures = 0;
+const quint32 kSupportedFeatures = 0;
 
 } // namespace
 
@@ -46,13 +46,13 @@ ClientSessionDesktopView::~ClientSessionDesktopView()
 }
 
 // static
-uint32_t ClientSessionDesktopView::supportedVideoEncodings()
+quint32 ClientSessionDesktopView::supportedVideoEncodings()
 {
     return kSupportedVideoEncodings;
 }
 
 // static
-uint32_t ClientSessionDesktopView::supportedFeatures()
+quint32 ClientSessionDesktopView::supportedFeatures()
 {
     return kSupportedFeatures;
 }

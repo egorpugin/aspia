@@ -11,7 +11,7 @@
 #include "desktop_capture/diff_block_sse2.h"
 #include "desktop_capture/diff_block_sse3.h"
 
-#include <libyuv/cpu_id.h>
+#include <x86/cpu_x86.h>
 
 namespace aspia {
 
@@ -84,7 +84,9 @@ Differ::Differ(const QSize& size)
     // Offset from the start of one block-row to the next.
     block_stride_y_ = bytes_per_row_ * kBlockHeight;
 
-    if (libyuv::TestCpuFlag(libyuv::kCpuHasAVX2))
+    static FeatureDetector::cpu_x86 d;
+
+    if (d.HW_AVX2)
     {
         qInfo("AVX2 differ loaded");
 
@@ -95,7 +97,7 @@ Differ::Differ(const QSize& size)
         else if constexpr (kBlockWidth == 32 && kBlockHeight == 32)
             diff_full_block_func_ = diffFullBlock_32x32_AVX2;
     }
-    else if (libyuv::TestCpuFlag(libyuv::kCpuHasSSSE3))
+    else if (d.HW_SSSE3)
     {
         qInfo("SSE3 differ loaded");
 
@@ -106,7 +108,7 @@ Differ::Differ(const QSize& size)
         else if constexpr (kBlockWidth == 32 && kBlockHeight == 32)
             diff_full_block_func_ = diffFullBlock_32x32_SSE3;
     }
-    else if (libyuv::TestCpuFlag(libyuv::kCpuHasSSE2))
+    else if (d.HW_SSE2)
     {
         qInfo("SSE2 differ loaded");
 

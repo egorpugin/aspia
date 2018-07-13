@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__COMPUTER_ITEM_H
 #define _ASPIA_CONSOLE__COMPUTER_ITEM_H
 
-#include "base/common.h"
-
 #include <QTreeWidget>
 
 #include "protocol/address_book.pb.h"
@@ -36,7 +34,7 @@ private:
     proto::address_book::Computer* computer_;
     ComputerGroupItem* parent_group_item_;
 
-    DISABLE_COPY(ComputerItem)
+    Q_DISABLE_COPY(ComputerItem)
 };
 
 } // namespace aspia

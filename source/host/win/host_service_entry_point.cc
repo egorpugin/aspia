@@ -7,7 +7,16 @@
 
 #include "host/win/host_service_main.h"
 
+#include <QtCore/QtPlugin>
+#ifdef QT_STATIC
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+#endif
+
+int qInitResources_resources();
+
 int main(int argc, char *argv[])
 {
+    qInitResources_resources();
     aspia::hostServiceMain(argc, argv);
 }

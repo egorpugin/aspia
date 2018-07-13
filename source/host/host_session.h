@@ -24,7 +24,7 @@ class HostSession : public QObject
 public:
     virtual ~HostSession() = default;
 
-    static HostSession* create(const QString& session_type, const QString& channel_id);
+    static HostSession* create(const std::string& session_type, const std::string& channel_id);
 
     void start();
 
@@ -38,7 +38,7 @@ signals:
     void errorOccurred();
 
 protected:
-    explicit HostSession(const QString& channel_id);
+    explicit HostSession(const std::string& channel_id);
 
     virtual void startSession() = 0;
     virtual void stopSession() = 0;
@@ -48,7 +48,7 @@ private slots:
     void stop();
 
 private:
-    QString channel_id_;
+    std::string channel_id_;
     QPointer<IpcChannel> ipc_channel_;
 
     DISABLE_COPY(HostSession)

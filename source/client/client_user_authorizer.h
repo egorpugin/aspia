@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CLIENT__CLIENT_USER_AUTHORIZER_H
 #define _ASPIA_CLIENT__CLIENT_USER_AUTHORIZER_H
 
-#include "base/common.h"
-
 #include <QObject>
 
 #include "protocol/authorization.pb.h"
@@ -56,7 +54,7 @@ private:
     QString username_;
     QString password_;
 
-    DISABLE_COPY(ClientUserAuthorizer)
+    Q_DISABLE_COPY(ClientUserAuthorizer)
 };
 
 } // namespace aspia

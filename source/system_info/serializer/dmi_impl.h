@@ -10,7 +10,7 @@
 
 #include "base/common.h"
 
-#include <QString>
+#include "base/common.h"
 
 #include <memory>
 
@@ -85,7 +85,7 @@ protected:
         return *reinterpret_cast<const T*>(table_[offset]);
     }
 
-    QString string(uint8_t offset) const;
+    std::string string(uint8_t offset) const;
 
 private:
     const uint8_t* table_;
@@ -94,13 +94,13 @@ private:
 class DmiBiosTable : public DmiTable
 {
 public:
-    QString manufacturer() const;
-    QString version() const;
-    QString date() const;
+    std::string manufacturer() const;
+    std::string version() const;
+    std::string date() const;
     uint64_t biosSize() const;
-    QString biosRevision() const;
-    QString firmwareRevision() const;
-    QString address() const;
+    std::string biosRevision() const;
+    std::string firmwareRevision() const;
+    std::string address() const;
     uint64_t runtimeSize() const;
 
     struct Characteristics

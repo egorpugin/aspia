@@ -16,13 +16,13 @@ namespace {
 
 void addBiosTable(system_info::dmi::Bios* bios, const DmiBiosTable* table)
 {
-    bios->set_manufacturer(table->manufacturer().toStdString());
-    bios->set_version(table->version().toStdString());
-    bios->set_date(table->date().toStdString());
+    bios->set_manufacturer(table->manufacturer());
+    bios->set_version(table->version());
+    bios->set_date(table->date());
     bios->set_size(table->biosSize());
-    bios->set_bios_revision(table->biosRevision().toStdString());
-    bios->set_firmware_revision(table->firmwareRevision().toStdString());
-    bios->set_address(table->address().toStdString());
+    bios->set_bios_revision(table->biosRevision());
+    bios->set_firmware_revision(table->firmwareRevision());
+    bios->set_address(table->address());
     bios->set_runtime_size(table->runtimeSize());
 
     DmiBiosTable::Characteristics result;
@@ -75,14 +75,14 @@ void addBiosTable(system_info::dmi::Bios* bios, const DmiBiosTable* table)
 
 } // namespace
 
-DmiSerializer::DmiSerializer(QObject* parent, const QString& uuid)
+DmiSerializer::DmiSerializer(QObject* parent, const std::string& uuid)
     : Serializer(parent, uuid)
 {
     // Nothing
 }
 
 // static
-Serializer* DmiSerializer::create(QObject* parent, const QString& uuid)
+Serializer* DmiSerializer::create(QObject* parent, const std::string& uuid)
 {
     return new DmiSerializer(parent, uuid);
 }

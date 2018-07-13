@@ -7,15 +7,17 @@
 
 #include "codec/compressor_zlib.h"
 
+#include <zlib-ng.h>
+
 #include <QDebug>
 
 namespace aspia {
 
 CompressorZLIB::CompressorZLIB(int compress_ratio)
 {
-    memset(&stream_, 0, sizeof(stream_));
+    stream_ = (zng_stream*)calloc(sizeof(zng_stream), 1);
 
-    int ret = zng_deflateInit2(&stream_,
+    int ret = zng_deflateInit2(stream_,
                                compress_ratio,
                                Z_DEFLATED,
                                MAX_WBITS,
@@ -26,13 +28,14 @@ CompressorZLIB::CompressorZLIB(int compress_ratio)
 
 CompressorZLIB::~CompressorZLIB()
 {
-    int ret = zng_deflateEnd(&stream_);
+    int ret = zng_deflateEnd(stream_);
     assert(ret == Z_OK);
+    free(stream_);
 }
 
 void CompressorZLIB::reset()
 {
-    int ret = zng_deflateReset(&stream_);
+    int ret = zng_deflateReset(stream_);
     assert(ret == Z_OK);
 }
 
@@ -47,10 +50,10 @@ bool CompressorZLIB::process(const uint8_t* input_data,
     assert(output_size != 0);
 
     // Setup I/O parameters.
-    stream_.avail_in  = static_cast<uint32_t>(input_size);
-    stream_.next_in   = input_data;
-    stream_.avail_out = static_cast<uint32_t>(output_size);
-    stream_.next_out  = output_data;
+    stream_->avail_in  = static_cast<uint32_t>(input_size);
+    stream_->next_in   = input_data;
+    stream_->avail_out = static_cast<uint32_t>(output_size);
+    stream_->next_out  = output_data;
 
     int z_flush = 0;
 
@@ -73,12 +76,12 @@ bool CompressorZLIB::process(const uint8_t* input_data,
             break;
     }
 
-    int ret = zng_deflate(&stream_, z_flush);
+    int ret = zng_deflate(stream_, z_flush);
     if (ret == Z_STREAM_ERROR)
         qWarning("zlib compression failed");
 
-    *consumed = input_size - stream_.avail_in;
-    *written = output_size - stream_.avail_out;
+    *consumed = input_size - stream_->avail_in;
+    *written = output_size - stream_->avail_out;
 
     //
     // If |ret| equals Z_STREAM_END we have reached the end of stream.
@@ -94,7 +97,7 @@ bool CompressorZLIB::process(const uint8_t* input_data,
             return false;
 
         case Z_BUF_ERROR:
-            return stream_.avail_out == 0;
+            return stream_->avail_out == 0;
 
         default:
             qWarning() << "Unexpected zlib error: " << ret;

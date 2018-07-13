@@ -28,8 +28,8 @@ public:
     ClientSessionDesktopView(ConnectData* connect_data, QObject* parent);
     virtual ~ClientSessionDesktopView();
 
-    static uint32_t supportedVideoEncodings();
-    static uint32_t supportedFeatures();
+    static quint32 supportedVideoEncodings();
+    static quint32 supportedFeatures();
 
 public slots:
     // ClientSession implementation.
@@ -52,7 +52,7 @@ private:
     proto::desktop::VideoEncoding video_encoding_ = proto::desktop::VIDEO_ENCODING_UNKNOWN;
     std::unique_ptr<VideoDecoder> video_decoder_;
 
-    DISABLE_COPY(ClientSessionDesktopView)
+    Q_DISABLE_COPY(ClientSessionDesktopView)
 };
 
 } // namespace aspia

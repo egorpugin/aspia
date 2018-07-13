@@ -10,23 +10,21 @@
 
 #include "base/common.h"
 
-#include <QString>
-
 namespace aspia {
 
 class ServiceEventHandler;
 
-class ServiceImpl
+class ASPIA_BASE_API ServiceImpl
 {
 public:
-    ServiceImpl(const QString& name, const QString& display_name, const QString& description);
+    ServiceImpl(const std::string& name, const std::string& display_name, const std::string& description);
     virtual ~ServiceImpl() = default;
 
     static ServiceImpl* instance() { return instance_; }
 
-    QString serviceName() const { return name_; }
-    QString serviceDisplayName() const { return display_name_; }
-    QString serviceDescription() const { return description_; }
+    std::string serviceName() const { return name_; }
+    std::string serviceDisplayName() const { return display_name_; }
+    std::string serviceDescription() const { return description_; }
 
     int exec(int argc, char* argv[]);
 
@@ -36,9 +34,9 @@ protected:
     virtual void start() = 0;
     virtual void stop() = 0;
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
     virtual void sessionChange(uint32_t event, uint32_t session_id) = 0;
-#endif // defined(Q_OS_WIN)
+#endif // defined(_WIN32)
 
     virtual void createApplication(int argc, char* argv[]) = 0;
     virtual int executeApplication() = 0;
@@ -46,9 +44,9 @@ protected:
 private:
     static ServiceImpl* instance_;
 
-    QString name_;
-    QString display_name_;
-    QString description_;
+    std::string name_;
+    std::string display_name_;
+    std::string description_;
 
     DISABLE_COPY(ServiceImpl)
 };

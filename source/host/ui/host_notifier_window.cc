@@ -7,7 +7,7 @@
 
 #include "host/ui/host_notifier_window.h"
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -72,7 +72,7 @@ HostNotifierWindow::HostNotifierWindow(QWidget* parent)
 {
     HostSettings settings;
 
-    QString current_locale = settings.locale();
+    std::string current_locale = settings.locale();
 
     if (!locale_loader_.contains(current_locale))
     {
@@ -97,7 +97,7 @@ HostNotifierWindow::HostNotifierWindow(QWidget* parent)
 
     setAttribute(Qt::WA_TranslucentBackground);
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
     taskbar_create_message_ = RegisterWindowMessageW(L"TaskbarCreated");
     if (!taskbar_create_message_)
     {
@@ -106,7 +106,7 @@ HostNotifierWindow::HostNotifierWindow(QWidget* parent)
 #endif
 }
 
-void HostNotifierWindow::setChannelId(const QString& channel_id)
+void HostNotifierWindow::setChannelId(const std::string& channel_id)
 {
     channel_id_ = channel_id;
 }
@@ -178,7 +178,7 @@ bool HostNotifierWindow::eventFilter(QObject* object, QEvent* event)
 
 bool HostNotifierWindow::nativeEvent(const QByteArray& event_type, void* message, long* result)
 {
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
     MSG* native_message = reinterpret_cast<MSG*>(message);
     if (native_message->message == taskbar_create_message_)
     {

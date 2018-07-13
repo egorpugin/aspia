@@ -53,7 +53,7 @@ void ClientSessionSystemInfo::messageReceived(const QByteArray& buffer)
 
 void ClientSessionSystemInfo::messageWritten(int message_id)
 {
-    assert(message_id == RequestMessageId);
+    Q_ASSERT(message_id == RequestMessageId);
     emit readMessage();
 }
 

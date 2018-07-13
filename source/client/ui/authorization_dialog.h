@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CLIENT__UI__AUTHORIZATION_DIALOG_H
 #define _ASPIA_CLIENT__UI__AUTHORIZATION_DIALOG_H
 
-#include "base/common.h"
-
 #include "ui_authorization_dialog.h"
 
 namespace aspia {
@@ -38,7 +36,7 @@ private slots:
 private:
     Ui::AuthorizationDialog ui;
 
-    DISABLE_COPY(AuthorizationDialog)
+    Q_DISABLE_COPY(AuthorizationDialog)
 };
 
 } // namespace aspia

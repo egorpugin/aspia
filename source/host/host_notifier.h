@@ -21,7 +21,7 @@ public:
     explicit HostNotifier(QObject* parent = nullptr);
     ~HostNotifier() = default;
 
-    bool start(const QString& channel_id);
+    bool start(const std::string& channel_id);
 
 public slots:
     void stop();

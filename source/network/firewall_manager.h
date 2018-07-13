@@ -5,13 +5,13 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_NETWORK__FIREWALL_MANAGER_H
-#define _ASPIA_NETWORK__FIREWALL_MANAGER_H
+#pragma once
 
 #include "base/common.h"
 
-#include <QString>
+#include <vector>
 
+// win
 #include <wrl/client.h>
 #include <netfw.h>
 
@@ -20,7 +20,7 @@ namespace aspia {
 class FirewallManager
 {
 public:
-    explicit FirewallManager(const QString& application_path);
+    explicit FirewallManager(const std::string& application_path);
     ~FirewallManager() = default;
 
     // Returns true if firewall manager is valid.
@@ -34,19 +34,19 @@ public:
 
     // Adds a firewall rule allowing inbound connections to the application on
     // TCP port |port|. Replaces the rule if it already exists. Needs elevation.
-    bool addTcpRule(const QString& rule_name,
-                    const QString& description,
+    bool addTcpRule(const std::string& rule_name,
+                    const std::string& description,
                     int port);
 
     // Deletes all rules with specified name. Needs elevation.
-    void deleteRuleByName(const QString& rule_name);
+    void deleteRuleByName(const std::string& rule_name);
 
     // Deletes all rules for current app. Needs elevation.
     void deleteAllRules();
 
 private:
     // Returns the list of rules applying to the application.
-    void allRules(QVector<Microsoft::WRL::ComPtr<INetFwRule>>* rules);
+    void allRules(std::vector<Microsoft::WRL::ComPtr<INetFwRule>>* rules);
 
     // Deletes rules. Needs elevation.
     void deleteRule(Microsoft::WRL::ComPtr<INetFwRule> rule);
@@ -54,11 +54,9 @@ private:
     Microsoft::WRL::ComPtr<INetFwPolicy2> firewall_policy_;
     Microsoft::WRL::ComPtr<INetFwRules> firewall_rules_;
 
-    QString application_path_;
+    std::string application_path_;
 
     DISABLE_COPY(FirewallManager)
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_NETWORK__FIREWALL_MANAGER_H

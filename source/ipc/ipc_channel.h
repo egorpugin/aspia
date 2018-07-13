@@ -36,7 +36,7 @@ public:
 
     static IpcChannel* createClient(QObject* parent = nullptr);
 
-    void connectToServer(const QString& channel_name);
+    void connectToServer(const std::string& channel_name);
     State channelState() const { return state_; }
 
 public slots:
@@ -59,7 +59,7 @@ signals:
 
 private slots:
     void onError(QLocalSocket::LocalSocketError socket_error);
-    void onBytesWritten(qint64 bytes);
+    void onBytesWritten(int64_t bytes);
     void onReadyRead();
 
 private:
@@ -76,13 +76,13 @@ private:
 
     std::queue<std::pair<int, QByteArray>> write_queue_;
     MessageSizeType write_size_ = 0;
-    qint64 written_ = 0;
+    int64_t written_ = 0;
 
     bool read_required_ = false;
     bool read_size_received_ = false;
     QByteArray read_buffer_;
     MessageSizeType read_size_ = 0;
-    qint64 read_ = 0;
+    int64_t read_ = 0;
 
     DISABLE_COPY(IpcChannel)
 };

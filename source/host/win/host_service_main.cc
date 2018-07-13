@@ -17,7 +17,7 @@ namespace aspia {
 int hostServiceMain(int argc, char *argv[])
 {
     FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName());
+    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
 
     return HostService().exec(argc, argv);
 }

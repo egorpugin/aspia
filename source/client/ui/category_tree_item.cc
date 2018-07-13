@@ -13,7 +13,7 @@ CategoryTreeItem::CategoryTreeItem(const Category& category)
     : category_(category)
 {
     setIcon(0, category_.icon());
-    setText(0, category_.name());
+    setText(0, category_.name().c_str());
 }
 
 } // namespace aspia

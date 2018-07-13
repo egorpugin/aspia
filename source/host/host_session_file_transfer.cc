@@ -18,7 +18,7 @@ enum MessageId { ReplyMessageId };
 
 } // namespace
 
-HostSessionFileTransfer::HostSessionFileTransfer(const QString& channel_id)
+HostSessionFileTransfer::HostSessionFileTransfer(const std::string& channel_id)
     : HostSession(channel_id)
 {
     // Nothing

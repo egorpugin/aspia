@@ -59,7 +59,7 @@ private:
     QQueue<FileTransferTask> pending_tasks_;
     QQueue<FileTransferTask> tasks_;
 
-    DISABLE_COPY(FileTransferQueueBuilder)
+    Q_DISABLE_COPY(FileTransferQueueBuilder)
 };
 
 } // namespace aspia

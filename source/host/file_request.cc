@@ -29,51 +29,51 @@ FileRequest* FileRequest::driveListRequest()
 }
 
 // static
-FileRequest* FileRequest::fileListRequest(const QString& path)
+FileRequest* FileRequest::fileListRequest(const std::string& path)
 {
     proto::file_transfer::Request request;
-    request.mutable_file_list_request()->set_path(path.toStdString());
+    request.mutable_file_list_request()->set_path(path);
     return new FileRequest(std::move(request));
 }
 
 // static
-FileRequest* FileRequest::createDirectoryRequest(const QString& path)
+FileRequest* FileRequest::createDirectoryRequest(const std::string& path)
 {
     proto::file_transfer::Request request;
-    request.mutable_create_directory_request()->set_path(path.toStdString());
+    request.mutable_create_directory_request()->set_path(path);
     return new FileRequest(std::move(request));
 }
 
 // static
-FileRequest* FileRequest::renameRequest(const QString& old_name, const QString& new_name)
+FileRequest* FileRequest::renameRequest(const std::string& old_name, const std::string& new_name)
 {
     proto::file_transfer::Request request;
-    request.mutable_rename_request()->set_old_name(old_name.toStdString());
-    request.mutable_rename_request()->set_new_name(new_name.toStdString());
+    request.mutable_rename_request()->set_old_name(old_name);
+    request.mutable_rename_request()->set_new_name(new_name);
     return new FileRequest(std::move(request));
 }
 
 // static
-FileRequest* FileRequest::removeRequest(const QString& path)
+FileRequest* FileRequest::removeRequest(const std::string& path)
 {
     proto::file_transfer::Request request;
-    request.mutable_remove_request()->set_path(path.toStdString());
+    request.mutable_remove_request()->set_path(path);
     return new FileRequest(std::move(request));
 }
 
 // static
-FileRequest* FileRequest::downloadRequest(const QString& file_path)
+FileRequest* FileRequest::downloadRequest(const std::string& file_path)
 {
     proto::file_transfer::Request request;
-    request.mutable_download_request()->set_path(file_path.toStdString());
+    request.mutable_download_request()->set_path(file_path);
     return new FileRequest(std::move(request));
 }
 
 // static
-FileRequest* FileRequest::uploadRequest(const QString& file_path, bool overwrite)
+FileRequest* FileRequest::uploadRequest(const std::string& file_path, bool overwrite)
 {
     proto::file_transfer::Request request;
-    request.mutable_upload_request()->set_path(file_path.toStdString());
+    request.mutable_upload_request()->set_path(file_path);
     request.mutable_upload_request()->set_overwrite(overwrite);
     return new FileRequest(std::move(request));
 }

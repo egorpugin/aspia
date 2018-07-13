@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CLIENT__UI__SYSTEM_INFO_WINDOW_H
 #define _ASPIA_CLIENT__UI__SYSTEM_INFO_WINDOW_H
 
-#include "base/common.h"
-
 #include "client/connect_data.h"
 #include "protocol/system_info_session.pb.h"
 #include "ui_system_info_window.h"
@@ -46,7 +44,7 @@ private:
     QMenu* menu_;
     QLineEdit* search_edit_;
 
-    DISABLE_COPY(SystemInfoWindow)
+    Q_DISABLE_COPY(SystemInfoWindow)
 };
 
 } // namespace aspia

@@ -25,7 +25,7 @@ LocaleLoader::LocaleLoader()
     {
         if (regexp.exactMatch(qm_file))
         {
-            const QString locale_name = regexp.cap(2);
+            const auto locale_name = regexp.cap(2);
 
             if (locale_list_.contains(locale_name))
                 locale_list_[locale_name].push_back(qm_file);
@@ -51,7 +51,7 @@ QStringList LocaleLoader::localeList() const
         list.push_back(iter.key());
     }
 
-    const QString english_locale = QStringLiteral("en");
+    const auto english_locale = QStringLiteral("en");
     if (!locale_list_.contains(english_locale))
         list.push_back(english_locale);
 
@@ -72,24 +72,24 @@ QStringList LocaleLoader::sortedLocaleList() const
     return list;
 }
 
-QStringList LocaleLoader::fileList(const QString& locale_name) const
+QStringList LocaleLoader::fileList(const std::string& locale_name) const
 {
-    if (!contains(locale_name))
+    if (!contains(locale_name.c_str()))
         return QStringList();
 
-    return locale_list_[locale_name];
+    return locale_list_[locale_name.c_str()];
 }
 
-bool LocaleLoader::contains(const QString& locale_name) const
+bool LocaleLoader::contains(const std::string& locale_name) const
 {
-    return locale_list_.contains(locale_name);
+    return locale_list_.contains(locale_name.c_str());
 }
 
-void LocaleLoader::installTranslators(const QString& locale_name)
+void LocaleLoader::installTranslators(const std::string& locale_name)
 {
     removeTranslators();
 
-    const QString translations_dir = translationsDir();
+    const auto translations_dir = translationsDir();
 
     for (const auto& qm_file : fileList(locale_name))
     {

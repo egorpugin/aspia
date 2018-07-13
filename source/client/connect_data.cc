@@ -13,10 +13,10 @@ namespace aspia {
 
 ConnectData::~ConnectData()
 {
-    secureMemZero(&computer_name_);
-    secureMemZero(&address_);
-    secureMemZero(&user_name_);
-    secureMemZero(&password_);
+    secureMemZero(&computer_name_.toStdString());
+    secureMemZero(&address_.toStdString());
+    secureMemZero(&user_name_.toStdString());
+    secureMemZero(&password_.toStdString());
 }
 
 } // namespace aspia

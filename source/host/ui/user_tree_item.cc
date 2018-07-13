@@ -18,7 +18,7 @@ UserTreeItem::UserTreeItem(int index, User* user)
     else
         setIcon(0, QIcon(QStringLiteral(":/icon/user-disabled.png")));
 
-    setText(0, user_->name());
+    setText(0, user_->name().c_str());
 }
 
 } // namespace aspia

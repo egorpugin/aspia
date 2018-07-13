@@ -7,16 +7,16 @@
 
 #include "base/errno_logging.h"
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#endif // defined(Q_OS_WIN)
+#endif // defined(_WIN32)
 
 namespace aspia {
 
 QString errnoToString(SystemErrorCode error_code)
 {
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
     const DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 
     const int kErrorMessageBufferSize = 256;
@@ -68,3 +68,9 @@ void errnoToLog(QtMsgType type, const char* file, int line, const char* message,
 }
 
 } // namespace aspia
+
+QDebug &operator<<(QDebug &o, const std::string &s)
+{
+    o << QString::fromStdString(s);
+    return o;
+}

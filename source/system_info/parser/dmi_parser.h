@@ -20,21 +20,21 @@ class DmiParser : public Parser
     Q_OBJECT
 
 public:
-    static Parser* create(QObject* parent, const QString& uuid);
+    static Parser* create(QObject* parent, const std::string& uuid);
 
     // Parser implementation.
     QJsonObject toJson() override;
     QDomElement toXml() override;
     QDomElement toHtml() override;
-    QString toText() override;
+    std::string toText() override;
 
 public slots:
     // Parser implementation.
     void updateData() const override;
-    void readReply(const QString& uuid, const QByteArray& data) override;
+    void readReply(const std::string& uuid, const QByteArray& data) override;
 
 protected:
-    DmiParser(QObject* parent, const QString& uuid);
+    DmiParser(QObject* parent, const std::string& uuid);
 
 private:
     std::unique_ptr<system_info::dmi::Dmi> dmi_;

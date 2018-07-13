@@ -7,7 +7,7 @@
 
 #include "host/file_platform_util.h"
 
-#if !defined(Q_OS_WIN)
+#if !defined(_WIN32)
 #error This file is only for MS Windows
 #endif
 
@@ -42,12 +42,13 @@ QIcon stockIcon(SHSTOCKICONID icon_id)
 } // namespace
 
 // static
-QPair<QIcon, QString> FilePlatformUtil::fileTypeInfo(const QString& file_name)
+QPair<QIcon, std::string> FilePlatformUtil::fileTypeInfo(const std::string& file_name)
 {
     SHFILEINFO file_info;
     memset(&file_info, 0, sizeof(file_info));
 
-    SHGetFileInfoW(qUtf16Printable(file_name),
+    auto n = to_wstring(file_name);
+    SHGetFileInfoW(n.c_str(),
                    FILE_ATTRIBUTE_NORMAL,
                    &file_info,
                    sizeof(file_info),
@@ -56,14 +57,12 @@ QPair<QIcon, QString> FilePlatformUtil::fileTypeInfo(const QString& file_name)
     ScopedHICON icon(file_info.hIcon);
     if (icon.isValid())
     {
-        return QPair<QIcon, QString>(QtWin::fromHICON(icon),
-                                     QString::fromUtf16(
-                                         reinterpret_cast<const ushort*>(file_info.szTypeName)));
+        return QPair<QIcon, std::string>(QtWin::fromHICON(icon),
+                                     to_string(file_info.szTypeName));
     }
 
-    return QPair<QIcon, QString>(QIcon(QStringLiteral(":/icon/document.png")),
-                                 QString::fromUtf16(
-                                     reinterpret_cast<const ushort*>(file_info.szTypeName)));
+    return QPair<QIcon, std::string>(QIcon(QStringLiteral(":/icon/document.png")),
+        to_string(file_info.szTypeName));
 }
 
 // static
@@ -113,9 +112,10 @@ QIcon FilePlatformUtil::driveIcon(proto::file_transfer::DriveList::Item::Type ty
 }
 
 // static
-proto::file_transfer::DriveList::Item::Type FilePlatformUtil::driveType(const QString& drive_path)
+proto::file_transfer::DriveList::Item::Type FilePlatformUtil::driveType(const std::string& drive_path)
 {
-    switch (GetDriveTypeW(qUtf16Printable(drive_path)))
+    auto n = to_wstring(drive_path);
+    switch (GetDriveTypeW(n.c_str()))
     {
         case DRIVE_FIXED:
             return proto::file_transfer::DriveList::Item::TYPE_FIXED;

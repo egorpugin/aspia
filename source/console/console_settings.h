@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__CONSOLE_SETTINGS_H
 #define _ASPIA_CONSOLE__CONSOLE_SETTINGS_H
 
-#include "base/common.h"
-
 #include <QSettings>
 
 #include "protocol/authorization.pb.h"
@@ -47,7 +45,7 @@ public:
 private:
     QSettings settings_;
 
-    DISABLE_COPY(ConsoleSettings)
+    Q_DISABLE_COPY(ConsoleSettings)
 };
 
 } // namespace aspia

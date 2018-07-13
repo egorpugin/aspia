@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__CONSOLE_STATUSBAR_H
 #define _ASPIA_CONSOLE__CONSOLE_STATUSBAR_H
 
-#include "base/common.h"
-
 #include <QStatusBar>
 
 #include "protocol/address_book.pb.h"
@@ -28,7 +26,7 @@ public:
     void clear();
 
 private:
-    DISABLE_COPY(ConsoleStatusBar)
+    Q_DISABLE_COPY(ConsoleStatusBar)
 };
 
 } // namespace aspia

@@ -52,7 +52,7 @@ FileLogger::~FileLogger()
     qInfo("Logging finished");
 }
 
-bool FileLogger::startLogging(const QString& prefix)
+bool FileLogger::startLogging(const std::string& prefix)
 {
     QDir directory(QDir::tempPath() + QLatin1String("/aspia"));
     if (!directory.exists())
@@ -64,9 +64,9 @@ bool FileLogger::startLogging(const QString& prefix)
         }
     }
 
-    QString file_path = QString("%1/%2_%3.log")
+    auto file_path = QString("%1/%2_%3.log")
         .arg(directory.path())
-        .arg(prefix)
+        .arg(prefix.c_str())
         .arg(QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_hh.mm.ss.zzz")));
 
     file_.reset(new QFile(file_path));

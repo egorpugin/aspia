@@ -26,9 +26,3 @@ E-Mail: dmitry@aspia.ru
 IRC channel: irc.freenode.net, #aspia
 
 Russian Group in Telegram: @aspia_ru
-
-Licensing
----------
-Project code is available under the GNU General Public License 3.
-
-For more information, see LICENSE.md.

@@ -11,7 +11,7 @@
 #include "base/common.h"
 
 #include <QObject>
-#include <QString>
+#include "base/common.h"
 
 #include "protocol/system_info_session.pb.h"
 
@@ -26,7 +26,7 @@ public:
     const std::string& requestUuid() const { return request_.request_uuid(); }
 
     static SystemInfoRequest* categoryList();
-    static SystemInfoRequest* category(const QString& uuid, const QByteArray& params);
+    static SystemInfoRequest* category(const std::string& uuid, const QByteArray& params);
 
 signals:
     void replyReady(const proto::system_info::Reply& reply);

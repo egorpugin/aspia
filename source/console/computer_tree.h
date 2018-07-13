@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__COMPUTER_TREE_H
 #define _ASPIA_CONSOLE__COMPUTER_TREE_H
 
-#include "base/common.h"
-
 #include <QTreeWidget>
 
 namespace aspia {
@@ -34,7 +32,7 @@ protected:
 private:
     QPoint start_pos_;
 
-    DISABLE_COPY(ComputerTree)
+    Q_DISABLE_COPY(ComputerTree)
 };
 
 } // namespace aspia

@@ -80,15 +80,15 @@ proto::file_transfer::Reply FileWorker::doDriveListRequest()
 
     for (const auto& volume : QStorageInfo::mountedVolumes())
     {
-        QString root_path = volume.rootPath();
+        auto root_path = volume.rootPath();
 
         proto::file_transfer::DriveList::Item* item = reply.mutable_drive_list()->add_item();
 
-        item->set_type(FilePlatformUtil::driveType(root_path));
+        item->set_type(FilePlatformUtil::driveType(root_path.toStdString()));
         item->set_path(root_path.toStdString());
     }
 
-    QString desktop_path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    auto desktop_path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     if (!desktop_path.isEmpty())
     {
         proto::file_transfer::DriveList::Item* item = reply.mutable_drive_list()->add_item();
@@ -97,7 +97,7 @@ proto::file_transfer::Reply FileWorker::doDriveListRequest()
         item->set_path(desktop_path.toStdString());
     }
 
-    QString home_path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    auto home_path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
     if (!home_path.isEmpty())
     {
         proto::file_transfer::DriveList::Item* item = reply.mutable_drive_list()->add_item();
@@ -151,7 +151,7 @@ proto::file_transfer::Reply FileWorker::doCreateDirectoryRequest(
 {
     proto::file_transfer::Reply reply;
 
-    QString directory_path = QString::fromStdString(request.path());
+    auto directory_path = QString::fromStdString(request.path());
 
     QFileInfo file_info(directory_path);
     if (file_info.exists())
@@ -176,8 +176,8 @@ proto::file_transfer::Reply FileWorker::doRenameRequest(
 {
     proto::file_transfer::Reply reply;
 
-    QString old_name = QString::fromStdString(request.old_name());
-    QString new_name = QString::fromStdString(request.new_name());
+    auto old_name = QString::fromStdString(request.old_name());
+    auto new_name = QString::fromStdString(request.new_name());
 
     if (old_name == new_name)
     {
@@ -225,7 +225,7 @@ proto::file_transfer::Reply FileWorker::doRemoveRequest(
 {
     proto::file_transfer::Reply reply;
 
-    QString path = QString::fromStdString(request.path());
+    auto path = QString::fromStdString(request.path());
 
     QFileInfo file_info(path);
     if (!file_info.exists())
@@ -262,7 +262,7 @@ proto::file_transfer::Reply FileWorker::doDownloadRequest(
 {
     proto::file_transfer::Reply reply;
 
-    packetizer_ = FilePacketizer::create(QString::fromStdString(request.path()));
+    packetizer_ = FilePacketizer::create(QString::fromStdString(request.path()).toStdString());
     if (!packetizer_)
         reply.set_status(proto::file_transfer::STATUS_FILE_OPEN_ERROR);
     else
@@ -276,7 +276,7 @@ proto::file_transfer::Reply FileWorker::doUploadRequest(
 {
     proto::file_transfer::Reply reply;
 
-    QString file_path = QString::fromStdString(request.path());
+    auto file_path = QString::fromStdString(request.path());
 
     do
     {
@@ -289,7 +289,7 @@ proto::file_transfer::Reply FileWorker::doUploadRequest(
             }
         }
 
-        depacketizer_ = FileDepacketizer::create(file_path, request.overwrite());
+        depacketizer_ = FileDepacketizer::create(file_path.toStdString(), request.overwrite());
         if (!depacketizer_)
         {
             reply.set_status(proto::file_transfer::STATUS_FILE_CREATE_ERROR);

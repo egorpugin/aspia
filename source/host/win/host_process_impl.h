@@ -9,7 +9,7 @@
 #define _ASPIA_HOST__WIN__HOST_PROCESS_IMPL_H
 
 #include <QPointer>
-#include <QString>
+#include "base/common.h"
 #include <QWinEventNotifier>
 
 #include "base/win/scoped_object.h"
@@ -32,7 +32,7 @@ public:
     HostProcess::ProcessState state_ = HostProcess::NotRunning;
     HostProcess::Account account_ = HostProcess::User;
     uint32_t session_id_ = -1;
-    QString program_;
+    std::string program_;
     QStringList arguments_;
 
     ScopedHandle thread_handle_;

@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CLIENT__UI__DESKTOP_WIDGET_H
 #define _ASPIA_CLIENT__UI__DESKTOP_WIDGET_H
 
-#include "base/common.h"
-
 #include <QEvent>
 #include <QWidget>
 #include <memory>
@@ -41,8 +39,8 @@ public slots:
     void executeKeySequense(int key_sequence);
 
 signals:
-    void sendKeyEvent(uint32_t usb_keycode, uint32_t flags);
-    void sendPointerEvent(const QPoint& pos, uint32_t mask);
+    void sendKeyEvent(quint32 usb_keycode, quint32 flags);
+    void sendPointerEvent(const QPoint& pos, quint32 mask);
 
 protected:
     // QWidget implementation.
@@ -60,9 +58,9 @@ private:
     std::unique_ptr<DesktopFrameQImage> frame_;
 
     QPoint prev_pos_;
-    uint32_t prev_mask_ = 0;
+    quint32 prev_mask_ = 0;
 
-    DISABLE_COPY(DesktopWidget)
+    Q_DISABLE_COPY(DesktopWidget)
 };
 
 } // namespace aspia

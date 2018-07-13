@@ -18,7 +18,7 @@ namespace aspia {
 int hostConfigMain(int argc, char *argv[])
 {
     FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName());
+    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
 
     QApplication application(argc, argv);
     application.setOrganizationName(QStringLiteral("Aspia"));

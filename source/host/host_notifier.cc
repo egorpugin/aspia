@@ -17,9 +17,9 @@ HostNotifier::HostNotifier(QObject* parent)
     // Nothing
 }
 
-bool HostNotifier::start(const QString& channel_id)
+bool HostNotifier::start(const std::string& channel_id)
 {
-    if (channel_id.isEmpty())
+    if (channel_id.empty())
     {
         qWarning("Invalid IPC channel id");
         return false;

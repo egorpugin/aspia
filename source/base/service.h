@@ -18,7 +18,7 @@ template <class Application>
 class Service : public ServiceImpl
 {
 public:
-    explicit Service(const QString& name, const QString& display_name, const QString& description)
+    explicit Service(const std::string& name, const std::string& display_name, const std::string& description)
         : ServiceImpl(name, display_name, description)
     {
         // Nothing

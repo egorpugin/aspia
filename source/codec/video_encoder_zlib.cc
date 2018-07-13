@@ -7,6 +7,8 @@
 
 #include "codec/video_encoder_zlib.h"
 
+#include <zlib-ng.h>
+
 #include <QDebug>
 
 #include "codec/pixel_translator.h"

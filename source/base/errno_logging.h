@@ -5,14 +5,16 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__ERRNO_LOGGING_H
-#define _ASPIA_BASE__ERRNO_LOGGING_H
+#pragma once
 
-#include <QString>
+#include <qstring.h>
+#include <qdebug.h>
+
+#include <string>
 
 namespace aspia {
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
 using SystemErrorCode = unsigned long;
 #elif defined(Q_OS_UNIX)
 using SystemErrorCode = int;
@@ -39,4 +41,4 @@ void errnoToLog(QtMsgType type, const char* file, int line, const char* message,
 
 } // namespace aspia
 
-#endif // _ASPIA_BASE__ERRNO_LOGGING_H
+QDebug &operator<<(QDebug &, const std::string &);

@@ -12,6 +12,7 @@
 
 #include <QCoreApplication>
 
+#include "base/errno_logging.h"
 #include "host/win/host_process.h"
 #include "host/host_session_fake.h"
 #include "ipc/ipc_channel.h"
@@ -66,7 +67,7 @@ void Host::setSessionType(proto::auth::SessionType session_type)
     session_type_ = session_type;
 }
 
-void Host::setUserName(const QString& user_name)
+void Host::setUserName(const std::string& user_name)
 {
     if (state_ != StoppedState)
     {
@@ -77,7 +78,7 @@ void Host::setUserName(const QString& user_name)
     user_name_ = user_name;
 }
 
-void Host::setUuid(const QString& uuid)
+void Host::setUuid(const std::string& uuid)
 {
     if (state_ != StoppedState)
     {
@@ -88,7 +89,7 @@ void Host::setUuid(const QString& uuid)
     uuid_ = uuid;
 }
 
-QString Host::remoteAddress() const
+std::string Host::remoteAddress() const
 {
     return network_channel_->peerAddress();
 }
@@ -116,13 +117,13 @@ bool Host::start()
         }
     }
 
-    if (user_name_.isEmpty())
+    if (user_name_.empty())
     {
         qWarning("Invalid user name");
         return false;
     }
 
-    if (uuid_.isEmpty())
+    if (uuid_.empty())
     {
         qWarning("Invalid session UUID");
         return false;
@@ -231,7 +232,7 @@ void Host::ipcMessageReceived(const QByteArray& buffer)
     network_channel_->writeMessage(NetworkMessageId, buffer);
 }
 
-void Host::ipcServerStarted(const QString& channel_id)
+void Host::ipcServerStarted(const std::string& channel_id)
 {
     assert(state_ == StartingState);
     assert(session_process_.isNull());
@@ -240,11 +241,11 @@ void Host::ipcServerStarted(const QString& channel_id)
 
     session_process_->setSessionId(session_id_);
     session_process_->setProgram(
-        QCoreApplication::applicationDirPath() + QLatin1String("/aspia_host.exe"));
+        QCoreApplication::applicationDirPath().toStdString() + "/aspia_host.exe");
 
     QStringList arguments;
 
-    arguments << QStringLiteral("--channel_id") << channel_id;
+    arguments << QStringLiteral("--channel_id") << channel_id.c_str();
     arguments << QStringLiteral("--session_type");
 
     switch (session_type_)

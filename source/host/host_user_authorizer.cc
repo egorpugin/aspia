@@ -10,6 +10,7 @@
 #include <QCryptographicHash>
 #include <QTimerEvent>
 
+#include "base/errno_logging.h"
 #include "base/message_serialization.h"
 #include "crypto/random.h"
 #include "crypto/secure_memory.h"
@@ -59,7 +60,7 @@ HostUserAuthorizer::~HostUserAuthorizer()
     stop();
 
     secureMemZero(&user_name_);
-    secureMemZero(&nonce_);
+    secureMemZero(&nonce_.toStdString());
 }
 
 void HostUserAuthorizer::setUserList(const QList<User>& user_list)
@@ -247,11 +248,11 @@ void HostUserAuthorizer::readClientChallenge(const proto::auth::ClientChallenge&
         return;
     }
 
-    QByteArray session_key = QByteArray::fromStdString(client_challenge.session_key());
-    user_name_ = QString::fromStdString(client_challenge.username());
+    auto session_key = client_challenge.session_key();
+    user_name_ = client_challenge.username();
     session_type_ = client_challenge.session_type();
 
-    status_ = doBasicAuthorization(user_name_, session_key, session_type_);
+    status_ = doBasicAuthorization(user_name_, session_key.c_str(), session_type_);
 
     secureMemZero(&session_key);
     writeLogonResult(status_);
@@ -272,7 +273,7 @@ void HostUserAuthorizer::writeLogonResult(proto::auth::Status status)
 }
 
 proto::auth::Status HostUserAuthorizer::doBasicAuthorization(
-    const QString& user_name, const QByteArray& session_key, proto::auth::SessionType session_type)
+    const std::string& user_name, const QByteArray& session_key, proto::auth::SessionType session_type)
 {
     if (!User::isValidName(user_name))
     {
@@ -288,9 +289,9 @@ proto::auth::Status HostUserAuthorizer::doBasicAuthorization(
 
     for (const auto& user : user_list_)
     {
-        if (user.name().compare(user_name, Qt::CaseInsensitive) == 0)
+        if (stricmp(user.name().c_str(), user_name.c_str()) == 0)
         {
-            if (createSessionKey(user.passwordHash(), nonce_) != session_key)
+            if (createSessionKey(user.passwordHash().c_str(), nonce_) != session_key)
             {
                 qWarning() << "Wrong password for user " << user_name;
                 return proto::auth::STATUS_ACCESS_DENIED;

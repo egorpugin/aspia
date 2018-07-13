@@ -15,13 +15,13 @@
 
 namespace aspia {
 
-class FileLogger
+class ASPIA_BASE_API FileLogger
 {
 public:
     FileLogger();
     ~FileLogger();
 
-    bool startLogging(const QString& prefix);
+    bool startLogging(const std::string& prefix);
 
 private:
     static void messageHandler(QtMsgType type,

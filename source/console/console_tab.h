@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CONSOLE__CONSOLE_TAB_H
 #define _ASPIA_CONSOLE__CONSOLE_TAB_H
 
-#include "base/common.h"
-
 #include <QWidget>
 
 namespace aspia {
@@ -29,7 +27,7 @@ public:
 private:
     const Type type_;
 
-    DISABLE_COPY(ConsoleTab)
+    Q_DISABLE_COPY(ConsoleTab)
 };
 
 } // namespace aspia

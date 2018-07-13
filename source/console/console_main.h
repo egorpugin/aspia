@@ -8,11 +8,9 @@
 #ifndef _ASPIA_CONSOLE__CONSOLE_MAIN_H
 #define _ASPIA_CONSOLE__CONSOLE_MAIN_H
 
-#include "core_export.h"
-
 namespace aspia {
 
-int CORE_EXPORT consoleMain(int argc, char *argv[]);
+int consoleMain(int argc, char *argv[]);
 
 } // namespace aspia
 

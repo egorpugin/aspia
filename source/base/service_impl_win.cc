@@ -7,9 +7,11 @@
 
 #include "base/service_impl.h"
 
-#if !defined(Q_OS_WIN)
+#include <qglobal.h>
+
+#if !defined(_WIN32)
 #error This file for MS Windows only
-#endif // defined(Q_OS_WIN)
+#endif // defined(_WIN32)
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -166,8 +168,8 @@ void ServiceHandler::run()
 {
     SERVICE_TABLE_ENTRYW service_table[2];
 
-    service_table[0].lpServiceName = const_cast<wchar_t*>(
-        qUtf16Printable(ServiceImpl::instance()->serviceName()));
+    auto n = to_wstring(ServiceImpl::instance()->serviceName());
+    service_table[0].lpServiceName = (LPWSTR)n.c_str();
     service_table[0].lpServiceProc = ServiceHandler::serviceMain;
     service_table[1].lpServiceName = nullptr;
     service_table[1].lpServiceProc = nullptr;
@@ -215,8 +217,9 @@ void WINAPI ServiceHandler::serviceMain(DWORD /* argc */, LPWSTR* /* argv */)
         instance->startup_state = RunningAsService;
     }
 
+    auto n = to_wstring(ServiceImpl::instance()->serviceName());
     instance->status_handle_ = RegisterServiceCtrlHandlerExW(
-        qUtf16Printable(ServiceImpl::instance()->serviceName()),
+        n.c_str(),
         serviceControlHandler,
         nullptr);
 
@@ -375,9 +378,9 @@ void ServiceEventHandler::customEvent(QEvent* event)
 
 ServiceImpl* ServiceImpl::instance_ = nullptr;
 
-ServiceImpl::ServiceImpl(const QString& name,
-                         const QString& display_name,
-                         const QString& description)
+ServiceImpl::ServiceImpl(const std::string& name,
+                         const std::string& display_name,
+                         const std::string& description)
     : name_(name),
       display_name_(display_name),
       description_(description)
@@ -431,7 +434,7 @@ int ServiceImpl::exec(int argc, char* argv[])
         if (parser.isSet(install_option))
         {
             ServiceController controller = ServiceController::install(
-                name_, display_name_, application->applicationFilePath());
+                name_, display_name_, application->applicationFilePath().toStdString());
             if (controller.isValid())
             {
                 printf("Service has been successfully installed. Starting...\n");

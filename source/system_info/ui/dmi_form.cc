@@ -9,19 +9,19 @@
 
 namespace aspia {
 
-DmiForm::DmiForm(QWidget* parent, const QString& uuid)
+DmiForm::DmiForm(QWidget* parent, const std::string& uuid)
     : Form(parent, uuid)
 {
     ui.setupUi(this);
 }
 
 // static
-Form* DmiForm::create(QWidget* parent, const QString& uuid)
+Form* DmiForm::create(QWidget* parent, const std::string& uuid)
 {
     return new DmiForm(parent, uuid);
 }
 
-void DmiForm::readReply(const QString& uuid, const QByteArray& data)
+void DmiForm::readReply(const std::string& uuid, const QByteArray& data)
 {
 
 }

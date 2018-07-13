@@ -163,7 +163,7 @@ void ComputerDialog::buttonBoxClicked(QAbstractButton* button)
         }
 
         QString username = ui.edit_username->text();
-        if (!username.isEmpty() && !User::isValidName(username))
+        if (!username.isEmpty() && !User::isValidName(username.toStdString()))
         {
             showError(tr("The user name can not be empty and can contain only"
                          " alphabet characters, numbers and ""_"", ""-"", ""."" characters."));
@@ -171,7 +171,7 @@ void ComputerDialog::buttonBoxClicked(QAbstractButton* button)
         }
 
         QString password = ui.edit_password->text();
-        if (!password.isEmpty() && !User::isValidPassword(password))
+        if (!password.isEmpty() && !User::isValidPassword(password.toStdString()))
         {
             showError(tr("Password can not be shorter than %n characters.",
                          "", User::kMinPasswordLength));

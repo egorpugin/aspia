@@ -40,7 +40,7 @@ public:
 
 private:
     QString locale_;
-    DISABLE_COPY(LanguageAction)
+    Q_DISABLE_COPY(LanguageAction)
 };
 
 } // namespace
@@ -52,13 +52,13 @@ ConsoleWindow::ConsoleWindow(const QString& file_path, QWidget* parent)
 
     QString current_locale = settings.locale();
 
-    if (!locale_loader_.contains(current_locale))
+    if (!locale_loader_.contains(current_locale.toStdString()))
     {
         current_locale = ConsoleSettings::defaultLocale();
         settings.setLocale(current_locale);
     }
 
-    locale_loader_.installTranslators(current_locale);
+    locale_loader_.installTranslators(current_locale.toStdString());
     ui.setupUi(this);
     createLanguageMenu(current_locale);
 
@@ -553,7 +553,7 @@ void ConsoleWindow::onLanguageChanged(QAction* action)
     {
         QString new_locale = language_action->locale();
 
-        locale_loader_.installTranslators(new_locale);
+        locale_loader_.installTranslators(new_locale.toStdString());
         ui.retranslateUi(this);
 
         for (int i = 0; i < ui.tab_widget->count(); ++i)

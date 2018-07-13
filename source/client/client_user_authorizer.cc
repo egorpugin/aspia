@@ -17,8 +17,8 @@ namespace aspia {
 
 namespace {
 
-const uint32_t kKeyHashingRounds = 100000;
-const uint32_t kPasswordHashingRounds = 100000;
+const quint32 kKeyHashingRounds = 100000;
+const quint32 kPasswordHashingRounds = 100000;
 
 enum MessageId { LogonRequest, ClientChallenge };
 
@@ -38,7 +38,7 @@ QByteArray createSessionKey(const QByteArray& password_hash, const QByteArray& n
 {
     QByteArray data = password_hash;
 
-    for (uint32_t i = 0; i < kKeyHashingRounds; ++i)
+    for (quint32 i = 0; i < kKeyHashingRounds; ++i)
     {
         QCryptographicHash hash(QCryptographicHash::Sha512);
 
@@ -61,8 +61,8 @@ ClientUserAuthorizer::ClientUserAuthorizer(QWidget* parent)
 
 ClientUserAuthorizer::~ClientUserAuthorizer()
 {
-    secureMemZero(&username_);
-    secureMemZero(&password_);
+    secureMemZero(&username_.toStdString());
+    secureMemZero(&password_.toStdString());
 
     cancel();
 }
@@ -180,7 +180,7 @@ void ClientUserAuthorizer::readServerChallenge(
     client_challenge->set_username(username_.toStdString());
     client_challenge->set_session_key(session_key.constData(), session_key.size());
 
-    secureMemZero(&session_key);
+    secureMemZero(&session_key.toStdString());
 
     QByteArray serialized_message = serializeMessage(message);
 
@@ -189,7 +189,7 @@ void ClientUserAuthorizer::readServerChallenge(
 
     emit writeMessage(ClientChallenge, serialized_message);
 
-    secureMemZero(&serialized_message);
+    secureMemZero(&serialized_message.toStdString());
 }
 
 void ClientUserAuthorizer::readLogonResult(const proto::auth::LogonResult& logon_result)

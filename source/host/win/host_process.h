@@ -50,7 +50,7 @@ public:
 
     void start(uint32_t session_id,
                Account account,
-               const QString& program,
+               const std::string& program,
                const QStringList& arguments);
 
     uint32_t sessionId() const;
@@ -59,8 +59,8 @@ public:
     Account account() const;
     void setAccount(Account account);
 
-    QString program() const;
-    void setProgram(const QString& program);
+    std::string program() const;
+    void setProgram(const std::string& program);
 
     QStringList arguments() const;
     void setArguments(const QStringList& arguments);

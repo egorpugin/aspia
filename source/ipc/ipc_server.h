@@ -33,7 +33,7 @@ public slots:
     void stop();
 
 signals:
-    void started(const QString& channel_id);
+    void started(const std::string& channel_id);
     void finished();
     void newConnection(IpcChannel* channel);
     void errorOccurred();

@@ -7,7 +7,7 @@
 
 #include "system_info/serializer/dmi_impl.h"
 
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 #endif
@@ -22,7 +22,7 @@ namespace {
 
 bool readSmBios(void* data, size_t data_size)
 {
-#if defined(Q_OS_WIN)
+#if defined(_WIN32)
     if (!GetSystemFirmwareTable('RSMB', 'PCAF', data, data_size))
     {
         qWarningErrno("GetSystemFirmwareTable failed");
@@ -120,11 +120,11 @@ DmiTable::DmiTable(const uint8_t* table)
     // Nothing
 }
 
-QString DmiTable::string(uint8_t offset) const
+std::string DmiTable::string(uint8_t offset) const
 {
     uint8_t handle = table_[offset];
     if (!handle)
-        return QString();
+        return std::string();
 
     char* string = reinterpret_cast<char*>(const_cast<uint8_t*>(&table_[0])) + length();
     while (handle > 1 && *string)
@@ -134,9 +134,9 @@ QString DmiTable::string(uint8_t offset) const
     }
 
     if (!*string)
-        return QString();
+        return std::string();
 
-    return QLatin1String(string).trimmed();
+    return QString(QLatin1String(string).trimmed()).toStdString();
 }
 
 //================================================================================================
@@ -149,17 +149,17 @@ DmiBiosTable::DmiBiosTable(const uint8_t* table)
     // Nothing
 }
 
-QString DmiBiosTable::manufacturer() const
+std::string DmiBiosTable::manufacturer() const
 {
     return string(0x04);
 }
 
-QString DmiBiosTable::version() const
+std::string DmiBiosTable::version() const
 {
     return string(0x05);
 }
 
-QString DmiBiosTable::date() const
+std::string DmiBiosTable::date() const
 {
     return string(0x08);
 }
@@ -198,35 +198,35 @@ uint64_t DmiBiosTable::biosSize() const
     }
 }
 
-QString DmiBiosTable::biosRevision() const
+std::string DmiBiosTable::biosRevision() const
 {
     const uint8_t major = number<uint8_t>(0x14);
     const uint8_t minor = number<uint8_t>(0x15);
 
     if (major == 0xFF || minor == 0xFF)
-        return QString();
+        return std::string();
 
-    return QString("%1.%2").arg(major).arg(minor);
+    return QString("%1.%2").arg(major).arg(minor).toStdString();
 }
 
-QString DmiBiosTable::firmwareRevision() const
+std::string DmiBiosTable::firmwareRevision() const
 {
     const uint8_t major = number<uint8_t>(0x16);
     const uint8_t minor = number<uint8_t>(0x17);
 
     if (major == 0xFF || minor == 0xFF)
-        return QString();
+        return std::string();
 
-    return QString("%1.%2").arg(major).arg(minor);
+    return QString("%1.%2").arg(major).arg(minor).toStdString();
 }
 
-QString DmiBiosTable::address() const
+std::string DmiBiosTable::address() const
 {
     const uint16_t address = number<uint16_t>(0x06);
     if (!address)
-        return QString();
+        return std::string();
 
-    return QString("%10h").arg(address, 4, 16);
+    return QString("%10h").arg(address, 4, 16).toStdString();
 }
 
 uint64_t DmiBiosTable::runtimeSize() const
