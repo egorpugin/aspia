@@ -16,7 +16,7 @@
 #include <QScrollArea>
 #include <QScrollBar>
 
-#include "base_client/clipboard.h"
+#include "client/clipboard.h"
 #include "client/ui/desktop_config_dialog.h"
 #include "client/ui/desktop_panel.h"
 #include "client/ui/desktop_widget.h"

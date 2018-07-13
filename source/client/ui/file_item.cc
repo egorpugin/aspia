@@ -10,7 +10,7 @@
 #include <QCoreApplication>
 #include <QDateTime>
 
-#include "host/file_platform_util.h"
+#include "client/file_platform_util.h"
 
 namespace aspia {
 

@@ -12,8 +12,8 @@
 
 #include "base/message_serialization.h"
 #include "client/ui/file_manager_window.h"
-#include "host/file_request.h"
-#include "host/file_worker.h"
+#include "client/file_request.h"
+#include "client/file_worker.h"
 
 namespace aspia {
 

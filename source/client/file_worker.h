@@ -8,9 +8,9 @@
 #ifndef _ASPIA_HOST__FILE_WORKER_H
 #define _ASPIA_HOST__FILE_WORKER_H
 
-#include "host/file_depacketizer.h"
-#include "host/file_packetizer.h"
-#include "host/file_request.h"
+#include "client/file_depacketizer.h"
+#include "client/file_packetizer.h"
+#include "client/file_request.h"
 #include "protocol/file_transfer_session.pb.h"
 
 namespace aspia {

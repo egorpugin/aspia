@@ -43,12 +43,7 @@ projects:
         files:
             - console/.*
         dependencies:
-            - client
             - core
-            - crypto
-            - network
-            - protocols
-            - system_info
 
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
@@ -323,10 +318,7 @@ projects:
     client:
         type: lib
         files:
-            - base_client/.*
             - client/.*
-            - host/file_.*
-            - host/system_info_.*
 
         dependencies:
             - codec
@@ -421,9 +413,6 @@ projects:
                 cppan_genpb(${f})
             endforeach()
 
-
-
-
     core:
         type: lib
         #shared_only: true
@@ -434,8 +423,6 @@ projects:
             - .*entry_point.cc$
             - .*manifest$
             - .*rc$
-            - host/file_.*
-            - host/system_info_.*
 
         options:
             any:
@@ -462,8 +449,6 @@ projects:
             - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
               ref: UIC_COMMAND
               version: 5
-
-
 
         post_sources: |
             include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)

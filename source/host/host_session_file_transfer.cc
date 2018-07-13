@@ -8,7 +8,7 @@
 #include "host/host_session_file_transfer.h"
 
 #include "base/message_serialization.h"
-#include "host/file_worker.h"
+#include "client/file_worker.h"
 
 namespace aspia {
 

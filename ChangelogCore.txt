@@ -3,3 +3,4 @@
 - Replace qt int types with stdint.
 - Remove generated pb files.
 - Split into libraries.
+- Implement shared build.

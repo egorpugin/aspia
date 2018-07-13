@@ -12,7 +12,7 @@
 
 #include "client/ui/category_group_tree_item.h"
 #include "client/ui/category_tree_item.h"
-#include "host/system_info_request.h"
+#include "client/system_info_request.h"
 #include "system_info/category.h"
 
 namespace aspia {
