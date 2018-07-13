@@ -1,0 +1,223 @@
+//
+// PROJECT:         Aspia
+// FILE:            host/host_session_desktop.cc
+// LICENSE:         GNU General Public License 3
+// PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
+//
+
+#include "host/host_session_desktop.h"
+
+#include "client/clipboard.h"
+#include "base/message_serialization.h"
+#include "host/input_injector.h"
+#include "host/screen_updater.h"
+
+namespace aspia {
+
+namespace {
+
+const uint32_t kSupportedVideoEncodings =
+    proto::desktop::VIDEO_ENCODING_ZLIB |
+    proto::desktop::VIDEO_ENCODING_VP8 |
+    proto::desktop::VIDEO_ENCODING_VP9;
+
+const uint32_t kSupportedFeaturesDesktopManage =
+    proto::desktop::FEATURE_CURSOR_SHAPE |
+    proto::desktop::FEATURE_CLIPBOARD;
+
+const uint32_t kSupportedFeaturesDesktopView = 0;
+
+enum MessageId { ScreenUpdateMessage };
+
+} // namespace
+
+HostSessionDesktop::HostSessionDesktop(proto::auth::SessionType session_type,
+                                       const std::string& channel_id)
+    : HostSession(channel_id),
+      session_type_(session_type)
+{
+    switch (session_type_)
+    {
+        case proto::auth::SESSION_TYPE_DESKTOP_MANAGE:
+        case proto::auth::SESSION_TYPE_DESKTOP_VIEW:
+            break;
+
+        default:
+            LOG_FATAL(logger, "Invalid session type: " << session_type_);
+            break;
+    }
+}
+
+void HostSessionDesktop::startSession()
+{
+    proto::desktop::HostToClient message;
+
+    message.mutable_config_request()->set_video_encodings(kSupportedVideoEncodings);
+
+    if (session_type_ == proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
+        message.mutable_config_request()->set_features(kSupportedFeaturesDesktopManage);
+    else
+        message.mutable_config_request()->set_features(kSupportedFeaturesDesktopView);
+
+    emit writeMessage(-1, serializeMessage(message));
+    emit readMessage();
+}
+
+void HostSessionDesktop::stopSession()
+{
+    delete screen_updater_;
+    delete clipboard_;
+    input_injector_.reset();
+}
+
+void HostSessionDesktop::customEvent(QEvent* event)
+{
+    switch (event->type())
+    {
+        case ScreenUpdater::UpdateEvent::kType:
+        {
+            ScreenUpdater::UpdateEvent* update_event =
+                reinterpret_cast<ScreenUpdater::UpdateEvent*>(event);
+
+            assert(update_event->video_packet || update_event->cursor_shape);
+
+            proto::desktop::HostToClient message;
+            message.set_allocated_video_packet(update_event->video_packet.release());
+            message.set_allocated_cursor_shape(update_event->cursor_shape.release());
+
+            emit writeMessage(ScreenUpdateMessage, serializeMessage(message));
+        }
+        break;
+
+        case ScreenUpdater::ErrorEvent::kType:
+            emit errorOccurred();
+            break;
+    }
+}
+
+void HostSessionDesktop::messageReceived(const std::string& buffer)
+{
+    proto::desktop::ClientToHost message;
+
+    if (!parseMessage(buffer, message))
+    {
+        emit errorOccurred();
+        return;
+    }
+
+    if (message.has_pointer_event())
+        readPointerEvent(message.pointer_event());
+    else if (message.has_key_event())
+        readKeyEvent(message.key_event());
+    else if (message.has_clipboard_event())
+        readClipboardEvent(message.clipboard_event());
+    else if (message.has_config())
+        readConfig(message.config());
+    else
+    {
+        LOG_DEBUG(logger, "Unhandled message from ASClient");
+    }
+
+    emit readMessage();
+}
+
+void HostSessionDesktop::messageWritten(int message_id)
+{
+    switch (message_id)
+    {
+        case ScreenUpdateMessage:
+        {
+            if (!screen_updater_.isNull())
+                screen_updater_->update();
+        }
+        break;
+
+        default:
+            break;
+    }
+}
+
+void HostSessionDesktop::clipboardEvent(const proto::desktop::ClipboardEvent& event)
+{
+    if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
+        return;
+
+    proto::desktop::HostToClient message;
+    message.mutable_clipboard_event()->CopyFrom(event);
+
+    emit writeMessage(-1, serializeMessage(message));
+}
+
+void HostSessionDesktop::readPointerEvent(const proto::desktop::PointerEvent& event)
+{
+    if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
+    {
+        LOG_WARN(logger, "Attempt to inject pointer event to desktop view session");
+        emit errorOccurred();
+        return;
+    }
+
+    if (input_injector_.isNull())
+        input_injector_.reset(new InputInjector(this));
+
+    input_injector_->injectPointerEvent(event);
+}
+
+void HostSessionDesktop::readKeyEvent(const proto::desktop::KeyEvent& event)
+{
+    if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
+    {
+        LOG_WARN(logger, "Attempt to inject key event to desktop view session");
+        emit errorOccurred();
+        return;
+    }
+
+    if (input_injector_.isNull())
+        input_injector_.reset(new InputInjector(this));
+
+    input_injector_->injectKeyEvent(event);
+}
+
+void HostSessionDesktop::readClipboardEvent(const proto::desktop::ClipboardEvent& clipboard_event)
+{
+    if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
+    {
+        LOG_WARN(logger, "Attempt to inject clipboard event to desktop view session");
+        emit errorOccurred();
+        return;
+    }
+
+    if (clipboard_.isNull())
+    {
+        LOG_WARN(logger, "Attempt to inject clipboard event to session with the clipboard disabled");
+        emit errorOccurred();
+        return;
+    }
+
+    clipboard_->injectClipboardEvent(clipboard_event);
+}
+
+void HostSessionDesktop::readConfig(const proto::desktop::Config& config)
+{
+    delete screen_updater_;
+    delete clipboard_;
+
+    if (config.features() & proto::desktop::FEATURE_CLIPBOARD)
+    {
+        if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
+        {
+            LOG_WARN(logger, "Attempt to enable clipboard in desktop view session");
+            emit errorOccurred();
+            return;
+        }
+
+        clipboard_ = new Clipboard(this);
+
+        connect(clipboard_, &Clipboard::clipboardEvent,
+                this, &HostSessionDesktop::clipboardEvent);
+    }
+
+    screen_updater_ = new ScreenUpdater(config, this);
+}
+
+} // namespace aspia

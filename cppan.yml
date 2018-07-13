@@ -63,10 +63,10 @@ projects:
             - resources/.*
 
         dependencies:
-            - name: pvt.cppan.demo.qtproject.qt.base.core
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.core
               ref: CORE
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.rcc
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.rcc
               ref: RCC_COMMAND
               version: 5
 
@@ -82,7 +82,7 @@ projects:
     base:
         type: lib
         files:
-            - base/.*
+            - ASBase/.*
         dependencies:
             - protocols
             - pvt.egorpugin.primitives.log: master
@@ -93,7 +93,7 @@ projects:
             - codec/.*
         dependencies:
             public:
-                - base
+                - ASBase
                 - desktop_capture
             private:
                 - pvt.cppan.demo.dead2.zlib_ng: develop
@@ -106,7 +106,7 @@ projects:
             - crypto/.*
         dependencies:
             public:
-                - base
+                - ASBase
             private:
                 - pvt.cppan.demo.jedisct1.libsodium: 1
 
@@ -124,7 +124,7 @@ projects:
 
         dependencies:
             public:
-                - base
+                - ASBase
                 - pvt.cppan.demo.qtproject.qt.base.gui: 5
             private:
                 - pvt.cppan.demo.mysticial.featuredetector: master
@@ -140,16 +140,16 @@ projects:
             public:
                 - crypto
 
-                - name: pvt.cppan.demo.qtproject.qt.base.widgets
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.widgets
                   ref: WIDGETS
                   version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.core
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.core
                   ref: CORE
                   version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.moc
                   ref: MOC_COMMAND
                   version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.uic
                   ref: UIC_COMMAND
                   version: 5
 
@@ -189,16 +189,16 @@ projects:
             public:
                 - crypto
 
-                - name: pvt.cppan.demo.qtproject.qt.base.widgets
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.widgets
                   ref: WIDGETS
                   version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.core
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.core
                   ref: CORE
                   version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.moc
                   ref: MOC_COMMAND
                   version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+                - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.uic
                   ref: UIC_COMMAND
                   version: 5
 
@@ -228,19 +228,19 @@ projects:
         files:
             - system_info/.*
         dependencies:
-            - base
+            - ASBase
 
             - pvt.cppan.demo.qtproject.qt.base.xml: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.widgets
               ref: WIDGETS
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.core
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.core
               ref: CORE
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.moc
               ref: MOC_COMMAND
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.uic
               ref: UIC_COMMAND
               version: 5
             - pvt.cppan.demo.google.protobuf.protobuf: 3
@@ -277,7 +277,7 @@ projects:
     client:
         type: lib
         files:
-            - client/.*
+            - ASClient/.*
 
         dependencies:
             - codec
@@ -289,16 +289,16 @@ projects:
 
             - pvt.cppan.demo.qtproject.qt.winextras: 5
             - pvt.cppan.demo.qtproject.qt.base.xml: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.widgets
               ref: WIDGETS
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.core
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.core
               ref: CORE
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.moc
               ref: MOC_COMMAND
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.uic
               ref: UIC_COMMAND
               version: 5
 
@@ -342,20 +342,20 @@ projects:
                             - sas
 
         dependencies:
-            - client
+            - ASClient
             - crypto
             - ipc
 
-            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.widgets
               ref: WIDGETS
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.core
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.core
               ref: CORE
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.moc
               ref: MOC_COMMAND
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.uic
               ref: UIC_COMMAND
               version: 5
 
@@ -390,16 +390,16 @@ projects:
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.widgets
               ref: WIDGETS
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.core
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.core
               ref: CORE
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.moc
               ref: MOC_COMMAND
               version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+            - name: pvt.cppan.demo.qtproject.qt.ASBase.tools.uic
               ref: UIC_COMMAND
               version: 5
 
