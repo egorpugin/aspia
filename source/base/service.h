@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <QPointer>
-
 #include "base/service_impl.h"
 
 namespace aspia {
@@ -26,12 +24,12 @@ public:
     virtual ~Service() = default;
 
 protected:
-    Application* application() const { return application_; }
+    Application* application() const { return application_.get(); }
 
     // ServiceImpl implementation.
     void createApplication(int argc, char* argv[]) override
     {
-        application_ = new Application(argc, argv);
+        application_ = std::make_unique<Application>(argc, argv);
     }
 
     // ServiceImpl implementation.
@@ -41,7 +39,7 @@ protected:
     }
 
 private:
-    QPointer<Application> application_;
+    std::unique_ptr<Application> application_;
 };
 
 } // namespace aspia

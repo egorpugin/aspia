@@ -26,12 +26,12 @@ public:
     virtual void startSession() = 0;
 
 signals:
-    void writeMessage(int message_id, const QByteArray& buffer);
+    void writeMessage(int message_id, const std::string& buffer);
     void readMessage();
     void errorOccurred();
 
 public slots:
-    virtual void onMessageReceived(const QByteArray& buffer) = 0;
+    virtual void onMessageReceived(const std::string& buffer) = 0;
     virtual void onMessageWritten(int message_id) = 0;
 
 protected:

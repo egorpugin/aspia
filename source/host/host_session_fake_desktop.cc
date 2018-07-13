@@ -44,13 +44,13 @@ void HostSessionFakeDesktop::startSession()
     emit writeMessage(-1, serializeMessage(message));
 }
 
-void HostSessionFakeDesktop::onMessageReceived(const QByteArray& buffer)
+void HostSessionFakeDesktop::onMessageReceived(const std::string& buffer)
 {
     proto::desktop::ClientToHost message;
 
     if (!parseMessage(buffer, message))
     {
-        qWarning("Unable to parse message");
+        LOG_WARN(logger, "Unable to parse message");
         emit errorOccurred();
         return;
     }
@@ -60,7 +60,7 @@ void HostSessionFakeDesktop::onMessageReceived(const QByteArray& buffer)
         std::unique_ptr<VideoEncoder> video_encoder = createEncoder(message.config());
         if (!video_encoder)
         {
-            qWarning("Unable to create video encoder");
+            LOG_WARN(logger, "Unable to create video encoder");
             emit errorOccurred();
             return;
         }
@@ -68,7 +68,7 @@ void HostSessionFakeDesktop::onMessageReceived(const QByteArray& buffer)
         std::unique_ptr<DesktopFrame> frame = createFrame();
         if (!frame)
         {
-            qWarning("Unable to create video frame");
+            LOG_WARN(logger, "Unable to create video frame");
             emit errorOccurred();
             return;
         }
@@ -76,7 +76,7 @@ void HostSessionFakeDesktop::onMessageReceived(const QByteArray& buffer)
         std::unique_ptr<proto::desktop::VideoPacket> packet = video_encoder->encode(frame.get());
         if (!packet)
         {
-            qWarning("Unable to encode video frame");
+            LOG_WARN(logger, "Unable to encode video frame");
             emit errorOccurred();
             return;
         }
@@ -112,7 +112,7 @@ std::unique_ptr<VideoEncoder> HostSessionFakeDesktop::createEncoder(
                 VideoUtil::fromVideoPixelFormat(config.pixel_format()), config.compress_ratio());
 
         default:
-            qWarning() << "Unsupported video encoding: " << config.video_encoding();
+            LOG_WARN(logger, "") << "Unsupported video encoding: " << config.video_encoding();
             return nullptr;
     }
 }

@@ -246,7 +246,7 @@ void HostConfigDialog::setConfigChanged(bool changed)
     QPushButton* apply_button = ui.button_box->button(QDialogButtonBox::Apply);
     if (!apply_button)
     {
-        qFatal("Button not found");
+        LOG_FATAL(logger, "Button not found");
         return;
     }
 
@@ -258,7 +258,7 @@ bool HostConfigDialog::isConfigChanged() const
     QPushButton* apply_button = ui.button_box->button(QDialogButtonBox::Apply);
     if (!apply_button)
     {
-        qFatal("Button not found");
+        LOG_FATAL(logger, "Button not found");
         return false;
     }
 

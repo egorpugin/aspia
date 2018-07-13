@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "base_client/clipboard.h"
+#include "client/clipboard.h"
 
 #include <QClipboard>
 #include <QDebug>

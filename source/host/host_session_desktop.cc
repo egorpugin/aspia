@@ -43,7 +43,7 @@ HostSessionDesktop::HostSessionDesktop(proto::auth::SessionType session_type,
             break;
 
         default:
-            qFatal("Invalid session type: %d", session_type_);
+            LOG_FATAL(logger, "Invalid session type: " << session_type_);
             break;
     }
 }
@@ -95,7 +95,7 @@ void HostSessionDesktop::customEvent(QEvent* event)
     }
 }
 
-void HostSessionDesktop::messageReceived(const QByteArray& buffer)
+void HostSessionDesktop::messageReceived(const std::string& buffer)
 {
     proto::desktop::ClientToHost message;
 
@@ -115,7 +115,7 @@ void HostSessionDesktop::messageReceived(const QByteArray& buffer)
         readConfig(message.config());
     else
     {
-        qDebug("Unhandled message from client");
+        LOG_DEBUG(logger, "Unhandled message from client");
     }
 
     emit readMessage();
@@ -152,7 +152,7 @@ void HostSessionDesktop::readPointerEvent(const proto::desktop::PointerEvent& ev
 {
     if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
     {
-        qWarning("Attempt to inject pointer event to desktop view session");
+        LOG_WARN(logger, "Attempt to inject pointer event to desktop view session");
         emit errorOccurred();
         return;
     }
@@ -167,7 +167,7 @@ void HostSessionDesktop::readKeyEvent(const proto::desktop::KeyEvent& event)
 {
     if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
     {
-        qWarning("Attempt to inject key event to desktop view session");
+        LOG_WARN(logger, "Attempt to inject key event to desktop view session");
         emit errorOccurred();
         return;
     }
@@ -182,14 +182,14 @@ void HostSessionDesktop::readClipboardEvent(const proto::desktop::ClipboardEvent
 {
     if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
     {
-        qWarning("Attempt to inject clipboard event to desktop view session");
+        LOG_WARN(logger, "Attempt to inject clipboard event to desktop view session");
         emit errorOccurred();
         return;
     }
 
     if (clipboard_.isNull())
     {
-        qWarning("Attempt to inject clipboard event to session with the clipboard disabled");
+        LOG_WARN(logger, "Attempt to inject clipboard event to session with the clipboard disabled");
         emit errorOccurred();
         return;
     }
@@ -206,7 +206,7 @@ void HostSessionDesktop::readConfig(const proto::desktop::Config& config)
     {
         if (session_type_ != proto::auth::SESSION_TYPE_DESKTOP_MANAGE)
         {
-            qWarning("Attempt to enable clipboard in desktop view session");
+            LOG_WARN(logger, "Attempt to enable clipboard in desktop view session");
             emit errorOccurred();
             return;
         }

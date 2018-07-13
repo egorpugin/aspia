@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "base/log.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -32,7 +34,7 @@ public:
             // matter what, so we may as well just force a crash now.
             if (!hdc_)
             {
-                qFatal("!hdc_");
+                LOG_FATAL(logger, "!hdc_");
             }
         }
     }

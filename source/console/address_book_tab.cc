@@ -84,7 +84,7 @@ void cleanupFile(proto::address_book::File* file)
 AddressBookTab::AddressBookTab(const QString& file_path,
                                proto::address_book::File&& file,
                                proto::address_book::Data&& data,
-                               QByteArray&& key,
+                               std::string&& key,
                                QWidget* parent)
     : ConsoleTab(ConsoleTab::AddressBook, parent),
       file_path_(file_path),
@@ -158,7 +158,7 @@ AddressBookTab::~AddressBookTab()
     cleanupFile(&file_);
 
     secureMemZero(&file_path_.toStdString());
-    secureMemZero(&key_.toStdString());
+    secureMemZero(&key_);
 }
 
 // static
@@ -166,7 +166,7 @@ AddressBookTab* AddressBookTab::createNew(QWidget* parent)
 {
     proto::address_book::File file;
     proto::address_book::Data data;
-    QByteArray key;
+    std::string key;
 
     AddressBookDialog dialog(parent, &file, &data, &key);
     if (dialog.exec() != QDialog::Accepted)
@@ -192,7 +192,7 @@ AddressBookTab* AddressBookTab::openFromFile(const QString& file_path, QWidget* 
         return nullptr;
     }
 
-    QByteArray buffer = file.readAll();
+    auto buffer = file.readAll();
     if (buffer.isEmpty())
     {
         showOpenError(parent, tr("Unable to read address book file."));
@@ -210,7 +210,7 @@ AddressBookTab* AddressBookTab::openFromFile(const QString& file_path, QWidget* 
     secureMemZero(&buffer.toStdString());
 
     proto::address_book::Data address_book_data;
-    QByteArray key;
+    std::string key;
 
     switch (address_book_file.encryption_type())
     {
@@ -231,11 +231,11 @@ AddressBookTab* AddressBookTab::openFromFile(const QString& file_path, QWidget* 
                 return nullptr;
 
             key = DataEncryptor::createKey(
-                dialog.password().toUtf8(),
-                QByteArray::fromStdString(address_book_file.hashing_salt()),
+                dialog.password().toStdString(),
+                address_book_file.hashing_salt(),
                 address_book_file.hashing_rounds());
 
-            QByteArray decrypted_data;
+            std::string decrypted_data;
 
             if (!DataEncryptor::decrypt(address_book_file.data().c_str(),
                                         address_book_file.data().size(),
@@ -252,7 +252,7 @@ AddressBookTab* AddressBookTab::openFromFile(const QString& file_path, QWidget* 
                 return nullptr;
             }
 
-            secureMemZero(&decrypted_data.toStdString());
+            secureMemZero(&decrypted_data);
         }
         break;
 
@@ -362,7 +362,7 @@ void AddressBookTab::modifyAddressBook()
         dynamic_cast<ComputerGroupItem*>(ui.tree_group->topLevelItem(0));
     if (!root_item)
     {
-        qDebug("Invalid root item");
+        LOG_DEBUG(logger, "Invalid root item");
         return;
     }
 
@@ -606,30 +606,30 @@ void AddressBookTab::updateComputerList(ComputerGroupItem* computer_group)
 
 bool AddressBookTab::saveToFile(const QString& file_path)
 {
-    QByteArray serialized_data = serializeMessage(data_);
+    auto serialized_data = serializeMessage(data_);
 
     switch (file_.encryption_type())
     {
         case proto::address_book::ENCRYPTION_TYPE_NONE:
-            file_.set_data(serialized_data.constData(), serialized_data.size());
+            file_.set_data(serialized_data.data(), serialized_data.size());
             break;
 
         case proto::address_book::ENCRYPTION_TYPE_XCHACHA20_POLY1305:
         {
-            QByteArray encrypted_data = DataEncryptor::encrypt(serialized_data, key_);
-            file_.set_data(encrypted_data.constData(), encrypted_data.size());
-            secureMemZero(&encrypted_data.toStdString());
+            auto encrypted_data = DataEncryptor::encrypt(serialized_data, key_);
+            file_.set_data(encrypted_data.data(), encrypted_data.size());
+            secureMemZero(&encrypted_data);
         }
         break;
 
         default:
-            qFatal("Unknown encryption type: %d", file_.encryption_type());
+            LOG_FATAL(logger, "Unknown encryption type: " << file_.encryption_type());
             return false;
     }
 
-    secureMemZero(&serialized_data.toStdString());
+    secureMemZero(&serialized_data);
 
-    QString path = file_path;
+    auto path = file_path;
     if (path.isEmpty())
     {
         ConsoleSettings settings;
@@ -651,11 +651,11 @@ bool AddressBookTab::saveToFile(const QString& file_path)
         return false;
     }
 
-    QByteArray buffer = serializeMessage(file_);
+    auto buffer = serializeMessage(file_);
 
-    qint64 bytes_written = file.write(buffer);
+    qint64 bytes_written = file.write(buffer.c_str());
 
-    secureMemZero(&buffer.toStdString());
+    secureMemZero(&buffer);
 
     if (bytes_written != buffer.size())
     {

@@ -42,13 +42,13 @@ void Host::setNetworkChannel(NetworkChannel* network_channel)
 {
     if (state_ != StoppedState)
     {
-        qWarning("An attempt to set a network channel in an already running host.");
+        LOG_WARN(logger, "An attempt to set a network channel in an already running host.");
         return;
     }
 
     if (!network_channel)
     {
-        qWarning("Network channel is null");
+        LOG_WARN(logger, "Network channel is null");
         return;
     }
 
@@ -60,7 +60,7 @@ void Host::setSessionType(proto::auth::SessionType session_type)
 {
     if (state_ != StoppedState)
     {
-        qWarning("An attempt to set a session type in an already running host.");
+        LOG_WARN(logger, "An attempt to set a session type in an already running host.");
         return;
     }
 
@@ -71,7 +71,7 @@ void Host::setUserName(const std::string& user_name)
 {
     if (state_ != StoppedState)
     {
-        qWarning("An attempt to set a user name in an already running host.");
+        LOG_WARN(logger, "An attempt to set a user name in an already running host.");
         return;
     }
 
@@ -82,7 +82,7 @@ void Host::setUuid(const std::string& uuid)
 {
     if (state_ != StoppedState)
     {
-        qWarning("An attempt to set a UUID in an already running host.");
+        LOG_WARN(logger, "An attempt to set a UUID in an already running host.");
         return;
     }
 
@@ -98,7 +98,7 @@ bool Host::start()
 {
     if (network_channel_.isNull())
     {
-        qWarning("Invalid network channel");
+        LOG_WARN(logger, "Invalid network channel");
         return false;
     }
 
@@ -112,30 +112,30 @@ bool Host::start()
 
         default:
         {
-            qWarning("Invalid session type: %d", session_type_);
+            LOG_WARN(logger, "Invalid session type: " << session_type_);
             return false;
         }
     }
 
     if (user_name_.empty())
     {
-        qWarning("Invalid user name");
+        LOG_WARN(logger, "Invalid user name");
         return false;
     }
 
     if (uuid_.empty())
     {
-        qWarning("Invalid session UUID");
+        LOG_WARN(logger, "Invalid session UUID");
         return false;
     }
 
     if (state_ != StoppedState)
     {
-        qWarning("Attempt to start a host already running");
+        LOG_WARN(logger, "Attempt to start a host already running");
         return false;
     }
 
-    qInfo("Starting the host");
+    LOG_INFO(logger, "Starting the host");
     state_ = StartingState;
 
     connect(network_channel_, &NetworkChannel::disconnected, this, &Host::stop);
@@ -143,7 +143,7 @@ bool Host::start()
     attach_timer_id_ = startTimer(std::chrono::minutes(1));
     if (!attach_timer_id_)
     {
-        qWarning("Could not start the timer");
+        LOG_WARN(logger, "Could not start the timer");
         return false;
     }
 
@@ -156,7 +156,7 @@ void Host::stop()
     if (state_ == StoppedState || state_ == StoppingState)
         return;
 
-    qInfo("Stopping host");
+    LOG_INFO(logger, "Stopping host");
     state_ = StoppingState;
 
     if (network_channel_->channelState() != NetworkChannel::NotConnected)
@@ -172,13 +172,13 @@ void Host::stop()
 
     state_ = StoppedState;
 
-    qInfo("Host is stopped");
+    LOG_INFO(logger, "Host is stopped");
     emit finished(this);
 }
 
 void Host::sessionChanged(uint32_t event, uint32_t session_id)
 {
-    qInfo() << "Session change event" << event << "for session" << session_id;
+    LOG_INFO(logger, "") << "Session change event" << event << "for session" << session_id;
 
     if (state_ != AttachedState && state_ != DetachedState)
         return;
@@ -202,7 +202,7 @@ void Host::timerEvent(QTimerEvent* event)
 {
     if (event->timerId() == attach_timer_id_)
     {
-        qWarning("Timeout of session attachment");
+        LOG_WARN(logger, "Timeout of session attachment");
         stop();
     }
 }
@@ -215,7 +215,7 @@ void Host::networkMessageWritten(int message_id)
         ipc_channel_->readMessage();
 }
 
-void Host::networkMessageReceived(const QByteArray& buffer)
+void Host::networkMessageReceived(const std::string& buffer)
 {
     if (!ipc_channel_.isNull())
         ipc_channel_->writeMessage(IpcMessageId, buffer);
@@ -227,7 +227,7 @@ void Host::ipcMessageWritten(int message_id)
     network_channel_->readMessage();
 }
 
-void Host::ipcMessageReceived(const QByteArray& buffer)
+void Host::ipcMessageReceived(const std::string& buffer)
 {
     network_channel_->writeMessage(NetworkMessageId, buffer);
 }
@@ -271,7 +271,7 @@ void Host::ipcServerStarted(const std::string& channel_id)
             break;
 
         default:
-            qFatal("Unknown session type: %d", session_type_);
+            LOG_FATAL(logger, "Unknown session type: " << session_type_);
             break;
     }
 
@@ -317,7 +317,7 @@ void Host::ipcNewConnection(IpcChannel* channel)
     connect(network_channel_, &NetworkChannel::messageWritten, this, &Host::networkMessageWritten);
     connect(network_channel_, &NetworkChannel::messageReceived, this, &Host::networkMessageReceived);
 
-    qInfo() << "Host process is attached for session" << session_id_;
+    LOG_INFO(logger, "") << "Host process is attached for session" << session_id_;
     state_ = AttachedState;
 
     ipc_channel_->readMessage();
@@ -326,7 +326,7 @@ void Host::ipcNewConnection(IpcChannel* channel)
 
 void Host::attachSession(uint32_t session_id)
 {
-    qInfo() << "Starting host process attachment to session" << session_id;
+    LOG_INFO(logger, "") << "Starting host process attachment to session" << session_id;
 
     state_ = StartingState;
     session_id_ = session_id;
@@ -363,7 +363,7 @@ void Host::dettachSession()
         delete session_process_;
     }
 
-    qInfo("Host process is detached");
+    LOG_INFO(logger, "Host process is detached");
 
     if (state_ == StoppingState)
         return;
@@ -377,7 +377,7 @@ void Host::dettachSession()
         attach_timer_id_ = startTimer(std::chrono::minutes(1));
         if (!attach_timer_id_)
         {
-            qWarning("Could not start the timer");
+            LOG_WARN(logger, "Could not start the timer");
             stop();
         }
     }
@@ -385,12 +385,12 @@ void Host::dettachSession()
 
 bool Host::startFakeSession()
 {
-    qInfo("Starting a fake session");
+    LOG_INFO(logger, "Starting a fake session");
 
     fake_session_ = HostSessionFake::create(session_type_, this);
     if (fake_session_.isNull())
     {
-        qInfo() << "Session type" << session_type_ << "does not have support for fake sessions";
+        LOG_INFO(logger, "") << "Session type" << session_type_ << "does not have support for fake sessions";
         return false;
     }
 

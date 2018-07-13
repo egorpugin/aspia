@@ -35,7 +35,7 @@ void HostSessionFileTransfer::stopSession()
     delete worker_;
 }
 
-void HostSessionFileTransfer::messageReceived(const QByteArray& buffer)
+void HostSessionFileTransfer::messageReceived(const std::string& buffer)
 {
     if (worker_.isNull())
         return;

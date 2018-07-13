@@ -56,7 +56,7 @@ quint32 ClientSessionDesktopManage::supportedFeatures()
     return kSupportedFeatures;
 }
 
-void ClientSessionDesktopManage::messageReceived(const QByteArray& buffer)
+void ClientSessionDesktopManage::messageReceived(const std::string& buffer)
 {
     proto::desktop::HostToClient message;
 
@@ -85,7 +85,7 @@ void ClientSessionDesktopManage::messageReceived(const QByteArray& buffer)
     else
     {
         // Unknown messages are ignored.
-        qWarning("Unhandled message from host");
+        LOG_WARN(logger, "Unhandled message from host");
     }
 
     emit readMessage();

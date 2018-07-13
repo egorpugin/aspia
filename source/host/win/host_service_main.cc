@@ -9,16 +9,14 @@
 
 #include <QFileInfo>
 
-#include "base/file_logger.h"
+#include "base/log.h"
 #include "host/win/host_service.h"
 
 namespace aspia {
 
 int hostServiceMain(int argc, char *argv[])
 {
-    FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
-
+    initLoggerForApplication(argc, argv);
     return HostService().exec(argc, argv);
 }
 

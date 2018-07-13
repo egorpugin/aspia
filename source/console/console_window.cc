@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QTranslator>
 
+#include "base/log.h"
 #include "client/ui/client_dialog.h"
 #include "client/client.h"
 #include "client/computer_factory.h"
@@ -539,7 +540,7 @@ void ConsoleWindow::onComputerDoubleClicked(proto::address_book::Computer* compu
     }
     else
     {
-        qFatal("Unknown session type");
+        LOG_FATAL(logger, "Unknown session type");
         return;
     }
 

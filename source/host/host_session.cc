@@ -28,7 +28,7 @@ HostSession* HostSession::create(const std::string& session_type, const std::str
 {
     if (channel_id.empty())
     {
-        qWarning("Invalid IPC channel id");
+        LOG_WARN(logger, "Invalid IPC channel id");
         return nullptr;
     }
 
@@ -50,7 +50,7 @@ HostSession* HostSession::create(const std::string& session_type, const std::str
     }
     else
     {
-        qWarning() << "Unknown session type: " << session_type;
+        LOG_WARN(logger, "") << "Unknown session type: " << session_type;
         return nullptr;
     }
 }

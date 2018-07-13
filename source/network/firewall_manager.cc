@@ -8,7 +8,6 @@
 #include "firewall_manager.h"
 
 #include <QCoreApplication>
-#include <QDebug>
 #include <QUuid>
 
 #include <comutil.h>
@@ -29,7 +28,7 @@ FirewallManager::FirewallManager(const std::string& application_path)
                                   IID_PPV_ARGS(&firewall_policy_));
     if (FAILED(hr))
     {
-        qWarning() << "CreateInstance failed: " << errnoToString(hr);
+        LOG_WARN(logger, "") << "CreateInstance failed: " << errnoToString(hr);
         firewall_policy_ = nullptr;
         return;
     }
@@ -37,7 +36,7 @@ FirewallManager::FirewallManager(const std::string& application_path)
     hr = firewall_policy_->get_Rules(firewall_rules_.GetAddressOf());
     if (FAILED(hr))
     {
-        qWarning() << "get_Rules failed: " << errnoToString(hr);
+        LOG_WARN(logger, "") << "get_Rules failed: " << errnoToString(hr);
         firewall_rules_ = nullptr;
     }
 }
@@ -102,7 +101,7 @@ bool FirewallManager::addTcpRule(const std::string& rule_name,
     HRESULT hr = CoCreateInstance(CLSID_NetFwRule, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&rule));
     if (FAILED(hr))
     {
-        qWarning() << "CoCreateInstance failed: " << errnoToString(hr);
+        LOG_WARN(logger, "") << "CoCreateInstance failed: " << errnoToString(hr);
         return false;
     }
 
@@ -119,7 +118,7 @@ bool FirewallManager::addTcpRule(const std::string& rule_name,
     firewall_rules_->Add(rule.Get());
     if (FAILED(hr))
     {
-        qWarning() << "Add failed: " << errnoToString(hr);
+        LOG_WARN(logger, "") << "Add failed: " << errnoToString(hr);
         return false;
     }
 
@@ -138,7 +137,7 @@ void FirewallManager::deleteRuleByName(const std::string& rule_name)
         HRESULT hr = rule->get_Name(bstr_rule_name.GetAddress());
         if (FAILED(hr))
         {
-            qWarning() << "get_Name failed: " << errnoToString(hr);
+            LOG_WARN(logger, "") << "get_Name failed: " << errnoToString(hr);
             continue;
         }
 
@@ -168,7 +167,7 @@ void FirewallManager::allRules(std::vector<Microsoft::WRL::ComPtr<INetFwRule>>* 
     HRESULT hr = firewall_rules_->get__NewEnum(rules_enum_unknown.GetAddressOf());
     if (FAILED(hr))
     {
-        qWarning() << "get__NewEnum failed: " << errnoToString(hr);
+        LOG_WARN(logger, "") << "get__NewEnum failed: " << errnoToString(hr);
         return;
     }
 
@@ -177,7 +176,7 @@ void FirewallManager::allRules(std::vector<Microsoft::WRL::ComPtr<INetFwRule>>* 
     hr = rules_enum_unknown.CopyTo(rules_enum.GetAddressOf());
     if (FAILED(hr))
     {
-        qWarning() << "QueryInterface failed: " << errnoToString(hr);
+        LOG_WARN(logger, "") << "QueryInterface failed: " << errnoToString(hr);
         return;
     }
 
@@ -186,7 +185,7 @@ void FirewallManager::allRules(std::vector<Microsoft::WRL::ComPtr<INetFwRule>>* 
         _variant_t rule_var;
         hr = rules_enum->Next(1, rule_var.GetAddress(), nullptr);
         if (FAILED(hr))
-            qWarning() << "Next failed: " << errnoToString(hr);
+            LOG_WARN(logger, "") << "Next failed: " << errnoToString(hr);
 
         if (hr != S_OK)
             break;
@@ -201,7 +200,7 @@ void FirewallManager::allRules(std::vector<Microsoft::WRL::ComPtr<INetFwRule>>* 
         hr = V_DISPATCH(&rule_var)->QueryInterface(IID_PPV_ARGS(rule.GetAddressOf()));
         if (FAILED(hr))
         {
-            qWarning() << "QueryInterface failed: " << errnoToString(hr);
+            LOG_WARN(logger, "") << "QueryInterface failed: " << errnoToString(hr);
             continue;
         }
 
@@ -209,7 +208,7 @@ void FirewallManager::allRules(std::vector<Microsoft::WRL::ComPtr<INetFwRule>>* 
         hr = rule->get_ApplicationName(bstr_path.GetAddress());
         if (FAILED(hr))
         {
-            qWarning() << "get_ApplicationName failed: " << errnoToString(hr);
+            LOG_WARN(logger, "") << "get_ApplicationName failed: " << errnoToString(hr);
             continue;
         }
 

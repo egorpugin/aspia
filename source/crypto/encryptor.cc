@@ -23,7 +23,7 @@ Encryptor::Encryptor(Mode mode)
 {
     if (sodium_init() == -1)
     {
-        qWarning("sodium_init failed");
+        LOG_WARN(logger, "sodium_init failed");
         return;
     }
 
@@ -35,7 +35,7 @@ Encryptor::Encryptor(Mode mode)
 
     if (crypto_kx_keypair(public_key.data(), secret_key.data()) != 0)
     {
-        qWarning("crypto_kx_keypair failed");
+        LOG_WARN(logger, "crypto_kx_keypair failed");
         return;
     }
 
@@ -70,7 +70,7 @@ Encryptor::~Encryptor()
     }
 }
 
-bool Encryptor::readHelloMessage(const QByteArray& message_buffer)
+bool Encryptor::readHelloMessage(const std::string& message_buffer)
 {
     if (local_public_key_.empty() || local_secret_key_.empty())
         return false;
@@ -104,7 +104,7 @@ bool Encryptor::readHelloMessage(const QByteArray& message_buffer)
                 local_secret_key_.data(),
                 reinterpret_cast<const uint8_t*>(message.public_key().data())) != 0)
         {
-            qWarning("crypto_kx_server_session_keys failed");
+            LOG_WARN(logger, "crypto_kx_server_session_keys failed");
             return false;
         }
     }
@@ -119,7 +119,7 @@ bool Encryptor::readHelloMessage(const QByteArray& message_buffer)
                local_secret_key_.data(),
                reinterpret_cast<const uint8_t*>(message.public_key().data())) != 0)
         {
-            qWarning("crypto_kx_client_session_keys failed");
+            LOG_WARN(logger, "crypto_kx_client_session_keys failed");
             return false;
         }
     }
@@ -142,10 +142,10 @@ bool Encryptor::readHelloMessage(const QByteArray& message_buffer)
     return true;
 }
 
-QByteArray Encryptor::helloMessage()
+std::string Encryptor::helloMessage()
 {
     if (local_public_key_.empty() || local_secret_key_.empty())
-        return QByteArray();
+        return std::string();
 
     encrypt_nonce_.resize(crypto_secretbox_NONCEBYTES);
 
@@ -157,7 +157,7 @@ QByteArray Encryptor::helloMessage()
     message.set_public_key(local_public_key_.data(), local_public_key_.size());
     message.set_nonce(encrypt_nonce_.data(), encrypt_nonce_.size());
 
-    QByteArray message_buffer = serializeMessage(message);
+    std::string message_buffer = serializeMessage(message);
 
     sodium_memzero(message.mutable_public_key()->data(), message.mutable_public_key()->size());
     sodium_memzero(message.mutable_nonce()->data(), message.mutable_nonce()->size());
@@ -174,7 +174,7 @@ QByteArray Encryptor::helloMessage()
     return message_buffer;
 }
 
-QByteArray Encryptor::encrypt(const QByteArray& source_buffer)
+std::string Encryptor::encrypt(const std::string& source_buffer)
 {
     assert(local_public_key_.empty());
     assert(local_secret_key_.empty());
@@ -183,7 +183,7 @@ QByteArray Encryptor::encrypt(const QByteArray& source_buffer)
 
     sodium_increment(encrypt_nonce_.data(), crypto_secretbox_NONCEBYTES);
 
-    QByteArray encrypted_buffer;
+    std::string encrypted_buffer;
     encrypted_buffer.resize(source_buffer.size() + crypto_secretbox_MACBYTES);
 
     // Encrypt message.
@@ -193,14 +193,14 @@ QByteArray Encryptor::encrypt(const QByteArray& source_buffer)
                               encrypt_nonce_.data(),
                               encrypt_key_.data()) != 0)
     {
-        qWarning("crypto_secretbox_easy failed");
-        return QByteArray();
+        LOG_WARN(logger, "crypto_secretbox_easy failed");
+        return std::string();
     }
 
     return encrypted_buffer;
 }
 
-QByteArray Encryptor::decrypt(const QByteArray& source_buffer)
+std::string Encryptor::decrypt(const std::string& source_buffer)
 {
     assert(local_public_key_.empty());
     assert(local_secret_key_.empty());
@@ -209,7 +209,7 @@ QByteArray Encryptor::decrypt(const QByteArray& source_buffer)
 
     sodium_increment(decrypt_nonce_.data(), crypto_secretbox_NONCEBYTES);
 
-    QByteArray decrypted_buffer;
+    std::string decrypted_buffer;
     decrypted_buffer.resize(source_buffer.size() - crypto_secretbox_MACBYTES);
 
     // Decrypt message.
@@ -219,8 +219,8 @@ QByteArray Encryptor::decrypt(const QByteArray& source_buffer)
                                    decrypt_nonce_.data(),
                                    decrypt_key_.data()) != 0)
     {
-        qWarning("crypto_secretbox_open_easy failed");
-        return QByteArray();
+        LOG_WARN(logger, "crypto_secretbox_open_easy failed");
+        return std::string();
     }
 
     return decrypted_buffer;

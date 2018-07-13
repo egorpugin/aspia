@@ -10,7 +10,6 @@
 
 #include "base/common.h"
 
-#include <QByteArray>
 #include <QPointer>
 
 namespace aspia {
@@ -29,11 +28,11 @@ public:
     void start();
 
 public slots:
-    virtual void messageReceived(const QByteArray& buffer) = 0;
+    virtual void messageReceived(const std::string& buffer) = 0;
     virtual void messageWritten(int message_id) = 0;
 
 signals:
-    void writeMessage(int message_id, const QByteArray& buffer);
+    void writeMessage(int message_id, const std::string& buffer);
     void readMessage();
     void errorOccurred();
 

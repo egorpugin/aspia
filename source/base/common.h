@@ -3,7 +3,10 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include <filesystem>
 #include <string>
+
+namespace fs = std::filesystem;
 
 #define DISABLE_COPY(Class)        \
     Class(const Class &) = delete; \

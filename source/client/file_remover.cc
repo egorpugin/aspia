@@ -7,6 +7,7 @@
 
 #include "client/file_remover.h"
 
+#include "base/log.h"
 #include "client/file_remove_queue_builder.h"
 #include "client/file_status.h"
 
@@ -58,7 +59,7 @@ void FileRemover::applyAction(Action action)
             break;
 
         default:
-            qFatal("Unexpected action: %d", action);
+            LOG_FATAL(logger, "Unexpected action: " << action);
             break;
     }
 }

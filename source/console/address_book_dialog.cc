@@ -10,6 +10,7 @@
 #include <QAbstractButton>
 #include <QMessageBox>
 
+#include "base/log.h"
 #include "crypto/data_encryptor.h"
 #include "crypto/random.h"
 
@@ -25,7 +26,7 @@ constexpr int kMaxCommentLength = 2048;
 } // namespace
 
 AddressBookDialog::AddressBookDialog(QWidget* parent, proto::address_book::File* file,
-                                     proto::address_book::Data* data, QByteArray* key)
+                                     proto::address_book::Data* data, std::string* key)
     : QDialog(parent), file_(file), data_(data), key_(key)
 {
     ui.setupUi(this);
@@ -49,7 +50,7 @@ AddressBookDialog::AddressBookDialog(QWidget* parent, proto::address_book::File*
 
     if (file->encryption_type() == proto::address_book::ENCRYPTION_TYPE_XCHACHA20_POLY1305)
     {
-        if (!key_->isEmpty())
+        if (!key_->empty())
         {
             QString text = tr("Double-click to change");
 
@@ -123,7 +124,7 @@ void AddressBookDialog::buttonBoxClicked(QAbstractButton* button)
         return;
     }
 
-    QString name = ui.edit_name->text();
+    auto name = ui.edit_name->text().toStdString();
     if (name.length() > kMaxNameLength)
     {
         showError(tr("Too long name. The maximum length of the name is 64 characters."));
@@ -135,7 +136,7 @@ void AddressBookDialog::buttonBoxClicked(QAbstractButton* button)
         return;
     }
 
-    QString comment = ui.edit_comment->toPlainText();
+    auto comment = ui.edit_comment->toPlainText().toStdString();
     if (comment.length() > kMaxCommentLength)
     {
         showError(tr("Too long comment. The maximum length of the comment is 2048 characters."));
@@ -162,8 +163,8 @@ void AddressBookDialog::buttonBoxClicked(QAbstractButton* button)
         {
             if (password_changed_)
             {
-                QString password = ui.edit_password->text();
-                QString password_repeat = ui.edit_password_repeat->text();
+                auto password = ui.edit_password->text().toStdString();
+                auto password_repeat = ui.edit_password_repeat->text().toStdString();
 
                 if (password != password_repeat)
                 {
@@ -179,15 +180,15 @@ void AddressBookDialog::buttonBoxClicked(QAbstractButton* button)
 
                 // Generate salt, which is added after each iteration of the hashing.
                 // New salt is generated each time the password is changed.
-                QByteArray hashing_salt =
+                auto hashing_salt =
                     Random::generateBuffer(ui.spinbox_password_salt->value());
 
                 // Save the salt and the number of hashing iterations.
                 file_->set_hashing_rounds(ui.spinbox_hashing_rounds->value());
-                *file_->mutable_hashing_salt() = hashing_salt.toStdString();
+                *file_->mutable_hashing_salt() = hashing_salt;
 
                 // Now generate a key for encryption/decryption.
-                *key_ = DataEncryptor::createKey(password.toUtf8(), hashing_salt,
+                *key_ = DataEncryptor::createKey(password, hashing_salt,
                                                  file_->hashing_rounds());
             }
 
@@ -195,20 +196,20 @@ void AddressBookDialog::buttonBoxClicked(QAbstractButton* button)
             int salt_after_size = ui.spinbox_salt_after->value();
 
             if (salt_before_size != data_->salt1().size())
-                *data_->mutable_salt1() = Random::generateBuffer(salt_before_size).toStdString();
+                *data_->mutable_salt1() = Random::generateBuffer(salt_before_size);
 
             if (salt_after_size != data_->salt2().size())
-                *data_->mutable_salt2() = Random::generateBuffer(salt_after_size).toStdString();
+                *data_->mutable_salt2() = Random::generateBuffer(salt_after_size);
         }
         break;
 
         default:
-            qFatal("Unexpected encryption type: %d", encryption_type);
+            LOG_FATAL(logger, "Unexpected encryption type: " << encryption_type);
             return;
     }
 
-    data_->mutable_root_group()->set_name(name.toStdString());
-    data_->mutable_root_group()->set_comment(comment.toStdString());
+    data_->mutable_root_group()->set_name(name);
+    data_->mutable_root_group()->set_comment(comment);
 
     file_->set_encryption_type(encryption_type);
 
@@ -248,7 +249,7 @@ void AddressBookDialog::encryptionTypedChanged(int item_index)
         break;
 
         default:
-            qFatal("Unexpected encryption type: %d", encryption_type);
+            LOG_FATAL(logger, "Unexpected encryption type: " << encryption_type);
             break;
     }
 }

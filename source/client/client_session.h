@@ -26,7 +26,7 @@ public:
 
 public slots:
     // Reads the incoming message for the session.
-    virtual void messageReceived(const QByteArray& buffer) = 0;
+    virtual void messageReceived(const std::string& buffer) = 0;
 
     // Message with ID |message_id| sent.
     virtual void messageWritten(int message_id) = 0;
@@ -39,7 +39,7 @@ public slots:
 
 signals:
     // Indicates an outgoing message.
-    void writeMessage(int message_id, const QByteArray& buffer);
+    void writeMessage(int message_id, const std::string& buffer);
 
     // Indicates that it is ready to receive the next incoming message.
     void readMessage();

@@ -5,6 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "desktop_capture/capturer_gdi.h"
 
 #include <QDebug>
@@ -102,7 +103,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
 
     if (!GetIconInfo(cursor, &icon_info))
     {
-        qWarning("GetIconInfo failed");
+        LOG_WARN(logger, "GetIconInfo failed");
         return nullptr;
     }
 
@@ -117,7 +118,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
 
     if (!GetObjectW(scoped_mask, sizeof(bitmap_info), &bitmap_info))
     {
-        qWarning("GetObjectW failed");
+        LOG_WARN(logger, "GetObjectW failed");
         return nullptr;
     }
 
@@ -148,7 +149,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
                    reinterpret_cast<BITMAPINFO*>(&bmi),
                    DIB_RGB_COLORS))
     {
-        qWarning("GetDIBits failed");
+        LOG_WARN(logger, "GetDIBits failed");
         return nullptr;
     }
 
@@ -173,7 +174,7 @@ std::unique_ptr<MouseCursor> createMouseCursorFromHCursor(HDC dc, HCURSOR cursor
                        reinterpret_cast<BITMAPINFO*>(&bmi),
                        DIB_RGB_COLORS))
         {
-            qWarning("GetDIBits failed");
+            LOG_WARN(logger, "GetDIBits failed");
             return nullptr;
         }
 
@@ -322,7 +323,7 @@ bool CapturerGDI::prepareCaptureResources()
         memory_dc_.reset(CreateCompatibleDC(*desktop_dc_));
         if (!memory_dc_)
         {
-            qWarning("CreateCompatibleDC failed");
+            LOG_WARN(logger, "CreateCompatibleDC failed");
             return false;
         }
 

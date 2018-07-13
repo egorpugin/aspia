@@ -185,7 +185,7 @@ void ServiceHandler::run()
         }
         else
         {
-            qWarning() << "StartServiceCtrlDispatcherW failed: "
+            LOG_WARN(logger, "") << "StartServiceCtrlDispatcherW failed: "
                        << errnoToString(error_code);
             instance->startup_state = ErrorOccurred;
         }
@@ -413,7 +413,7 @@ int ServiceImpl::exec(int argc, char* argv[])
     QScopedPointer<QCoreApplication> application(QCoreApplication::instance());
     if (application.isNull())
     {
-        qWarning("Application instance is null");
+        LOG_WARN(logger, "Application instance is null");
         return 1;
     }
 

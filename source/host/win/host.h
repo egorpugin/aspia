@@ -68,9 +68,9 @@ protected:
 
 private slots:
     void networkMessageWritten(int message_id);
-    void networkMessageReceived(const QByteArray& buffer);
+    void networkMessageReceived(const std::string& buffer);
     void ipcMessageWritten(int message_id);
-    void ipcMessageReceived(const QByteArray& buffer);
+    void ipcMessageReceived(const std::string& buffer);
     void ipcServerStarted(const std::string& channel_id);
     void ipcNewConnection(IpcChannel* channel);
     void attachSession(uint32_t session_id);

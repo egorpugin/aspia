@@ -9,7 +9,7 @@
 
 #include <QFileInfo>
 
-#include "base/file_logger.h"
+#include "base/log.h"
 #include "host/ui/host_config_dialog.h"
 #include "version.h"
 
@@ -17,8 +17,7 @@ namespace aspia {
 
 int hostConfigMain(int argc, char *argv[])
 {
-    FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
+    initLoggerForApplication(argc, argv);
 
     QApplication application(argc, argv);
     application.setOrganizationName(QStringLiteral("Aspia"));

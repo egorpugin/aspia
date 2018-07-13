@@ -7,14 +7,16 @@
 
 #include "system_info/serializer/dmi_impl.h"
 
+#include "base/errno_logging.h"
+
+#include <boost/algorithm/string.hpp>
+
+#include <bitset>
+
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 #endif
-
-#include "base/errno_logging.h"
-
-#include <bitset>
 
 namespace aspia {
 
@@ -66,7 +68,7 @@ void DmiTableEnumerator::advance()
         // user know his / her table is broken.
         if (table_length < 4)
         {
-            qWarning("Invalid SMBIOS table length");
+            LOG_WARN(logger, "Invalid SMBIOS table length");
             break;
         }
 
@@ -76,7 +78,7 @@ void DmiTableEnumerator::advance()
 
         // Look for the next handle.
         next_ = current_ + table_length;
-        while (static_cast<quintptr>(next_ - start + 1) < data_.length &&
+        while (static_cast<uintptr_t>(next_ - start + 1) < data_.length &&
             (next_[0] != 0 || next_[1] != 0))
         {
             ++next_;
@@ -136,7 +138,7 @@ std::string DmiTable::string(uint8_t offset) const
     if (!*string)
         return std::string();
 
-    return QString(QLatin1String(string).trimmed()).toStdString();
+    return boost::algorithm::trim_copy(std::string(string));
 }
 
 //================================================================================================
@@ -206,7 +208,7 @@ std::string DmiBiosTable::biosRevision() const
     if (major == 0xFF || minor == 0xFF)
         return std::string();
 
-    return QString("%1.%2").arg(major).arg(minor).toStdString();
+    return std::to_string(major) + "." + std::to_string(minor);
 }
 
 std::string DmiBiosTable::firmwareRevision() const
@@ -217,7 +219,7 @@ std::string DmiBiosTable::firmwareRevision() const
     if (major == 0xFF || minor == 0xFF)
         return std::string();
 
-    return QString("%1.%2").arg(major).arg(minor).toStdString();
+    return std::to_string(major) + "." + std::to_string(minor);
 }
 
 std::string DmiBiosTable::address() const
@@ -226,7 +228,10 @@ std::string DmiBiosTable::address() const
     if (!address)
         return std::string();
 
-    return QString("%10h").arg(address, 4, 16).toStdString();
+    char buf[15] = { 0 };
+    snprintf(buf, sizeof(buf), "%4x", address);
+    //return QString("%10h").arg(address, 4, 16).toStdString();
+    return buf;
 }
 
 uint64_t DmiBiosTable::runtimeSize() const

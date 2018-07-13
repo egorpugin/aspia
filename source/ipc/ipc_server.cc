@@ -5,6 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "ipc/ipc_server.h"
 
 #include <QCoreApplication>
@@ -45,7 +46,7 @@ void IpcServer::start()
 {
     if (isStarted())
     {
-        qWarning("An attempt was start an already running server.");
+        LOG_WARN(logger, "An attempt was start an already running server.");
         return;
     }
 
@@ -60,7 +61,7 @@ void IpcServer::start()
 
     if (!server_->listen(channel_id))
     {
-        qWarning() << "listen failed: " << server_->errorString();
+        LOG_WARN(logger, "") << "listen failed: " << server_->errorString().toStdString();
         emit errorOccurred();
         stop();
         return;

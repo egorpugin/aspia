@@ -27,7 +27,7 @@ HostSessionSystemInfo::HostSessionSystemInfo(const std::string& channel_id)
     // Nothing
 }
 
-void HostSessionSystemInfo::messageReceived(const QByteArray& buffer)
+void HostSessionSystemInfo::messageReceived(const std::string& buffer)
 {
     proto::system_info::Request request;
 
@@ -47,7 +47,7 @@ void HostSessionSystemInfo::messageReceived(const QByteArray& buffer)
     }
     else
     {
-        qWarning("Unhandled request");
+        LOG_WARN(logger, "Unhandled request");
         emit errorOccurred();
     }
 }
@@ -86,11 +86,11 @@ void HostSessionSystemInfo::readCategoryRequest(
     const std::string& request_uuid,
     const proto::system_info::CategoryRequest& request)
 {
-    auto category_uuid = QString::fromStdString(request.uuid());
+    auto category_uuid = request.uuid();
 
     for (const auto& category : category_list_)
     {
-        if (category.uuid() == category_uuid.toStdString())
+        if (category.uuid() == category_uuid)
         {
             QThread* thread = new QThread(this);
 
@@ -119,7 +119,7 @@ void HostSessionSystemInfo::readCategoryRequest(
         }
     }
 
-    qWarning() << "An unknown category was requested: " << category_uuid;
+    LOG_WARN(logger, "An unknown category was requested: " << category_uuid);
     emit errorOccurred();
 }
 

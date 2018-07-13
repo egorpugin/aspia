@@ -9,14 +9,14 @@
 
 #include "base/common.h"
 
-#include <QHash>
-#include <QStringList>
+#include <qhash.h>
+#include <qstring.h>
 
 class QTranslator;
 
 namespace aspia {
 
-class ASPIA_BASE_API LocaleLoader
+class ASPIA_CORE_API LocaleLoader
 {
 public:
     LocaleLoader();
@@ -36,7 +36,7 @@ private:
     QHash<QString, QStringList> locale_list_;
     QList<QTranslator*> translator_list_;
 
-    DISABLE_COPY(LocaleLoader)
+    Q_DISABLE_COPY(LocaleLoader)
 };
 
 } // namespace aspia

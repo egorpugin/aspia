@@ -7,8 +7,6 @@
 
 #include "base/win/security_helpers.h"
 
-#include <QDebug>
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <objidl.h>
@@ -125,7 +123,7 @@ bool initializeComSecurity(const wchar_t* security_descriptor,
     ScopedSd relative_sd = convertSddlToSd(sddl);
     if (!relative_sd)
     {
-        qWarning("Failed to create a security descriptor");
+        LOG_WARN(logger, "Failed to create a security descriptor");
         return false;
     }
 
@@ -138,7 +136,7 @@ bool initializeComSecurity(const wchar_t* security_descriptor,
     if (!makeScopedAbsoluteSd(relative_sd, &absolute_sd, &dacl,
                               &group, &owner, &sacl))
     {
-        qWarning("MakeScopedAbsoluteSd failed");
+        LOG_WARN(logger, "MakeScopedAbsoluteSd failed");
         return false;
     }
 
@@ -160,7 +158,7 @@ bool initializeComSecurity(const wchar_t* security_descriptor,
         nullptr);  // Reserved, must be nullptr
     if (FAILED(result))
     {
-        qWarning() << "CoInitializeSecurity failed: " << result;
+        LOG_WARN(logger, "") << "CoInitializeSecurity failed: " << result;
         return false;
     }
 

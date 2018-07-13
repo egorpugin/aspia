@@ -5,6 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "codec/compressor_zlib.h"
 
 #include <zlib-ng.h>
@@ -72,13 +73,13 @@ bool CompressorZLIB::process(const uint8_t* input_data,
             break;
 
         default:
-            qWarning("Unsupported flush mode");
+            LOG_WARN(logger, "Unsupported flush mode");
             break;
     }
 
     int ret = zng_deflate(stream_, z_flush);
     if (ret == Z_STREAM_ERROR)
-        qWarning("zlib compression failed");
+        LOG_WARN(logger, "zlib compression failed");
 
     *consumed = input_size - stream_->avail_in;
     *written = output_size - stream_->avail_out;
@@ -100,7 +101,7 @@ bool CompressorZLIB::process(const uint8_t* input_data,
             return stream_->avail_out == 0;
 
         default:
-            qWarning() << "Unexpected zlib error: " << ret;
+            LOG_WARN(logger, "") << "Unexpected zlib error: " << ret;
             break;
     }
 

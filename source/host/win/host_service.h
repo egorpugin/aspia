@@ -10,9 +10,10 @@
 
 #include <QGuiApplication>
 #include <QScopedPointer>
+#include <QPointer>
 
 #include "base/win/scoped_com_initializer.h"
-#include "base/locale_loader.h"
+#include "host/locale_loader.h"
 #include "base/service.h"
 
 namespace aspia {

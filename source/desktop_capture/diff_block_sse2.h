@@ -8,7 +8,7 @@
 #ifndef _ASPIA_DESKTOP_CAPTURE__DIFF_BLOCK_SSE2_H
 #define _ASPIA_DESKTOP_CAPTURE__DIFF_BLOCK_SSE2_H
 
-#include <qglobal.h>
+#include <base/common.h>
 
 namespace aspia {
 

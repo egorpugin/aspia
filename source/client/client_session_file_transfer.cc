@@ -48,7 +48,7 @@ ClientSessionFileTransfer::~ClientSessionFileTransfer()
     delete worker_;
 }
 
-void ClientSessionFileTransfer::messageReceived(const QByteArray& buffer)
+void ClientSessionFileTransfer::messageReceived(const std::string& buffer)
 {
     proto::file_transfer::Reply reply;
 

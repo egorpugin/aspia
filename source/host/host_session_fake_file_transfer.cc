@@ -29,7 +29,7 @@ void HostSessionFakeFileTransfer::startSession()
     emit readMessage();
 }
 
-void HostSessionFakeFileTransfer::onMessageReceived(const QByteArray& /* buffer */)
+void HostSessionFakeFileTransfer::onMessageReceived(const std::string& /* buffer */)
 {
     proto::file_transfer::Reply reply;
     reply.set_status(proto::file_transfer::STATUS_NO_LOGGED_ON_USER);

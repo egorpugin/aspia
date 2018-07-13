@@ -10,7 +10,8 @@
 
 #include "base/common.h"
 
-#include <QRegion>
+#include <qregion.h>
+
 #include <memory>
 
 namespace aspia {

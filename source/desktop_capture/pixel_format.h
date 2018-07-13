@@ -8,7 +8,7 @@
 #ifndef _ASPIA_DESKTOP_CAPTURE__PIXEL_FORMAT_H
 #define _ASPIA_DESKTOP_CAPTURE__PIXEL_FORMAT_H
 
-#include <qglobal.h>
+#include <base/common.h>
 
 namespace aspia {
 

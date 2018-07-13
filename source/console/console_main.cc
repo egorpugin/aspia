@@ -10,7 +10,7 @@
 #include <QCommandLineParser>
 #include <QFileInfo>
 
-#include "base/file_logger.h"
+#include "base/log.h"
 #include "console/console_window.h"
 #include "version.h"
 
@@ -18,8 +18,7 @@ namespace aspia {
 
 int consoleMain(int argc, char *argv[])
 {
-    FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
+    initLoggerForApplication(argc, argv);
 
     QApplication application(argc, argv);
 

@@ -5,9 +5,8 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "ipc/ipc_channel.h"
-
-#include <QDebug>
 
 namespace aspia {
 
@@ -75,7 +74,7 @@ void IpcChannel::readMessage()
     onReadyRead();
 }
 
-void IpcChannel::writeMessage(int message_id, const QByteArray& buffer)
+void IpcChannel::writeMessage(int message_id, const std::string& buffer)
 {
     bool schedule_write = write_queue_.empty();
 
@@ -87,13 +86,13 @@ void IpcChannel::writeMessage(int message_id, const QByteArray& buffer)
 
 void IpcChannel::onError(QLocalSocket::LocalSocketError /* socket_error */)
 {
-    qWarning() << "IPC channel error: " << socket_->errorString();
+    LOG_WARN(logger, "") << "IPC channel error: " << socket_->errorString().toStdString();
     emit errorOccurred();
 }
 
 void IpcChannel::onBytesWritten(int64_t bytes)
 {
-    const QByteArray& write_buffer = write_queue_.front().second;
+    const auto& write_buffer = write_queue_.front().second;
 
     written_ += bytes;
 
@@ -141,7 +140,7 @@ void IpcChannel::onReadyRead()
 
                 if (!read_size_ || read_size_ > kMaxMessageSize)
                 {
-                    qWarning() << "Wrong message size: " << read_size_;
+                    LOG_WARN(logger, "") << "Wrong message size: " << read_size_;
                     socket_->abort();
                     return;
                 }
@@ -177,12 +176,12 @@ void IpcChannel::onReadyRead()
 
 void IpcChannel::scheduleWrite()
 {
-    const QByteArray& write_buffer = write_queue_.front().second;
+    const auto& write_buffer = write_queue_.front().second;
 
     write_size_ = write_buffer.size();
     if (!write_size_ || write_size_ > kMaxMessageSize)
     {
-        qWarning() << "Wrong message size: " << write_size_;
+        LOG_WARN(logger, "") << "Wrong message size: " << write_size_;
         socket_->abort();
         return;
     }

@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/system_info_request.h"
+#include "client/system_info_request.h"
 
 #include <QUuid>
 

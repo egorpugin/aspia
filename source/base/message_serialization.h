@@ -8,23 +8,22 @@
 #ifndef _ASPIA_BASE__MESSAGE_SERIALIZATION_H
 #define _ASPIA_BASE__MESSAGE_SERIALIZATION_H
 
-#include <QDebug>
-#include <QByteArray>
+#include "base/log.h"
 
 #include <google/protobuf/message_lite.h>
 
 namespace aspia {
 
-static QByteArray serializeMessage(const google::protobuf::MessageLite& message)
+static std::string serializeMessage(const google::protobuf::MessageLite& message)
 {
     size_t size = message.ByteSizeLong();
     if (!size)
     {
-        qWarning("Empty messages are not allowed");
-        return QByteArray();
+        LOG_WARN(logger, "Empty messages are not allowed");
+        return {};
     }
 
-    QByteArray buffer;
+    std::string buffer;
     buffer.resize(size);
 
     message.SerializeWithCachedSizesToArray(reinterpret_cast<uint8_t*>(buffer.data()));
@@ -32,11 +31,11 @@ static QByteArray serializeMessage(const google::protobuf::MessageLite& message)
 }
 
 template <class T>
-bool parseMessage(const QByteArray& buffer, T& message)
+bool parseMessage(const std::string& buffer, T& message)
 {
-    if (!message.ParseFromArray(buffer.constData(), buffer.size()))
+    if (!message.ParseFromArray(buffer.data(), buffer.size()))
     {
-        qWarning("Received message that is not a valid protocol buffer");
+        LOG_WARN(logger, "Received message that is not a valid protocol buffer");
         return false;
     }
 

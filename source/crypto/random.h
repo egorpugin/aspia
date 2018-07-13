@@ -10,14 +10,12 @@
 
 #include "base/common.h"
 
-#include <QByteArray>
-
 namespace aspia {
 
 class ASPIA_CRYPTO_API Random
 {
 public:
-    static QByteArray generateBuffer(int size);
+    static std::string generateBuffer(int size);
     static uint32_t generateNumber();
 
 private:

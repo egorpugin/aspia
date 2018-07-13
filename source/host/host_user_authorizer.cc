@@ -7,9 +7,9 @@
 
 #include "host/host_user_authorizer.h"
 
-#include <QCryptographicHash>
 #include <QTimerEvent>
 
+#include "base/log.h"
 #include "base/errno_logging.h"
 #include "base/message_serialization.h"
 #include "crypto/random.h"
@@ -25,23 +25,23 @@ const uint32_t kNonceSize = 16;
 
 enum MessageId { ServerChallenge, LogonResult };
 
-QByteArray generateNonce()
+std::string generateNonce()
 {
     return Random::generateBuffer(kNonceSize);
 }
 
-QByteArray createSessionKey(const QByteArray& password_hash, const QByteArray& nonce)
+std::string createSessionKey(const std::string& password_hash, const std::string& nonce)
 {
-    QByteArray data = password_hash;
+    auto data = password_hash;
 
     for (uint32_t i = 0; i < kKeyHashingRounds; ++i)
     {
-        QCryptographicHash hash(QCryptographicHash::Sha512);
+        /*QCryptographicHash hash(QCryptographicHash::Sha512);
 
         hash.addData(data);
         hash.addData(nonce);
 
-        data = hash.result();
+        data = hash.result();*/
     }
 
     return data;
@@ -60,7 +60,7 @@ HostUserAuthorizer::~HostUserAuthorizer()
     stop();
 
     secureMemZero(&user_name_);
-    secureMemZero(&nonce_.toStdString());
+    secureMemZero(&nonce_);
 }
 
 void HostUserAuthorizer::setUserList(const QList<User>& user_list)
@@ -77,13 +77,13 @@ void HostUserAuthorizer::start()
 {
     if (state_ != NotStarted)
     {
-        qWarning("Authorizer already started");
+        LOG_WARN(logger, "Authorizer already started");
         return;
     }
 
     if (user_list_.isEmpty() || network_channel_.isNull())
     {
-        qWarning("Empty user list or invalid network channel");
+        LOG_WARN(logger, "Empty user list or invalid network channel");
         stop();
         return;
     }
@@ -93,7 +93,7 @@ void HostUserAuthorizer::start()
     timer_id_ = startTimer(std::chrono::minutes(2));
     if (!timer_id_)
     {
-        qWarning("Unable to start timer");
+        LOG_WARN(logger, "Unable to start timer");
         stop();
         return;
     }
@@ -181,14 +181,14 @@ void HostUserAuthorizer::messageWritten(int message_id)
 
         default:
         {
-            qFatal("Unexpected message id: %d", message_id);
+            LOG_FATAL(logger, "Unexpected message id: " << message_id);
             stop();
         }
         break;
     }
 }
 
-void HostUserAuthorizer::messageReceived(const QByteArray& buffer)
+void HostUserAuthorizer::messageReceived(const std::string& buffer)
 {
     if (state_ == Finished)
         return;
@@ -211,7 +211,7 @@ void HostUserAuthorizer::messageReceived(const QByteArray& buffer)
         }
     }
 
-    qWarning("Unknown message from client");
+    LOG_WARN(logger, "Unknown message from client");
     stop();
 }
 
@@ -220,7 +220,7 @@ void HostUserAuthorizer::readLogonRequest(const proto::auth::LogonRequest& logon
     // We do not support other authorization methods yet.
     if (logon_request.method() != proto::auth::METHOD_BASIC)
     {
-        qWarning() << "Unsupported authorization method: " << logon_request.method();
+        LOG_WARN(logger, "") << "Unsupported authorization method: " << logon_request.method();
         status_ = proto::auth::STATUS_ACCESS_DENIED;
         writeLogonResult(status_);
         return;
@@ -229,9 +229,9 @@ void HostUserAuthorizer::readLogonRequest(const proto::auth::LogonRequest& logon
     method_ = logon_request.method();
 
     nonce_ = generateNonce();
-    if (nonce_.isEmpty())
+    if (nonce_.empty())
     {
-        qDebug("Empty nonce generated");
+        LOG_DEBUG(logger, "Empty nonce generated");
         stop();
         return;
     }
@@ -241,9 +241,9 @@ void HostUserAuthorizer::readLogonRequest(const proto::auth::LogonRequest& logon
 
 void HostUserAuthorizer::readClientChallenge(const proto::auth::ClientChallenge& client_challenge)
 {
-    if (nonce_.isEmpty())
+    if (nonce_.empty())
     {
-        qWarning("Unexpected client challenge. Nonce not generated yet");
+        LOG_WARN(logger, "Unexpected client challenge. Nonce not generated yet");
         stop();
         return;
     }
@@ -258,10 +258,10 @@ void HostUserAuthorizer::readClientChallenge(const proto::auth::ClientChallenge&
     writeLogonResult(status_);
 }
 
-void HostUserAuthorizer::writeServerChallenge(const QByteArray& nonce)
+void HostUserAuthorizer::writeServerChallenge(const std::string& nonce)
 {
     proto::auth::HostToClient message;
-    message.mutable_server_challenge()->set_nonce(nonce.constData(), nonce.size());
+    message.mutable_server_challenge()->set_nonce(nonce.data(), nonce.size());
     emit writeMessage(ServerChallenge, serializeMessage(message));
 }
 
@@ -273,17 +273,17 @@ void HostUserAuthorizer::writeLogonResult(proto::auth::Status status)
 }
 
 proto::auth::Status HostUserAuthorizer::doBasicAuthorization(
-    const std::string& user_name, const QByteArray& session_key, proto::auth::SessionType session_type)
+    const std::string& user_name, const std::string& session_key, proto::auth::SessionType session_type)
 {
     if (!User::isValidName(user_name))
     {
-        qWarning() << "Invalid user name: " << user_name;
+        LOG_WARN(logger, "") << "Invalid user name: " << user_name;
         return proto::auth::STATUS_ACCESS_DENIED;
     }
 
-    if (session_key.isEmpty())
+    if (session_key.empty())
     {
-        qWarning("Empty session key");
+        LOG_WARN(logger, "Empty session key");
         return proto::auth::STATUS_ACCESS_DENIED;
     }
 
@@ -293,19 +293,19 @@ proto::auth::Status HostUserAuthorizer::doBasicAuthorization(
         {
             if (createSessionKey(user.passwordHash().c_str(), nonce_) != session_key)
             {
-                qWarning() << "Wrong password for user " << user_name;
+                LOG_WARN(logger, "") << "Wrong password for user " << user_name;
                 return proto::auth::STATUS_ACCESS_DENIED;
             }
 
             if (!(user.flags() & User::FLAG_ENABLED))
             {
-                qWarning() << "User " << user_name << " is disabled";
+                LOG_WARN(logger, "") << "User " << user_name << " is disabled";
                 return proto::auth::STATUS_ACCESS_DENIED;
             }
 
             if (!(user.sessions() & session_type))
             {
-                qWarning() << "Session type " << session_type
+                LOG_WARN(logger, "") << "Session type " << session_type
                            << " is disabled for user " << user_name;
                 return proto::auth::STATUS_ACCESS_DENIED;
             }
@@ -314,7 +314,7 @@ proto::auth::Status HostUserAuthorizer::doBasicAuthorization(
         }
     }
 
-    qWarning() << "User not found: " << user_name;
+    LOG_WARN(logger, "") << "User not found: " << user_name;
     return proto::auth::STATUS_ACCESS_DENIED;
 }
 

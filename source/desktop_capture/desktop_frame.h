@@ -9,12 +9,10 @@
 #define _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_H
 
 #include "base/common.h"
-
-#include <QRegion>
-#include <QPoint>
-#include <QSize>
-
 #include "desktop_capture/pixel_format.h"
+
+#include <qregion.h>
+#include <qsize.h>
 
 namespace aspia {
 

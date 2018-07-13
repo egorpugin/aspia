@@ -8,8 +8,8 @@
 #ifndef _ASPIA_DESKTOP_CAPTURE__MOUSE_CURSOR_H
 #define _ASPIA_DESKTOP_CAPTURE__MOUSE_CURSOR_H
 
-#include <QPoint>
-#include <QSize>
+#include <qpoint.h>
+#include <qsize.h>
 
 #include <memory>
 

@@ -7,6 +7,7 @@
 
 #include "client/file_transfer.h"
 
+#include "base/log.h"
 #include "client/file_status.h"
 #include "client/file_transfer_queue_builder.h"
 
@@ -246,7 +247,7 @@ void FileTransfer::applyAction(Error error_type, Action action)
         break;
 
         default:
-            qFatal("Unexpected action");
+            LOG_FATAL(logger, "Unexpected action");
             break;
     }
 }

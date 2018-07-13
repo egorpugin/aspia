@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/file_request.h"
+#include "client/file_request.h"
 
 namespace aspia {
 

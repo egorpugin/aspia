@@ -7,11 +7,7 @@
 
 #include "codec/video_encoder_vpx.h"
 
-#include <QDebug>
-#include <QThread>
-
-#include <libyuv/convert_from_argb.h>
-
+#include "base/log.h"
 #include "codec/video_util.h"
 #include "desktop_capture/desktop_frame.h"
 
@@ -20,6 +16,10 @@ extern "C" {
 #include <vpx/vpx_encoder.h>
 #include <vpx/vp8cx.h>
 } // extern "C"
+
+#include <libyuv/convert_from_argb.h>
+
+#include <thread>
 
 namespace aspia {
 
@@ -54,13 +54,7 @@ void setCommonCodecParameters(vpx_codec_enc_cfg_t* config, const QSize& size)
     config->kf_min_dist = 10000;
     config->kf_max_dist = 10000;
 
-    //
-    // Using 2 threads gives a great boost in performance for most systems with
-    // adequate processing power. NB: Going to multiple threads on low end
-    // windows systems can really hurt performance.
-    // http://crbug.com/99179
-    //
-    config->g_threads = (QThread::idealThreadCount() > 2) ? 2 : 1;
+    config->g_threads = std::thread::hardware_concurrency() > 2 ? 2 : 1;
 }
 
 } // namespace
@@ -331,7 +325,7 @@ void VideoEncoderVPX::prepareImageAndActiveMap(const DesktopFrame* frame,
         break;
 
         default:
-            qFatal("Unsupported image format: %d", image_->fmt);
+            LOG_FATAL(logger, "Unsupported image format: " << image_->fmt);
             break;
     }
 }

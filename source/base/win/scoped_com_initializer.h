@@ -8,12 +8,9 @@
 #pragma once
 
 #include "base/common.h"
+#include "base/log.h"
 
 #include <objbase.h>
-
-#ifndef NDEBUG
-#include <QDebug>
-#endif
 
 namespace aspia {
 
@@ -65,12 +62,12 @@ private:
 #ifndef NDEBUG
         if (hr_ == S_FALSE)
         {
-            qWarning() << "Multiple CoInitialize() calls for thread " << thread_id_;
+            LOG_WARN(logger, "") << "Multiple CoInitialize() calls for thread " << thread_id_;
         }
         else
         {
             if (hr_ != RPC_E_CHANGED_MODE)
-                qFatal("Invalid COM thread model change");
+                LOG_FATAL(logger, "Invalid COM thread model change");
         }
 #endif
     }

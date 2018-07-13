@@ -48,14 +48,14 @@ public slots:
 
     // Sends a message. If the |message_id| is not -1, then after the message is sent,
     // the signal |messageWritten| is called.
-    void writeMessage(int message_id, const QByteArray& buffer);
+    void writeMessage(int message_id, const std::string& buffer);
 
 signals:
     void connected();
     void disconnected();
     void errorOccurred();
     void messageWritten(int message_id);
-    void messageReceived(const QByteArray& buffer);
+    void messageReceived(const std::string& buffer);
 
 private slots:
     void onError(QLocalSocket::LocalSocketError socket_error);
@@ -74,13 +74,13 @@ private:
     QPointer<QLocalSocket> socket_;
     State state_ = NotConnected;
 
-    std::queue<std::pair<int, QByteArray>> write_queue_;
+    std::queue<std::pair<int, std::string>> write_queue_;
     MessageSizeType write_size_ = 0;
     int64_t written_ = 0;
 
     bool read_required_ = false;
     bool read_size_received_ = false;
-    QByteArray read_buffer_;
+    std::string read_buffer_;
     MessageSizeType read_size_ = 0;
     int64_t read_ = 0;
 

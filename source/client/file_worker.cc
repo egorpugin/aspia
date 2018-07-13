@@ -5,14 +5,15 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/file_worker.h"
+#include "client/file_worker.h"
 
 #include <QDebug>
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QStorageInfo>
 
-#include "host/file_platform_util.h"
+#include "base/log.h"
+#include "client/file_platform_util.h"
 
 namespace aspia {
 
@@ -311,7 +312,7 @@ proto::file_transfer::Reply FileWorker::doPacketRequest()
     {
         // Set the unknown status of the request. The connection will be closed.
         reply.set_status(proto::file_transfer::STATUS_UNKNOWN);
-        qWarning("Unexpected file packet request");
+        LOG_WARN(logger, "Unexpected file packet request");
     }
     else
     {
@@ -342,7 +343,7 @@ proto::file_transfer::Reply FileWorker::doPacket(const proto::file_transfer::Pac
     {
         // Set the unknown status of the request. The connection will be closed.
         reply.set_status(proto::file_transfer::STATUS_UNKNOWN);
-        qWarning("Unexpected file packet");
+        LOG_WARN(logger, "Unexpected file packet");
     }
     else
     {

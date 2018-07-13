@@ -37,12 +37,12 @@ public slots:
     void start();
     void cancel();
     void messageWritten(int message_id);
-    void messageReceived(const QByteArray& buffer);
+    void messageReceived(const std::string& buffer);
 
 signals:
     void finished(proto::auth::Status status);
     void errorOccurred(const QString& message);
-    void writeMessage(int message_id, const QByteArray& buffer);
+    void writeMessage(int message_id, const std::string& buffer);
     void readMessage();
 
 private:

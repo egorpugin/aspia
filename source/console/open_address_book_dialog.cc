@@ -7,6 +7,8 @@
 
 #include "console/open_address_book_dialog.h"
 
+#include "base/log.h"
+
 namespace aspia {
 
 OpenAddressBookDialog::OpenAddressBookDialog(
@@ -33,7 +35,7 @@ OpenAddressBookDialog::OpenAddressBookDialog(
             break;
 
         default:
-            qFatal("Unknown encryption type: %d", encryption_type);
+            LOG_FATAL(logger, "Unknown encryption type: " << encryption_type);
             break;
     }
 

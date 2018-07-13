@@ -7,6 +7,7 @@
 
 #include "client/ui/desktop_config_dialog.h"
 
+#include "base/log.h"
 #include "codec/video_util.h"
 
 namespace aspia {
@@ -162,7 +163,7 @@ void DesktopConfigDialog::onButtonBoxClicked(QAbstractButton* button)
                     break;
 
                 default:
-                    qFatal("Unexpected color depth");
+                    LOG_FATAL(logger, "Unexpected color depth");
                     break;
             }
 

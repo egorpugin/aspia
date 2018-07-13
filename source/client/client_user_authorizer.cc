@@ -86,7 +86,7 @@ void ClientUserAuthorizer::start()
 {
     if (state_ != NotStarted)
     {
-        qWarning("Authorizer already started");
+        LOG_WARN(logger, "Authorizer already started");
         return;
     }
 
@@ -116,7 +116,7 @@ void ClientUserAuthorizer::messageWritten(int message_id)
     emit readMessage();
 }
 
-void ClientUserAuthorizer::messageReceived(const QByteArray& buffer)
+void ClientUserAuthorizer::messageReceived(const std::string& buffer)
 {
     if (state_ == Finished)
         return;
@@ -182,14 +182,14 @@ void ClientUserAuthorizer::readServerChallenge(
 
     secureMemZero(&session_key.toStdString());
 
-    QByteArray serialized_message = serializeMessage(message);
+    auto serialized_message = serializeMessage(message);
 
     secureMemZero(client_challenge->mutable_username());
     secureMemZero(client_challenge->mutable_session_key());
 
     emit writeMessage(ClientChallenge, serialized_message);
 
-    secureMemZero(&serialized_message.toStdString());
+    secureMemZero(&serialized_message);
 }
 
 void ClientUserAuthorizer::readLogonResult(const proto::auth::LogonResult& logon_result)

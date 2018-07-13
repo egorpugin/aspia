@@ -42,7 +42,7 @@ public slots:
 
 signals:
     void finished(HostUserAuthorizer* authorizer);
-    void writeMessage(int message_id, const QByteArray& buffer);
+    void writeMessage(int message_id, const std::string& buffer);
     void readMessage();
 
 protected:
@@ -51,16 +51,16 @@ protected:
 
 private slots:
     void messageWritten(int message_id);
-    void messageReceived(const QByteArray& buffer);
+    void messageReceived(const std::string& buffer);
 
 private:
     void readLogonRequest(const proto::auth::LogonRequest& logon_request);
     void readClientChallenge(const proto::auth::ClientChallenge& client_challenge);
-    void writeServerChallenge(const QByteArray& nonce);
+    void writeServerChallenge(const std::string& nonce);
     void writeLogonResult(proto::auth::Status status);
 
     proto::auth::Status doBasicAuthorization(const std::string& user_name,
-                                             const QByteArray& session_key,
+                                             const std::string& session_key,
                                              proto::auth::SessionType session_type);
 
     State state_ = NotStarted;
@@ -69,7 +69,7 @@ private:
     QPointer<NetworkChannel> network_channel_;
 
     std::string user_name_;
-    QByteArray nonce_;
+    std::string nonce_;
     int timer_id_ = 0;
 
     proto::auth::Method method_ = proto::auth::METHOD_UNKNOWN;

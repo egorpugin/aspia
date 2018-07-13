@@ -8,8 +8,6 @@
 #ifndef _ASPIA_CODEC__DECOMPRESSOR_H
 #define _ASPIA_CODEC__DECOMPRESSOR_H
 
-#include <qglobal.h>
-
 namespace aspia {
 
 //
@@ -20,7 +18,7 @@ namespace aspia {
 // lifetime. This object should be destroyed after use.
 //
 
-class Decompressor
+class ASPIA_CODEC_API Decompressor
 {
 public:
     virtual ~Decompressor() = default;

@@ -10,8 +10,6 @@
 
 #include "base/common.h"
 
-#include <QByteArray>
-
 #include <vector>
 
 namespace aspia {
@@ -29,11 +27,11 @@ public:
     explicit Encryptor(Mode mode);
     ~Encryptor();
 
-    bool readHelloMessage(const QByteArray& message_buffer);
-    QByteArray helloMessage();
+    bool readHelloMessage(const std::string& message_buffer);
+    std::string helloMessage();
 
-    QByteArray encrypt(const QByteArray& source_buffer);
-    QByteArray decrypt(const QByteArray& source_buffer);
+    std::string encrypt(const std::string& source_buffer);
+    std::string decrypt(const std::string& source_buffer);
 
 private:
     const Mode mode_;

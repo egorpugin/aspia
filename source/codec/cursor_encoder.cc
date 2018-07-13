@@ -5,9 +5,8 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "codec/cursor_encoder.h"
-
-#include <QDebug>
 
 namespace aspia {
 
@@ -105,7 +104,7 @@ std::unique_ptr<proto::desktop::CursorShape> CursorEncoder::encode(
     if (size.width() <= 0 || size.width() > kMaxSize ||
         size.height() <= 0 || size.height() > kMaxSize)
     {
-        qWarning() << "Wrong size of cursor: " << size.width() << "x" << size.height();
+        LOG_WARN(logger, "") << "Wrong size of cursor: " << size.width() << "x" << size.height();
         return nullptr;
     }
 

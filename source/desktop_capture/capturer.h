@@ -13,7 +13,7 @@
 
 namespace aspia {
 
-class Capturer
+class ASPIA_DESKTOP_CAPTURE_API Capturer
 {
 public:
     virtual ~Capturer() = default;

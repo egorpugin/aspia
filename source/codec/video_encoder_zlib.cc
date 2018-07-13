@@ -5,11 +5,10 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "codec/video_encoder_zlib.h"
 
 #include <zlib-ng.h>
-
-#include <QDebug>
 
 #include "codec/pixel_translator.h"
 #include "codec/video_util.h"
@@ -46,7 +45,7 @@ std::unique_ptr<VideoEncoderZLIB> VideoEncoderZLIB::create(const PixelFormat& ta
     if (compression_ratio < Z_BEST_SPEED ||
         compression_ratio > Z_BEST_COMPRESSION)
     {
-        qWarning() << "Wrong compression ratio: " << compression_ratio;
+        LOG_WARN(logger, "") << "Wrong compression ratio: " << compression_ratio;
         return nullptr;
     }
 
@@ -54,7 +53,7 @@ std::unique_ptr<VideoEncoderZLIB> VideoEncoderZLIB::create(const PixelFormat& ta
         PixelTranslator::create(PixelFormat::ARGB(), target_format);
     if (!translator)
     {
-        qWarning("Unsupported pixel format");
+        LOG_WARN(logger, "Unsupported pixel format");
         return nullptr;
     }
 

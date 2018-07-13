@@ -43,7 +43,7 @@ private slots:
     void onHostFinished(Host* host);
     void onIpcServerStarted(const std::string& channel_id);
     void onIpcNewConnection(IpcChannel* channel);
-    void onIpcMessageReceived(const QByteArray& buffer);
+    void onIpcMessageReceived(const std::string& buffer);
     void onNotifierProcessError(HostProcess::ErrorCode error_code);
     void restartNotifier();
 

@@ -49,7 +49,7 @@ public:
                 break;
 
             default:
-                qFatal("Unexpected session type: %d", session_.session_type());
+                LOG_FATAL(logger, "Unexpected session type: " << session_.session_type());
                 return;
         }
 

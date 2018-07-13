@@ -5,9 +5,8 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "crypto/data_encryptor.h"
-
-#include <QCryptographicHash>
 
 extern "C" {
 #pragma warning(push, 3)
@@ -24,31 +23,28 @@ const size_t kChunkSize = 4096;
 } // namespace
 
 // static
-QByteArray DataEncryptor::createKey(const QByteArray& password,
-                                    const QByteArray& salt,
+std::string DataEncryptor::createKey(const std::string& password,
+                                    const std::string& salt,
                                     int rounds)
 {
-    QByteArray data = password;
+    std::string data = password;
 
     for (int i = 0; i < rounds; ++i)
     {
-        QCryptographicHash key_hash(QCryptographicHash::Sha256);
-
-        key_hash.addData(data);
-        key_hash.addData(salt);
-
-        data = key_hash.result();
+        auto d = data + salt;
+        data.resize(32);
+        crypto_hash_sha256((uint8_t*)data.data(), (uint8_t*)d.data(), d.size());
     }
 
     return data;
 }
 
 // static
-QByteArray DataEncryptor::encrypt(const QByteArray& source_data, const QByteArray& key)
+std::string DataEncryptor::encrypt(const std::string& source_data, const std::string& key)
 {
     assert(key.size() == crypto_secretstream_xchacha20poly1305_KEYBYTES);
 
-    QByteArray encrypted_data;
+    std::string encrypted_data;
     encrypted_data.resize(crypto_secretstream_xchacha20poly1305_HEADERBYTES);
 
     crypto_secretstream_xchacha20poly1305_state state;
@@ -56,9 +52,9 @@ QByteArray DataEncryptor::encrypt(const QByteArray& source_data, const QByteArra
     crypto_secretstream_xchacha20poly1305_init_push(
         &state,
         reinterpret_cast<uint8_t*>(encrypted_data.data()),
-        reinterpret_cast<const uint8_t*>(key.constData()));
+        reinterpret_cast<const uint8_t*>(key.data()));
 
-    const uint8_t* input_buffer = reinterpret_cast<const uint8_t*>(source_data.constData());
+    const uint8_t* input_buffer = reinterpret_cast<const uint8_t*>(source_data.data());
     size_t input_pos = 0;
 
     bool end_of_buffer = false;
@@ -96,27 +92,27 @@ QByteArray DataEncryptor::encrypt(const QByteArray& source_data, const QByteArra
 }
 
 // static
-bool DataEncryptor::decrypt(const QByteArray& source_data,
-                            const QByteArray& key,
-                            QByteArray* decrypted_data)
+bool DataEncryptor::decrypt(const std::string& source_data,
+                            const std::string& key,
+                            std::string* decrypted_data)
 {
-    return decrypt(source_data.constData(), source_data.size(), key, decrypted_data);
+    return decrypt(source_data.data(), source_data.size(), key, decrypted_data);
 }
 
 // static
-bool DataEncryptor::decrypt(const char* source_data, int source_size, const QByteArray& key,
-                            QByteArray* decrypted_data)
+bool DataEncryptor::decrypt(const char* source_data, int source_size, const std::string& key,
+                            std::string* decrypted_data)
 {
     if (!source_data || source_size < crypto_secretstream_xchacha20poly1305_HEADERBYTES ||
         !decrypted_data)
     {
-        qWarning("Invalid parameters");
+        LOG_WARN(logger, "Invalid parameters");
         return false;
     }
 
     if (key.size() != crypto_secretstream_xchacha20poly1305_KEYBYTES)
     {
-        qWarning("Invalid key size");
+        LOG_WARN(logger, "Invalid key size");
         return false;
     }
 
@@ -126,9 +122,9 @@ bool DataEncryptor::decrypt(const char* source_data, int source_size, const QByt
 
     if (crypto_secretstream_xchacha20poly1305_init_pull(
             &state, reinterpret_cast<const uint8_t*>(source_data),
-            reinterpret_cast<const uint8_t*>(key.constData())) != 0)
+            reinterpret_cast<const uint8_t*>(key.data())) != 0)
     {
-        qWarning("crypto_secretstream_xchacha20poly1305_init_pull failed");
+        LOG_WARN(logger, "crypto_secretstream_xchacha20poly1305_init_pull failed");
         return false;
     }
 
@@ -152,7 +148,7 @@ bool DataEncryptor::decrypt(const char* source_data, int source_size, const QByt
                                                        input_buffer + input_pos, consumed, nullptr,
                                                        0) != 0)
         {
-            qWarning("crypto_secretstream_xchacha20poly1305_pull failed");
+            LOG_WARN(logger, "crypto_secretstream_xchacha20poly1305_pull failed");
             return false;
         }
 
@@ -162,7 +158,7 @@ bool DataEncryptor::decrypt(const char* source_data, int source_size, const QByt
         {
             if (input_pos != input_size)
             {
-                qWarning("Unexpected end of buffer");
+                LOG_WARN(logger, "Unexpected end of buffer");
                 return false;
             }
 

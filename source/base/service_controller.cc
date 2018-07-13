@@ -7,7 +7,6 @@
 
 #include "base/service_controller.h"
 
-#include <QDebug>
 #include <memory>
 
 #include "base/errno_logging.h"
@@ -50,7 +49,7 @@ ServiceController ServiceController::open(const std::string& name)
     }
 
     ScopedScHandle service(OpenServiceW(sc_manager,
-                                        qUtf16Printable(name.c_str()),
+                                        to_wstring(name).c_str(),
                                         SERVICE_ALL_ACCESS));
     if (!service.isValid())
     {
@@ -129,7 +128,7 @@ bool ServiceController::isInstalled(const std::string& name)
     }
 
     ScopedScHandle service(OpenServiceW(sc_manager,
-                                        qUtf16Printable(name.c_str()),
+                                        to_wstring(name).c_str(),
                                         SERVICE_QUERY_STATUS));
     if (!service.isValid())
     {
@@ -146,8 +145,10 @@ bool ServiceController::isInstalled(const std::string& name)
 
 bool ServiceController::setDescription(const std::string& description)
 {
+    auto d = to_wstring(description);
+
     SERVICE_DESCRIPTIONW service_description;
-    service_description.lpDescription = const_cast<LPWSTR>(qUtf16Printable(description.c_str()));
+    service_description.lpDescription = const_cast<LPWSTR>(d.c_str());
 
     // Set the service description.
     if (!ChangeServiceConfig2W(service_, SERVICE_CONFIG_DESCRIPTION, &service_description))
@@ -166,7 +167,7 @@ std::string ServiceController::description() const
     if (QueryServiceConfig2W(service_, SERVICE_CONFIG_DESCRIPTION, nullptr, 0, &bytes_needed) ||
         GetLastError() != ERROR_INSUFFICIENT_BUFFER)
     {
-        qWarning("QueryServiceConfig2W: unexpected result");
+        LOG_WARN(logger, "QueryServiceConfig2W: unexpected result");
         return std::string();
     }
 
@@ -197,7 +198,7 @@ std::string ServiceController::filePath() const
     if (QueryServiceConfigW(service_, nullptr, 0, &bytes_needed) ||
         GetLastError() != ERROR_INSUFFICIENT_BUFFER)
     {
-        qWarning("QueryServiceConfigW: unexpected result");
+        LOG_WARN(logger, "QueryServiceConfigW: unexpected result");
         return std::string();
     }
 

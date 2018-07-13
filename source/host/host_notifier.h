@@ -34,7 +34,7 @@ signals:
 
 private slots:
     void onIpcChannelConnected();
-    void onIpcMessageReceived(const QByteArray& buffer);
+    void onIpcMessageReceived(const std::string& buffer);
 
 private:
     QPointer<IpcChannel> ipc_channel_;

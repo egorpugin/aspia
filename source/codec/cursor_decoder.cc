@@ -5,9 +5,8 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "codec/cursor_decoder.h"
-
-#include <QDebug>
 
 namespace aspia {
 
@@ -29,7 +28,7 @@ bool CursorDecoder::decompressCursor(const proto::desktop::CursorShape& cursor_s
     {
         if (row_y > cursor_shape.height() - 1)
         {
-            qWarning("Too much data is received for the given rectangle");
+            LOG_WARN(logger, "Too much data is received for the given rectangle");
             return false;
         }
 
@@ -73,7 +72,7 @@ std::shared_ptr<MouseCursor> CursorDecoder::decode(const proto::desktop::CursorS
         if (size.width()  <= 0 || size.width()  > (std::numeric_limits<qint16>::max() / 2) ||
             size.height() <= 0 || size.height() > (std::numeric_limits<qint16>::max() / 2))
         {
-            qWarning() << "Cursor dimensions are out of bounds for SetCursor: "
+            LOG_WARN(logger, "") << "Cursor dimensions are out of bounds for SetCursor: "
                        << size.width() << "x" << size.height();
             return nullptr;
         }
@@ -101,7 +100,7 @@ std::shared_ptr<MouseCursor> CursorDecoder::decode(const proto::desktop::CursorS
 
         if (!cache_)
         {
-            qWarning("Host did not send cache reset command");
+            LOG_WARN(logger, "Host did not send cache reset command");
             return nullptr;
         }
 

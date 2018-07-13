@@ -8,11 +8,11 @@
 #ifndef _ASPIA_CODEC__CURSOR_ENCODER_H
 #define _ASPIA_CODEC__CURSOR_ENCODER_H
 
-#include <memory>
-
 #include "codec/compressor_zlib.h"
 #include "desktop_capture/mouse_cursor_cache.h"
 #include "protocol/desktop_session.pb.h"
+
+#include <memory>
 
 namespace aspia {
 

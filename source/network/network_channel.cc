@@ -5,6 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "network/network_channel.h"
 
 #include <QHostAddress>
@@ -19,7 +20,7 @@ namespace {
 constexpr uint32_t kMaxMessageSize = 16 * 1024 * 1024; // 16MB
 constexpr int64_t kMaxWriteSize = 1200;
 
-QByteArray createWriteBuffer(const QByteArray& message_buffer)
+std::string createWriteBuffer(const std::string& message_buffer)
 {
     uint32_t message_size = message_buffer.size();
 
@@ -45,11 +46,11 @@ QByteArray createWriteBuffer(const QByteArray& message_buffer)
         }
     }
 
-    QByteArray write_buffer;
+    std::string write_buffer;
     write_buffer.resize(length + message_size);
 
     memcpy(write_buffer.data(), buffer, length);
-    memcpy(write_buffer.data() + length, message_buffer.constData(), message_size);
+    memcpy(write_buffer.data() + length, message_buffer.data(), message_size);
 
     return write_buffer;
 }
@@ -92,7 +93,7 @@ void NetworkChannel::connectToHost(const std::string& address, int port)
 {
     if (channel_type_ == ServerChannel)
     {
-        qWarning("The channel is server. The method invocation is invalid.");
+        LOG_WARN(logger, "The channel is server. The method invocation is invalid.");
         return;
     }
 
@@ -119,11 +120,11 @@ void NetworkChannel::readMessage()
     onReadyRead();
 }
 
-void NetworkChannel::writeMessage(int message_id, const QByteArray& buffer)
+void NetworkChannel::writeMessage(int message_id, const std::string& buffer)
 {
     if (!encryptor_)
     {
-        qWarning("Uninitialized encryptor");
+        LOG_WARN(logger, "Uninitialized encryptor");
         return;
     }
 
@@ -150,7 +151,7 @@ void NetworkChannel::timerEvent(QTimerEvent* event)
         bool schedule_write = write_queue_.empty();
 
         // Pinger sends 1 byte equal to zero.
-        write_queue_.emplace(-1, QByteArray(1, 0));
+        write_queue_.emplace(-1, std::string(1, 0));
 
         if (schedule_write)
             scheduleWrite();
@@ -201,12 +202,12 @@ void NetworkChannel::onBytesWritten(int64_t bytes)
 {
     written_ += bytes;
 
-    const QByteArray& write_buffer = write_queue_.front().second;
+    const auto& write_buffer = write_queue_.front().second;
 
     if (written_ < write_buffer.size())
     {
         int64_t bytes_to_write = qMin(write_buffer.size() - written_, kMaxWriteSize);
-        socket_->write(write_buffer.constData() + written_, bytes_to_write);
+        socket_->write(write_buffer.data() + written_, bytes_to_write);
     }
     else
     {
@@ -268,7 +269,7 @@ void NetworkChannel::onReadyRead()
 
                     if (!read_size_ || read_size_ > kMaxMessageSize)
                     {
-                        qWarning() << "Wrong message size: " << read_size_;
+                        LOG_WARN(logger, "") << "Wrong message size: " << read_size_;
                         stop();
                         return;
                     }
@@ -293,7 +294,7 @@ void NetworkChannel::onReadyRead()
             read_size_received_ = false;
             read_ = 0;
 
-            onMessageReceived(read_buffer_);
+            onMessageReceived(read_buffer_.c_str());
             break;
         }
 
@@ -341,7 +342,7 @@ void NetworkChannel::onMessageWritten(int message_id)
     }
 }
 
-void NetworkChannel::onMessageReceived(const QByteArray& buffer)
+void NetworkChannel::onMessageReceived(const std::string& buffer)
 {
     switch (channel_state_)
     {
@@ -349,17 +350,17 @@ void NetworkChannel::onMessageReceived(const QByteArray& buffer)
         {
             if (!encryptor_)
             {
-                qWarning("Uninitialized encryptor");
+                LOG_WARN(logger, "Uninitialized encryptor");
                 return;
             }
 
-            emit messageReceived(encryptor_->decrypt(buffer));
+            emit messageReceived(encryptor_->decrypt(buffer.data()).c_str());
         }
         break;
 
         case Connected:
         {
-            if (!encryptor_->readHelloMessage(buffer))
+            if (!encryptor_->readHelloMessage(buffer.data()))
             {
                 stop();
                 return;
@@ -387,9 +388,9 @@ void NetworkChannel::onMessageReceived(const QByteArray& buffer)
     }
 }
 
-void NetworkChannel::write(int message_id, const QByteArray& buffer)
+void NetworkChannel::write(int message_id, const std::string& buffer)
 {
-    if (buffer.isEmpty() || buffer.size() > kMaxMessageSize)
+    if (buffer.empty() || buffer.size() > kMaxMessageSize)
     {
         stop();
         return;
@@ -405,8 +406,8 @@ void NetworkChannel::write(int message_id, const QByteArray& buffer)
 
 void NetworkChannel::scheduleWrite()
 {
-    const QByteArray& write_buffer = write_queue_.front().second;
-    socket_->write(write_buffer.constData(), write_buffer.size());
+    const auto& write_buffer = write_queue_.front().second;
+    socket_->write(write_buffer.data(), write_buffer.size());
 }
 
 } // namespace aspia

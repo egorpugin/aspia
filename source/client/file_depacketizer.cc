@@ -5,9 +5,9 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/file_depacketizer.h"
+#include "client/file_depacketizer.h"
 
-#include <QDebug>
+#include "base/log.h"
 
 namespace aspia {
 
@@ -48,13 +48,13 @@ bool FileDepacketizer::writeNextPacket(const proto::file_transfer::Packet& packe
 
     if (!file_->seek(file_size_ - left_size_))
     {
-        qDebug("seek failed");
+        LOG_DEBUG(logger, "seek failed");
         return false;
     }
 
     if (file_->write(packet.data().data(), packet_size) != packet_size)
     {
-        qDebug("Unable to write file");
+        LOG_DEBUG(logger, "Unable to write file");
         return false;
     }
 

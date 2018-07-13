@@ -7,6 +7,7 @@
 
 #include "desktop_capture/differ.h"
 
+#include "base/log.h"
 #include "desktop_capture/diff_block_avx2.h"
 #include "desktop_capture/diff_block_sse2.h"
 #include "desktop_capture/diff_block_sse3.h"
@@ -88,7 +89,7 @@ Differ::Differ(const QSize& size)
 
     if (d.HW_AVX2)
     {
-        qInfo("AVX2 differ loaded");
+        LOG_INFO(logger, "AVX2 differ loaded");
 
         if constexpr (kBlockWidth == 8 && kBlockHeight == 8)
             diff_full_block_func_ = diffFullBlock_8x8_AVX2;
@@ -99,7 +100,7 @@ Differ::Differ(const QSize& size)
     }
     else if (d.HW_SSSE3)
     {
-        qInfo("SSE3 differ loaded");
+        LOG_INFO(logger, "SSE3 differ loaded");
 
         if constexpr (kBlockWidth == 8 && kBlockHeight == 8)
             diff_full_block_func_ = diffFullBlock_8x8_SSE3;
@@ -110,7 +111,7 @@ Differ::Differ(const QSize& size)
     }
     else if (d.HW_SSE2)
     {
-        qInfo("SSE2 differ loaded");
+        LOG_INFO(logger, "SSE2 differ loaded");
 
         if constexpr (kBlockWidth == 8 && kBlockHeight == 8)
             diff_full_block_func_ = diffFullBlock_8x8_SSE2;
@@ -121,7 +122,7 @@ Differ::Differ(const QSize& size)
     }
     else
     {
-        qInfo("C differ loaded");
+        LOG_INFO(logger, "C differ loaded");
         diff_full_block_func_ = diffFullBlock_C;
     }
 }

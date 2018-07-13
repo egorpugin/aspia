@@ -5,7 +5,9 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/file_packetizer.h"
+#include "client/file_packetizer.h"
+
+#include "base/log.h"
 
 namespace aspia {
 
@@ -62,13 +64,13 @@ std::unique_ptr<proto::file_transfer::Packet> FilePacketizer::readNextPacket()
     // Moving to a new position in file.
     if (!file_->seek(file_size_ - left_size_))
     {
-        qDebug("Unable to seek file");
+        LOG_DEBUG(logger, "Unable to seek file");
         return nullptr;
     }
 
     if (file_->read(packet_buffer, packet_buffer_size) != packet_buffer_size)
     {
-        qDebug("Unable to read file");
+        LOG_DEBUG(logger, "Unable to read file");
         return nullptr;
     }
 

@@ -9,8 +9,6 @@
 
 #include "base/common.h"
 
-#include "base/common.h"
-
 #include "base/win/scoped_object.h"
 
 namespace aspia {

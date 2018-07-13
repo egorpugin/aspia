@@ -26,7 +26,7 @@ ClientSessionSystemInfo::ClientSessionSystemInfo(ConnectData* connect_data, QObj
     qRegisterMetaType<proto::system_info::Reply>();
 }
 
-void ClientSessionSystemInfo::messageReceived(const QByteArray& buffer)
+void ClientSessionSystemInfo::messageReceived(const std::string& buffer)
 {
     proto::system_info::Reply reply;
 

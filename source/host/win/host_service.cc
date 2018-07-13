@@ -59,7 +59,7 @@ HostService::HostService()
 
 void HostService::start()
 {
-    qInfo("Command to start the service has been received");
+    LOG_INFO(logger, "Command to start the service has been received");
 
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
 
@@ -72,7 +72,7 @@ void HostService::start()
     com_initializer_.reset(new ScopedCOMInitializer());
     if (!com_initializer_->isSucceeded())
     {
-        qFatal("COM not initialized");
+        LOG_FATAL(logger, "COM not initialized");
         app->quit();
         return;
     }
@@ -92,17 +92,17 @@ void HostService::start()
         return;
     }
 
-    qInfo("Service is started");
+    LOG_INFO(logger, "Service is started");
 }
 
 void HostService::stop()
 {
-    qInfo("Command to stop the service has been received");
+    LOG_INFO(logger, "Command to stop the service has been received");
 
     delete server_;
     com_initializer_.reset();
 
-    qInfo("Service is stopped");
+    LOG_INFO(logger, "Service is stopped");
 }
 
 void HostService::sessionChange(uint32_t event, uint32_t session_id)

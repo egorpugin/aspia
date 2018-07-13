@@ -8,7 +8,7 @@
 #ifndef _ASPIA_HOST__UI__HOST_CONFIG_DIALOG_H
 #define _ASPIA_HOST__UI__HOST_CONFIG_DIALOG_H
 
-#include "base/locale_loader.h"
+#include "host/locale_loader.h"
 #include "host/user.h"
 #include "ui_host_config_dialog.h"
 

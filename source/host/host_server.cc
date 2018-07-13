@@ -81,18 +81,18 @@ HostServer::~HostServer()
 
 bool HostServer::start(int port, const QList<User>& user_list)
 {
-    qInfo("Starting the server");
+    LOG_INFO(logger, "Starting the server");
 
     if (!network_server_.isNull())
     {
-        qWarning("An attempt was start an already running server.");
+        LOG_WARN(logger, "An attempt was start an already running server.");
         return false;
     }
 
     user_list_ = user_list;
     if (user_list_.isEmpty())
     {
-        qWarning("Empty user list");
+        LOG_WARN(logger, "Empty user list");
     }
 
     FirewallManager firewall(QCoreApplication::applicationFilePath().toStdString());
@@ -102,7 +102,7 @@ bool HostServer::start(int port, const QList<User>& user_list)
                                 tr("Allow incoming TCP connections").toStdString(),
                                 port))
         {
-            qInfo("Rule is added to the firewall");
+            LOG_INFO(logger, "Rule is added to the firewall");
         }
     }
 
@@ -114,13 +114,13 @@ bool HostServer::start(int port, const QList<User>& user_list)
     if (!network_server_->start(port))
         return false;
 
-    qInfo() << "Server is started on port" << port;
+    LOG_INFO(logger, "") << "Server is started on port" << port;
     return true;
 }
 
 void HostServer::stop()
 {
-    qInfo("Stopping the server");
+    LOG_INFO(logger, "Stopping the server");
 
     for (auto session : session_list_)
         session->stop();
@@ -139,7 +139,7 @@ void HostServer::stop()
     if (firewall.isValid())
         firewall.deleteRuleByName(kFirewallRuleName);
 
-    qInfo("Server is stopped");
+    LOG_INFO(logger, "Server is stopped");
 }
 
 void HostServer::setSessionChanged(uint32_t event, uint32_t session_id)
@@ -204,7 +204,7 @@ void HostServer::onNewConnection()
         if (!channel)
             continue;
 
-        qInfo() << "New connected client:" << channel->peerAddress();
+        LOG_INFO(logger, "") << "New connected client:" << channel->peerAddress();
 
         HostUserAuthorizer* authorizer = new HostUserAuthorizer(this);
 
@@ -214,14 +214,14 @@ void HostServer::onNewConnection()
         connect(authorizer, &HostUserAuthorizer::finished,
                 this, &HostServer::onAuthorizationFinished);
 
-        qInfo("Start authorization");
+        LOG_INFO(logger, "Start authorization");
         authorizer->start();
     }
 }
 
 void HostServer::onAuthorizationFinished(HostUserAuthorizer* authorizer)
 {
-    qInfo() << "Authorization for" << authorizer->userName()
+    LOG_INFO(logger, "") << "Authorization for" << authorizer->userName()
             << "completed with status:" << statusToString(authorizer->status());
 
     QScopedPointer<HostUserAuthorizer> authorizer_deleter(authorizer);
@@ -239,7 +239,7 @@ void HostServer::onAuthorizationFinished(HostUserAuthorizer* authorizer)
     connect(this, &HostServer::sessionChanged, host.data(), &Host::sessionChanged);
     connect(host.data(), &Host::finished, this, &HostServer::onHostFinished, Qt::QueuedConnection);
 
-    qInfo() << "Starting" << sessionTypeToString(authorizer->sessionType())
+    LOG_INFO(logger, "") << "Starting" << sessionTypeToString(authorizer->sessionType())
             << "session for" << authorizer->userName();
 
     if (host->start())
@@ -255,7 +255,7 @@ void HostServer::onAuthorizationFinished(HostUserAuthorizer* authorizer)
 
 void HostServer::onHostFinished(Host* host)
 {
-    qInfo() << sessionTypeToString(host->sessionType())
+    LOG_INFO(logger, "") << sessionTypeToString(host->sessionType())
             << "session is finished for" << host->userName();
 
     for (auto it = session_list_.begin(); it != session_list_.end(); ++it)
@@ -299,7 +299,7 @@ void HostServer::onIpcNewConnection(IpcChannel* channel)
 {
     assert(notifier_state_ == NotifierState::Starting);
 
-    qInfo("Notifier is started");
+    LOG_INFO(logger, "Notifier is started");
     notifier_state_ = NotifierState::Started;
 
     ipc_channel_ = channel;
@@ -320,12 +320,12 @@ void HostServer::onNotifierProcessError(HostProcess::ErrorCode error_code)
 {
     if (error_code == HostProcess::NoLoggedOnUser)
     {
-        qInfo("There is no logged on user. The notifier will not be started.");
+        LOG_INFO(logger, "There is no logged on user. The notifier will not be started.");
         stopNotifier();
     }
     else
     {
-        qWarning("Unable to start notifier. The server will be stopped");
+        LOG_WARN(logger, "Unable to start notifier. The server will be stopped");
         stop();
     }
 }
@@ -344,25 +344,25 @@ void HostServer::restartNotifier()
     restart_timer_id_ = startTimer(std::chrono::seconds(30));
     if (restart_timer_id_ == 0)
     {
-        qWarning("Unable to start timer");
+        LOG_WARN(logger, "Unable to start timer");
         stop();
     }
 }
 
-void HostServer::onIpcMessageReceived(const QByteArray& buffer)
+void HostServer::onIpcMessageReceived(const std::string& buffer)
 {
     proto::notifier::NotifierToService message;
 
     if (!parseMessage(buffer, message))
     {
-        qWarning("Invaliid message from notifier");
+        LOG_WARN(logger, "Invaliid message from notifier");
         stop();
         return;
     }
 
     if (message.has_kill_session())
     {
-        qInfo("Command to terminate the session from the notifier is received");
+        LOG_INFO(logger, "Command to terminate the session from the notifier is received");
 
         auto uuid = QString::fromStdString(message.kill_session().uuid()).toStdString();
 
@@ -377,7 +377,7 @@ void HostServer::onIpcMessageReceived(const QByteArray& buffer)
     }
     else
     {
-        qWarning("Unhandled message from notifier");
+        LOG_WARN(logger, "Unhandled message from notifier");
     }
 
     // Read next message.
@@ -389,7 +389,7 @@ void HostServer::startNotifier()
     if (notifier_state_ != NotifierState::Stopped)
         return;
 
-    qInfo("Starting the notifier");
+    LOG_INFO(logger, "Starting the notifier");
     notifier_state_ = NotifierState::Starting;
 
     IpcServer* ipc_server = new IpcServer(this);
@@ -420,7 +420,7 @@ void HostServer::stopNotifier()
         delete notifier_process_;
     }
 
-    qInfo("Notifier is stopped");
+    LOG_INFO(logger, "Notifier is stopped");
 }
 
 void HostServer::sessionToNotifier(const Host& host)

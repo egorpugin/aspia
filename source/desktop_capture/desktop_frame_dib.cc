@@ -5,6 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "desktop_capture/desktop_frame_dib.h"
 
 namespace aspia {
@@ -85,7 +86,7 @@ DesktopFrameDIB::create(const QSize& size,
                                       0);
     if (!bitmap)
     {
-        qWarning("CreateDIBSection failed");
+        LOG_WARN(logger, "CreateDIBSection failed");
         return nullptr;
     }
 

@@ -10,28 +10,26 @@
 
 #include "base/common.h"
 
-#include <QByteArray>
-
 namespace aspia {
 
 class ASPIA_CRYPTO_API DataEncryptor
 {
 public:
     // Creates a key from the password. |password| must be in UTF-8 encoding.
-    static QByteArray createKey(const QByteArray& password,
-                                const QByteArray& salt,
+    static std::string createKey(const std::string& password,
+                                const std::string& salt,
                                 int rounds);
 
-    static QByteArray encrypt(const QByteArray& source_data, const QByteArray& key);
+    static std::string encrypt(const std::string& source_data, const std::string& key);
 
-    static bool decrypt(const QByteArray& source_data,
-                        const QByteArray& key,
-                        QByteArray* decrypted_data);
+    static bool decrypt(const std::string& source_data,
+                        const std::string& key,
+                        std::string* decrypted_data);
 
     static bool decrypt(const char* source_data,
                         int source_size,
-                        const QByteArray& key,
-                        QByteArray* decrypted_data);
+                        const std::string& key,
+                        std::string* decrypted_data);
 
 private:
     DISABLE_COPY(DataEncryptor)

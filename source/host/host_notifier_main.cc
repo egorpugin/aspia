@@ -16,7 +16,7 @@
 #include <QFileInfo>
 #include <QScreen>
 
-#include "base/file_logger.h"
+#include "base/log.h"
 #include "desktop_capture/win/scoped_thread_desktop.h"
 #include "host/ui/host_notifier_window.h"
 #include "version.h"
@@ -25,8 +25,7 @@ namespace aspia {
 
 int hostNotifierMain(int argc, char *argv[])
 {
-    FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
+    initLoggerForApplication(argc, argv);
 
     int max_attempt_count = 600;
 
@@ -45,7 +44,7 @@ int hostNotifierMain(int argc, char *argv[])
 
     if (max_attempt_count == 0)
     {
-        qWarning("Exceeded the number of attempts");
+        LOG_WARN(logger, "Exceeded the number of attempts");
         return 1;
     }
 
@@ -63,7 +62,7 @@ int hostNotifierMain(int argc, char *argv[])
 
     if (!parser.parse(application.arguments()))
     {
-        qWarning() << "Error parsing command line parameters: " << parser.errorText();
+        LOG_WARN(logger, "Error parsing command line parameters: " << parser.errorText().toStdString());
         return 1;
     }
 

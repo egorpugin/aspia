@@ -54,7 +54,7 @@ signals:
     void connected();
     void disconnected();
     void errorOccurred(const QString& message);
-    void messageReceived(const QByteArray& buffer);
+    void messageReceived(const std::string& buffer);
     void messageWritten(int message_id);
 
 public slots:
@@ -64,7 +64,7 @@ public slots:
 
     // Sends a message. If the |message_id| is not -1, then after the message is sent,
     // the signal |messageWritten| is called.
-    void writeMessage(int message_id, const QByteArray& buffer);
+    void writeMessage(int message_id, const std::string& buffer);
 
     // Stops the channel.
     void stop();
@@ -79,14 +79,14 @@ private slots:
     void onBytesWritten(int64_t bytes);
     void onReadyRead();
     void onMessageWritten(int message_id);
-    void onMessageReceived(const QByteArray& buffer);
+    void onMessageReceived(const std::string& buffer);
 
 private:
     friend class NetworkServer;
 
     NetworkChannel(ChannelType channel_type, QTcpSocket* socket, QObject* parent);
 
-    void write(int message_id, const QByteArray& buffer);
+    void write(int message_id, const std::string& buffer);
     void scheduleWrite();
 
     using MessageSizeType = uint32_t;
@@ -97,13 +97,13 @@ private:
 
     std::unique_ptr<Encryptor> encryptor_;
 
-    std::queue<std::pair<int, QByteArray>> write_queue_;
+    std::queue<std::pair<int, std::string>> write_queue_;
     int64_t written_ = 0;
 
     bool read_required_ = false;
     bool read_size_received_ = false;
-    QByteArray read_buffer_;
-    int read_size_ = 0;
+    std::string read_buffer_;
+    size_t read_size_ = 0;
     int64_t read_ = 0;
 
     int pinger_timer_id_ = 0;

@@ -30,7 +30,7 @@ public:
 
 public slots:
     // HostSessionFake implementation.
-    void onMessageReceived(const QByteArray& buffer) override;
+    void onMessageReceived(const std::string& buffer) override;
     void onMessageWritten(int message_id) override;
 
 private:

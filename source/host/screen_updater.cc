@@ -8,8 +8,8 @@
 #include "host/screen_updater.h"
 
 #include <QCoreApplication>
-#include <QDebug>
 
+#include "base/log.h"
 #include "codec/cursor_encoder.h"
 #include "codec/video_encoder_vpx.h"
 #include "codec/video_encoder_zlib.h"
@@ -68,7 +68,7 @@ void ScreenUpdater::run()
             break;
 
         default:
-            qWarning() << "Unsupported video encoding: " << config_.video_encoding();
+            LOG_WARN(logger, "") << "Unsupported video encoding: " << config_.video_encoding();
             break;
     }
 

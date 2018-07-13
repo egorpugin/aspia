@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/file_platform_util.h"
+#include "client/file_platform_util.h"
 
 #if !defined(_WIN32)
 #error This file is only for MS Windows

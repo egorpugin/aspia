@@ -5,10 +5,10 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "base/errno_logging.h"
 #include "host/host_settings.h"
 
-#include <QDebug>
+#include "base/log.h"
+#include "base/errno_logging.h"
 
 namespace aspia {
 
@@ -67,14 +67,14 @@ QList<User> HostSettings::userList() const
         std::string user_name = settings_.value(QStringLiteral("UserName")).toString().toStdString();
         if (!user.setName(user_name))
         {
-            qDebug() << "Invalid user name: " << user_name << ". The list of users is corrupted";
+            LOG_DEBUG(logger, "") << "Invalid user name: " << user_name << ". The list of users is corrupted";
             return QList<User>();
         }
 
         auto password_hash = settings_.value(QStringLiteral("PasswordHash")).toString().toStdString();
         if (!user.setPasswordHash(password_hash))
         {
-            qDebug() << "Invalid password hash: " << password_hash
+            LOG_DEBUG(logger, "") << "Invalid password hash: " << password_hash
                      << ". The list of users is corrupted";
             return QList<User>();
         }

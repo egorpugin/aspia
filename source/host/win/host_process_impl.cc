@@ -107,7 +107,7 @@ HostProcess::ErrorCode createSessionToken(DWORD session_id, ScopedHandle* token_
 
     if (!RevertToSelf())
     {
-        qFatal("RevertToSelf failed");
+        LOG_FATAL(logger, "RevertToSelf failed");
         return HostProcess::OtherError;
     }
 
@@ -150,7 +150,7 @@ HostProcess::ErrorCode createLoggedOnUserToken(DWORD session_id, ScopedHandle* t
         if (system_error_code != ERROR_NO_TOKEN)
         {
             error_code = HostProcess::OtherError;
-            qWarning() << "WTSQueryUserToken failed: " << errnoToString(system_error_code);
+            LOG_WARN(logger, "") << "WTSQueryUserToken failed: " << errnoToString(system_error_code);
         }
         else
         {

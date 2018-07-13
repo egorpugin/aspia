@@ -8,6 +8,8 @@
 #ifndef _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_DIB_H
 #define _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_DIB_H
 
+#include <qsize.h>
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <memory>

@@ -11,11 +11,10 @@
 #include <windows.h>
 
 #include <QCommandLineParser>
-#include <QDebug>
 #include <QFileInfo>
 #include <QGuiApplication>
 
-#include "base/file_logger.h"
+#include "base/log.h"
 #include "host/host_session.h"
 #include "version.h"
 
@@ -23,8 +22,7 @@ namespace aspia {
 
 int hostMain(int argc, char *argv[])
 {
-    FileLogger logger;
-    logger.startLogging(QFileInfo(argv[0]).fileName().toStdString());
+    initLoggerForApplication(argc, argv);
 
     // At the end of the user's session, the program ends later than the others.
     SetProcessShutdownParameters(0, SHUTDOWN_NORETRY);
@@ -48,7 +46,7 @@ int hostMain(int argc, char *argv[])
 
     if (!parser.parse(application.arguments()))
     {
-        qWarning() << "Error parsing command line parameters: " << parser.errorText();
+        LOG_WARN(logger, "Error parsing command line parameters: " << parser.errorText().toStdString());
         return 1;
     }
 

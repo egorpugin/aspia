@@ -27,7 +27,7 @@ public:
 
 public slots:
     // ClientSession implementation.
-    void messageReceived(const QByteArray& buffer) override;
+    void messageReceived(const std::string& buffer) override;
     void messageWritten(int message_id) override;
 
     // ClientSessionDesktopView implementation.

@@ -5,11 +5,10 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
+#include "base/log.h"
 #include "codec/decompressor_zlib.h"
 
 #include <zlib-ng.h>
-
-#include <QDebug>
 
 namespace aspia {
 
@@ -51,7 +50,7 @@ bool DecompressorZLIB::process(const uint8_t* input_data,
 
     int ret = zng_inflate(stream_, Z_NO_FLUSH);
     if (ret == Z_STREAM_ERROR)
-        qWarning() << "zlib decompression failed: " << ret;
+        LOG_WARN(logger, "") << "zlib decompression failed: " << ret;
 
     *consumed = input_size - stream_->avail_in;
     *written = output_size - stream_->avail_out;

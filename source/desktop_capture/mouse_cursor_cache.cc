@@ -7,7 +7,7 @@
 
 #include "desktop_capture/mouse_cursor_cache.h"
 
-#include <QDebug>
+#include "base/log.h"
 
 namespace aspia {
 
@@ -64,7 +64,7 @@ std::shared_ptr<MouseCursor> MouseCursorCache::Get(size_t index)
 {
     if (index > kMaxCacheSize)
     {
-        qDebug() << "Invalid cache index: " << index;
+        LOG_DEBUG(logger, "") << "Invalid cache index: " << index;
         return nullptr;
     }
 
