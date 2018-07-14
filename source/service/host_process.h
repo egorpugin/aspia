@@ -17,7 +17,7 @@ namespace aspia {
 
 class HostProcessImpl;
 
-class ASPIA_HOSTLIB_API HostProcess : public QObject
+class HostProcess : public QObject
 {
     Q_OBJECT
 

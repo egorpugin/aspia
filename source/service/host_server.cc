@@ -13,7 +13,7 @@
 
 #include "base/errno_logging.h"
 #include "base/message_serialization.h"
-#include "hostlib/host.h"
+#include "host.h"
 #include "host_user_authorizer.h"
 #include "ipc/ipc_server.h"
 #include "network/firewall_manager.h"

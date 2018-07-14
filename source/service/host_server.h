@@ -8,7 +8,7 @@
 #ifndef _ASPIA_HOST__HOST_SERVER_H
 #define _ASPIA_HOST__HOST_SERVER_H
 
-#include "hostlib/host_process.h"
+#include "host_process.h"
 #include "core/user.h"
 #include "ipc/ipc_channel.h"
 #include "network/network_server.h"

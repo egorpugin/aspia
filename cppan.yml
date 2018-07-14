@@ -249,40 +249,6 @@ projects:
             - crypto
             - pvt.cppan.demo.qtproject.qt.base.core: 5
 
-    hostlib:
-        type: lib
-        files:
-            - hostlib/.*
-        options:
-            any:
-                link_libraries:
-                    win32:
-                        public:
-                            - Wtsapi32
-        dependencies:
-            - ipc
-            - network
-            - codec
-
-            - name: pvt.cppan.demo.qtproject.qt.base.core
-              ref: CORE
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
-              ref: MOC_COMMAND
-              version: 5
-
-        post_sources: |
-            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
-
-            set(moc ${src})
-            list(FILTER moc INCLUDE REGEX ".h$")
-
-            find_moc_targets(moc ${moc})
-
-            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
-            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
-            list(FILTER moc INCLUDE REGEX ".cpp$")
-            set(src ${src} ${moc})
 
     aspia_console:
         executable_type: win32
@@ -388,10 +354,16 @@ projects:
         files:
             - service/.*
 
+        options:
+            any:
+                link_libraries:
+                    win32:
+                        public:
+                            - Wtsapi32
         dependencies:
             - client
             - core
-            - hostlib
+            - ipc
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
@@ -430,7 +402,7 @@ projects:
         dependencies:
             - client
             - core
-            - hostlib
+            - ipc
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
