@@ -5,10 +5,10 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_session_fake.h"
+#include "host_session_fake.h"
 
-#include "host/host_session_fake_desktop.h"
-#include "host/host_session_fake_file_transfer.h"
+#include "host_session_fake_desktop.h"
+#include "host_session_fake_file_transfer.h"
 
 namespace aspia {
 

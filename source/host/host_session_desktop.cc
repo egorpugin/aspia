@@ -5,12 +5,12 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_session_desktop.h"
+#include "host_session_desktop.h"
 
 #include "client/clipboard.h"
 #include "base/message_serialization.h"
-#include "host/input_injector.h"
-#include "host/screen_updater.h"
+#include "input_injector.h"
+#include "screen_updater.h"
 
 namespace aspia {
 

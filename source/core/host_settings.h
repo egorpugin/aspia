@@ -16,7 +16,7 @@
 
 namespace aspia {
 
-class ASPIA_CORE2_API HostSettings
+class ASPIA_CORE_API HostSettings
 {
 public:
     HostSettings();

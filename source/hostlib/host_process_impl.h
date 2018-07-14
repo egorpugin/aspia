@@ -13,7 +13,7 @@
 #include <QWinEventNotifier>
 
 #include "base/win/scoped_object.h"
-#include "host/win/host_process.h"
+#include "host_process.h"
 
 namespace aspia {
 

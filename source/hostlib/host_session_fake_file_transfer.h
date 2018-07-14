@@ -10,7 +10,7 @@
 
 #include "base/common.h"
 
-#include "host/host_session_fake.h"
+#include "host_session_fake.h"
 
 namespace aspia {
 

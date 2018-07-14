@@ -5,13 +5,13 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_session.h"
+#include "host_session.h"
 
 #include <QCoreApplication>
 
 #include "base/errno_logging.h"
-#include "host/host_session_desktop.h"
-#include "host/host_session_file_transfer.h"
+#include "host_session_desktop.h"
+#include "host_session_file_transfer.h"
 #include "ipc/ipc_channel.h"
 
 namespace aspia {

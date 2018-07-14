@@ -7,8 +7,6 @@
 
 #include "desktop_capture/win/desktop.h"
 
-#include <QDebug>
-
 #include "base/errno_logging.h"
 
 namespace aspia {

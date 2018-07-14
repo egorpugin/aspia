@@ -18,7 +18,7 @@ namespace aspia {
 
 class NetworkChannel;
 
-class ASPIA_CORE_API HostUserAuthorizer : public QObject
+class HostUserAuthorizer : public QObject
 {
     Q_OBJECT
 

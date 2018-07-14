@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/ui/host_config_dialog.h"
+#include "host_config_dialog.h"
 
 #include <QDebug>
 #include <QDir>
@@ -15,8 +15,8 @@
 
 #include "base/log.h"
 #include "base/service_controller.h"
-#include "host/ui/user_dialog.h"
-#include "host/ui/user_tree_item.h"
+#include "user_dialog.h"
+#include "user_tree_item.h"
 #include "core/host_settings.h"
 
 namespace aspia {

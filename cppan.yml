@@ -87,19 +87,6 @@ projects:
             - protocols
             - pvt.egorpugin.primitives.log: master
 
-    codec:
-        type: lib
-        files:
-            - codec/.*
-        dependencies:
-            public:
-                - base
-                - desktop_capture
-            private:
-                - pvt.cppan.demo.dead2.zlib_ng: develop
-                - pvt.cppan.demo.chromium.libyuv.libyuv: master
-                - pvt.cppan.demo.webmproject.vpx: 1
-
     crypto:
         type: lib
         files:
@@ -129,6 +116,19 @@ projects:
             private:
                 - pvt.cppan.demo.mysticial.featuredetector: master
 
+    codec:
+        type: lib
+        files:
+            - codec/.*
+        dependencies:
+            public:
+                - base
+                - desktop_capture
+            private:
+                - pvt.cppan.demo.dead2.zlib_ng: develop
+                - pvt.cppan.demo.chromium.libyuv.libyuv: master
+                - pvt.cppan.demo.webmproject.vpx: 1
+
     network:
         type: lib
         files:
@@ -140,17 +140,11 @@ projects:
             public:
                 - crypto
 
-                - name: pvt.cppan.demo.qtproject.qt.base.widgets
-                  ref: WIDGETS
-                  version: 5
                 - name: pvt.cppan.demo.qtproject.qt.base.core
                   ref: CORE
                   version: 5
                 - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
                   ref: MOC_COMMAND
-                  version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
-                  ref: UIC_COMMAND
                   version: 5
 
         options:
@@ -172,34 +166,20 @@ projects:
             list(FILTER moc INCLUDE REGEX ".cpp$")
             set(src ${src} ${moc})
 
-            #
-            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
-            file(GLOB_RECURSE uis "${SDIR}/network/*.ui")
-            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
-            qt5_wrap_ui(uic ${uis})
-            set(src ${src} ${uic})
-
     ipc:
         type: lib
         files:
             - ipc/.*
         dependencies:
-            private:
-                - pvt.cppan.demo.qtproject.qt.base.network: 5
             public:
                 - crypto
 
-                - name: pvt.cppan.demo.qtproject.qt.base.widgets
-                  ref: WIDGETS
-                  version: 5
+                - pvt.cppan.demo.qtproject.qt.base.network: 5
                 - name: pvt.cppan.demo.qtproject.qt.base.core
                   ref: CORE
                   version: 5
                 - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
                   ref: MOC_COMMAND
-                  version: 5
-                - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
-                  ref: UIC_COMMAND
                   version: 5
 
         post_sources: |
@@ -215,14 +195,6 @@ projects:
             list(FILTER moc INCLUDE REGEX ".cpp$")
             set(src ${src} ${moc})
 
-            #
-            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
-            file(GLOB_RECURSE uis "${SDIR}/ipc/*.ui")
-            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
-            qt5_wrap_ui(uic ${uis})
-            set(src ${src} ${uic})
-
-
     client:
         type: lib
         files:
@@ -232,8 +204,6 @@ projects:
             - codec
             - desktop_capture
             - network
-            # remove from here?
-            - resources
 
             - pvt.cppan.demo.qtproject.qt.winextras: 5
             - pvt.cppan.demo.qtproject.qt.base.xml: 5
@@ -271,7 +241,7 @@ projects:
             set(src ${src} ${uic})
 
 
-    core2:
+    core:
         type: lib
         files:
             - core/.*
@@ -279,41 +249,26 @@ projects:
             - crypto
             - pvt.cppan.demo.qtproject.qt.base.core: 5
 
-    core:
+    hostlib:
         type: lib
-        #shared_only: true
         files:
-            - host/.*
-
-        exclude_from_build:
-            - .*entry_point.cc$
-            - .*manifest$
-            - .*rc$
-
+            - hostlib/.*
         options:
             any:
                 link_libraries:
                     win32:
                         public:
                             - Wtsapi32
-                            - sas
-
         dependencies:
-            - client
             - ipc
-            - core2
+            - network
+            - codec
 
-            - name: pvt.cppan.demo.qtproject.qt.base.widgets
-              ref: WIDGETS
-              version: 5
             - name: pvt.cppan.demo.qtproject.qt.base.core
               ref: CORE
               version: 5
             - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
               ref: MOC_COMMAND
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
-              ref: UIC_COMMAND
               version: 5
 
         post_sources: |
@@ -329,20 +284,15 @@ projects:
             list(FILTER moc INCLUDE REGEX ".cpp$")
             set(src ${src} ${moc})
 
-            #
-            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
-            file(GLOB_RECURSE uis "${SDIR}/host/*.ui")
-            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
-            qt5_wrap_ui(uic ${uis})
-            set(src ${src} ${uic})
-
     aspia_console:
         executable_type: win32
         rc_enabled: false
         files:
             - console/.*
         dependencies:
+            - client
             - core
+            - resources
 
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
@@ -385,22 +335,12 @@ projects:
         executable_type: win32
         rc_enabled: false
         files:
-            - host/host_config_entry_point.cc
-            - host/host_config.rc
+            - config/.*
+        exclude_from_build:
+            - .*manifest$
         dependencies:
             - core
-            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
-            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
-            - pvt.cppan.demo.qtproject.qt.base.winmain: 5
-
-    aspia_host_service:
-        # service must be win32
-        executable_type: win32
-        rc_enabled: false
-        files:
-            - service/.*
-        dependencies:
-            - core
+            - resources
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
@@ -433,23 +373,87 @@ projects:
 
             #
             include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
-            file(GLOB_RECURSE uis "${SDIR}/service/*.ui")
+            file(GLOB_RECURSE uis "${SDIR}/config/*.ui")
             set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
             qt5_wrap_ui(uic ${uis})
             set(src ${src} ${uic})
 
 
+
+
+
+    aspia_host_service:
+        executable_type: win32
+        rc_enabled: false
+        files:
+            - service/.*
+
+        dependencies:
+            - client
+            - core
+            - hostlib
+            - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
+            - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
+            - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
     aspia_host:
         executable_type: win32
         rc_enabled: false
         files:
-            - host/win/host_entry_point.cc
-            - host/win/host.rc
+            - host/.*
+        options:
+            any:
+                link_libraries:
+                    win32:
+                        public:
+                            - sas
         dependencies:
+            - client
             - core
+            - hostlib
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
 
     aspia_host_notifier:
         executable_type: win32
@@ -457,9 +461,10 @@ projects:
         files:
             - notifier/.*
         dependencies:
-            - client
+            - desktop_capture
             - ipc
-            - core2
+            - core
+            - resources
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5

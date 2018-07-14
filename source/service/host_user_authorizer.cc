@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_user_authorizer.h"
+#include "host_user_authorizer.h"
 
 #include <QTimerEvent>
 

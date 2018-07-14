@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/win/host.h"
+#include "host.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -13,8 +13,8 @@
 #include <QCoreApplication>
 
 #include "base/errno_logging.h"
-#include "host/win/host_process.h"
-#include "host/host_session_fake.h"
+#include "host_process.h"
+#include "host_session_fake.h"
 #include "ipc/ipc_channel.h"
 #include "ipc/ipc_server.h"
 #include "network/network_channel.h"

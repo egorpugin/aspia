@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/ui/user_dialog.h"
+#include "user_dialog.h"
 
 #include <QMessageBox>
 #include <QMouseEvent>

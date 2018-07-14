@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/win/host_main.h"
+#include "host_main.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -15,7 +15,7 @@
 #include <QGuiApplication>
 
 #include "base/log.h"
-#include "host/host_session.h"
+#include "host_session.h"
 #include "version.h"
 
 namespace aspia {

@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_session_file_transfer.h"
+#include "host_session_file_transfer.h"
 
 #include "base/message_serialization.h"
 #include "client/file_worker.h"

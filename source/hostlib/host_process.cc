@@ -5,10 +5,10 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/win/host_process.h"
+#include "host_process.h"
 
 #include "base/log.h"
-#include "host/win/host_process_impl.h"
+#include "host_process_impl.h"
 
 namespace aspia {
 

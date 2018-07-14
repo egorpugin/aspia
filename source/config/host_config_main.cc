@@ -5,12 +5,12 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_config_main.h"
+#include "host_config_main.h"
 
 #include <QFileInfo>
 
 #include "base/log.h"
-#include "host/ui/host_config_dialog.h"
+#include "ui/host_config_dialog.h"
 #include "version.h"
 
 namespace aspia {

@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/ui/user_tree_item.h"
+#include "user_tree_item.h"
 
 namespace aspia {
 

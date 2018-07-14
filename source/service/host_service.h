@@ -14,7 +14,7 @@
 
 #include "base/win/scoped_com_initializer.h"
 #include "core/locale_loader.h"
-#include "host/service.h"
+#include "service.h"
 
 namespace aspia {
 

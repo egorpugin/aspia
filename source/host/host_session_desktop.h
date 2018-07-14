@@ -8,7 +8,7 @@
 #ifndef _ASPIA_HOST__HOST_SESSION_DESKTOP_H
 #define _ASPIA_HOST__HOST_SESSION_DESKTOP_H
 
-#include "host/host_session.h"
+#include "host_session.h"
 #include "protocol/authorization.pb.h"
 #include "protocol/desktop_session.pb.h"
 

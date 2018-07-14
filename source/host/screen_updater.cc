@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/screen_updater.h"
+#include "screen_updater.h"
 
 #include <QCoreApplication>
 

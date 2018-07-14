@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/input_injector.h"
+#include "input_injector.h"
 
 #include <QRect>
 #include <QSettings>

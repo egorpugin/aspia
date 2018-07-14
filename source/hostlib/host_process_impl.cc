@@ -5,9 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/win/host_process_impl.h"
-
-#include <QDebug>
+#include "host_process_impl.h"
 
 #include <userenv.h>
 #include <wtsapi32.h>
