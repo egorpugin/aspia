@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__VIDEO_ENCODER_H
-#define _ASPIA_CODEC__VIDEO_ENCODER_H
+#pragma once
 
 #include <memory>
 
@@ -25,5 +24,3 @@ public:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__VIDEO_ENCODER_H

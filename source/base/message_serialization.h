@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_BASE__MESSAGE_SERIALIZATION_H
-#define _ASPIA_BASE__MESSAGE_SERIALIZATION_H
+#pragma once
 
 #include "base/log.h"
 
@@ -43,5 +42,3 @@ bool parseMessage(const std::string& buffer, T& message)
 }
 
 } // namespace aspia
-
-#endif // _ASPIA_BASE__MESSAGE_SERIALIZATION_H

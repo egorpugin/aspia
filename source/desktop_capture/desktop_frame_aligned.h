@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_ALIGNED_H
-#define _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_ALIGNED_H
+#pragma once
 
 #include <memory>
 
@@ -32,5 +31,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_ALIGNED_H

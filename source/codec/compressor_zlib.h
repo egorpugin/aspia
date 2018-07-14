@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__COMPRESSOR_ZLIB_H
-#define _ASPIA_CODEC__COMPRESSOR_ZLIB_H
+#pragma once
 
 #include "base/common.h"
 #include "codec/compressor.h"
@@ -38,5 +37,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__COMPRESSOR_ZLIB_H

@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__PIXEL_TRANSLATOR_H
-#define _ASPIA_CODEC__PIXEL_TRANSLATOR_H
+#pragma once
 
 #include <memory>
 
@@ -31,5 +30,3 @@ public:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__PIXEL_TRANSLATOR_H

@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_DESKTOP_CAPTURE__DIFF_BLOCK_SSE3_H
-#define _ASPIA_DESKTOP_CAPTURE__DIFF_BLOCK_SSE3_H
+#pragma once
 
 #include <base/common.h>
 
@@ -19,5 +18,3 @@ uint8_t diffFullBlock_16x16_SSE3(const uint8_t* image1, const uint8_t* image2, i
 uint8_t diffFullBlock_8x8_SSE3(const uint8_t* image1, const uint8_t* image2, int bytes_per_row);
 
 } // namespace aspia
-
-#endif // _ASPIA_DESKTOP_CAPTURE__DIFF_BLOCK_SSE3_H

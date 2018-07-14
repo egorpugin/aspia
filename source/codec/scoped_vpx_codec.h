@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__SCOPED_VPX_CODEC_H
-#define _ASPIA_CODEC__SCOPED_VPX_CODEC_H
+#pragma once
 
 #include <memory>
 
@@ -25,5 +24,3 @@ struct VpxCodecDeleter
 using ScopedVpxCodec = std::unique_ptr<vpx_codec_ctx_t, VpxCodecDeleter>;
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__SCOPED_VPX_CODEC_H

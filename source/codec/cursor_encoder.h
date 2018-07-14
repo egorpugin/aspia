@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__CURSOR_ENCODER_H
-#define _ASPIA_CODEC__CURSOR_ENCODER_H
+#pragma once
 
 #include "codec/compressor_zlib.h"
 #include "desktop_capture/mouse_cursor_cache.h"
@@ -35,5 +34,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__CURSOR_ENCODER_H

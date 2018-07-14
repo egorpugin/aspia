@@ -1,7 +1,6 @@
 /*
  * Aspia: Remote desktop and file transfer tool.
  * Copyright (C) 2018 Dmitry Chapyshev <dmitry@aspia.ru>
- * Copyright (C) 2018 Egor Pugin <egor.pugin@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

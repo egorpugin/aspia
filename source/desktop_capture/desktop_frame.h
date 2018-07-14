@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_H
-#define _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_H
+#pragma once
 
 #include "base/common.h"
 #include "desktop_capture/pixel_format.h"
@@ -51,5 +50,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_H

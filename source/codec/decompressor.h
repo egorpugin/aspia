@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__DECOMPRESSOR_H
-#define _ASPIA_CODEC__DECOMPRESSOR_H
+#pragma once
 
 namespace aspia {
 
@@ -52,5 +51,3 @@ public:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__DECOMPRESSOR_H

@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__VIDEO_ENCODER_ZLIB_H
-#define _ASPIA_CODEC__VIDEO_ENCODER_ZLIB_H
+#pragma once
 
 #include <QSize>
 
@@ -50,5 +49,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__VIDEO_ENCODER_ZLIB_H

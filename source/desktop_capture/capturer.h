@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_DESKTOP_CAPTURE__CAPTURER_H
-#define _ASPIA_DESKTOP_CAPTURE__CAPTURER_H
+#pragma once
 
 #include "desktop_capture/desktop_frame.h"
 #include "desktop_capture/mouse_cursor.h"
@@ -23,5 +22,3 @@ public:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_DESKTOP_CAPTURE__CAPTURER_H

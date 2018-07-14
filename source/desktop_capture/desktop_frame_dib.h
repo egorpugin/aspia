@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_DIB_H
-#define _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_DIB_H
+#pragma once
 
 #include <qsize.h>
 
@@ -43,5 +42,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_DESKTOP_CAPTURE__DESKTOP_FRAME_DIB_H

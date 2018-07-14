@@ -5,11 +5,8 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_VERSION_H
-#define _ASPIA_VERSION_H
+#pragma once
 
 // Version information.
 #define ASPIA_VERSION_STRING "1.0.1"
 #define ASPIA_VERSION        1,0,1,0
-
-#endif // _ASPIA_VERSION_H

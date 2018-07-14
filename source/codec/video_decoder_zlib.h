@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__VIDEO_DECODER_ZLIB_H
-#define _ASPIA_CODEC__VIDEO_DECODER_ZLIB_H
+#pragma once
 
 #include "codec/decompressor_zlib.h"
 #include "codec/video_decoder.h"
@@ -36,5 +35,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__VIDEO_DECODER_ZLIB_H

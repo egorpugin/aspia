@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__HOST_SETTINGS_H
-#define _ASPIA_HOST__HOST_SETTINGS_H
+#pragma once
 
 #include "base/common.h"
 
@@ -41,5 +40,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__HOST_SETTINGS_H

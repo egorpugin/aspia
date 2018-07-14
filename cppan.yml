@@ -361,9 +361,10 @@ projects:
                         public:
                             - Wtsapi32
         dependencies:
-            - client
             - core
             - ipc
+            - network
+            - codec
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
@@ -401,7 +402,6 @@ projects:
                             - sas
         dependencies:
             - client
-            - core
             - ipc
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5

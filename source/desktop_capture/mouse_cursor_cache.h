@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_DESKTOP_CAPTURE__MOUSE_CURSOR_CACHE_H
-#define _ASPIA_DESKTOP_CAPTURE__MOUSE_CURSOR_CACHE_H
+#pragma once
 
 #include <deque>
 
@@ -51,5 +50,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_DESKTOP_CAPTURE__MOUSE_CURSOR_CACHE_H

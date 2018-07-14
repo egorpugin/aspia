@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CODEC__VIDEO_DECODER_VPX_H
-#define _ASPIA_CODEC__VIDEO_DECODER_VPX_H
+#pragma once
 
 extern "C" {
 
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CODEC__VIDEO_DECODER_VPX_H
