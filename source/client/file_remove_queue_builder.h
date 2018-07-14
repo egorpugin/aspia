@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__FILE_REMOVE_QUEUE_BUILDER_H
-#define _ASPIA_CLIENT__FILE_REMOVE_QUEUE_BUILDER_H
+#pragma once
 
 #include "client/file_remover.h"
 
@@ -56,5 +55,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__FILE_REMOVE_QUEUE_BUILDER_H

@@ -5,13 +5,10 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__HOST_NOTIFIER_MAIN_H
-#define _ASPIA_HOST__HOST_NOTIFIER_MAIN_H
+#pragma once
 
 namespace aspia {
 
 int hostNotifierMain(int argc, char *argv[]);
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__HOST_NOTIFIER_MAIN_H

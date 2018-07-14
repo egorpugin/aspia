@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__UI__HOST_NOTIFIER_WINDOW_H
-#define _ASPIA_HOST__UI__HOST_NOTIFIER_WINDOW_H
+#pragma once
 
 #include "core/locale_loader.h"
 #include "notifier/host_notifier.h"
@@ -61,5 +60,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__UI__HOST_NOTIFIER_WINDOW_H

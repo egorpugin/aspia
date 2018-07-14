@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__AUTHORIZATION_DIALOG_H
-#define _ASPIA_CLIENT__UI__AUTHORIZATION_DIALOG_H
+#pragma once
 
 #include "ui_authorization_dialog.h"
 
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__AUTHORIZATION_DIALOG_H

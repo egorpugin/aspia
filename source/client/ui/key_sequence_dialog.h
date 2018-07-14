@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__KEY_SEQUENCE_DIALOG_H
-#define _ASPIA_CLIENT__UI__KEY_SEQUENCE_DIALOG_H
+#pragma once
 
 #include "ui_key_sequence_dialog.h"
 
@@ -33,5 +32,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__KEY_SEQUENCE_DIALOG_H

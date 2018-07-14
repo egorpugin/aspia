@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__COMPUTER_GROUP_ITEM_H
-#define _ASPIA_CONSOLE__COMPUTER_GROUP_ITEM_H
+#pragma once
 
 #include "console/computer_item.h"
 #include "protocol/address_book.pb.h"
@@ -44,5 +43,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__COMPUTER_GROUP_ITEM_H

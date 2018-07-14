@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__CONSOLE_TAB_H
-#define _ASPIA_CONSOLE__CONSOLE_TAB_H
+#pragma once
 
 #include <QWidget>
 
@@ -31,5 +30,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__CONSOLE_TAB_H

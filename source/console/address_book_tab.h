@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__ADDRESS_BOOK_TAB_H
-#define _ASPIA_CONSOLE__ADDRESS_BOOK_TAB_H
+#pragma once
 
 #include "console/console_tab.h"
 #include "protocol/address_book.pb.h"
@@ -95,5 +94,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__ADDRESS_BOOK_TAB_H

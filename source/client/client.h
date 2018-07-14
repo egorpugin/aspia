@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__CLIENT_H
-#define _ASPIA_CLIENT__CLIENT_H
+#pragma once
 
 #include "client/client_session.h"
 #include "client/connect_data.h"
@@ -48,5 +47,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__CLIENT_H

@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__FILE_ITEM_DELEGATE_H
-#define _ASPIA_CLIENT__UI__FILE_ITEM_DELEGATE_H
+#pragma once
 
 #include <QStyledItemDelegate>
 
@@ -61,5 +60,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__FILE_ITEM_DELEGATE_H

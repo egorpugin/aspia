@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__COMPUTER_DRAG_H
-#define _ASPIA_CONSOLE__COMPUTER_DRAG_H
+#pragma once
 
 #include <QDrag>
 
@@ -32,5 +31,3 @@ public:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__COMPUTER_DRAG_H

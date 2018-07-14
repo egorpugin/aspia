@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__FILE_REMOVE_TASK_H
-#define _ASPIA_CLIENT__FILE_REMOVE_TASK_H
+#pragma once
 
 #include <QString>
 
@@ -34,5 +33,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__FILE_REMOVE_TASK_H

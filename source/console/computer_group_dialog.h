@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__COMPUTER_GROUP_DIALOG_H
-#define _ASPIA_CONSOLE__COMPUTER_GROUP_DIALOG_H
+#pragma once
 
 #include "console/computer_group_item.h"
 #include "ui_computer_group_dialog.h"
@@ -41,5 +40,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__COMPUTER_GROUP_DIALOG_H

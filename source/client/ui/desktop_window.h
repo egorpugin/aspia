@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__DESKTOP_WINDOW_H
-#define _ASPIA_CLIENT__UI__DESKTOP_WINDOW_H
+#pragma once
 
 #include <QPointer>
 #include <QWidget>
@@ -83,5 +82,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__DESKTOP_WINDOW_H

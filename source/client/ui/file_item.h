@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__FILE_ITEM_H
-#define _ASPIA_CLIENT__UI__FILE_ITEM_H
+#pragma once
 
 #include <QTreeWidget>
 
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__FILE_ITEM_H

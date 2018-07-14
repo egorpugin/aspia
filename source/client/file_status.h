@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__FILE_STATUS_H
-#define _ASPIA_CLIENT__FILE_STATUS_H
+#pragma once
 
 #include <QString>
 
@@ -17,5 +16,3 @@ namespace aspia {
 QString fileStatusToString(proto::file_transfer::Status status);
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__FILE_STATUS_H

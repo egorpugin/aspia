@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__CONSOLE_STATUSBAR_H
-#define _ASPIA_CONSOLE__CONSOLE_STATUSBAR_H
+#pragma once
 
 #include <QStatusBar>
 
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__CONSOLE_STATUSBAR_H

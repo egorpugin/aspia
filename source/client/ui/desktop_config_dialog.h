@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__DESKTOP_CONFIG_DIALOG_H
-#define _ASPIA_CLIENT__UI__DESKTOP_CONFIG_DIALOG_H
+#pragma once
 
 #include "protocol/desktop_session.pb.h"
 #include "ui_desktop_config_dialog.h"
@@ -42,5 +41,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__DESKTOP_CONFIG_DIALOG_H

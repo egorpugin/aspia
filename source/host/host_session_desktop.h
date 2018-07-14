@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__HOST_SESSION_DESKTOP_H
-#define _ASPIA_HOST__HOST_SESSION_DESKTOP_H
+#pragma once
 
 #include "host_session.h"
 #include "protocol/authorization.pb.h"
@@ -56,5 +55,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__HOST_SESSION_DESKTOP_H

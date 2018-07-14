@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__CLIENT_SESSION_H
-#define _ASPIA_CLIENT__CLIENT_SESSION_H
+#pragma once
 
 #include <QObject>
 
@@ -53,5 +52,3 @@ signals:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__CLIENT_SESSION_H

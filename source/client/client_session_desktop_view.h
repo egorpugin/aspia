@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__CLIENT_SESSION_DESKTOP_VIEW_H
-#define _ASPIA_CLIENT__CLIENT_SESSION_DESKTOP_VIEW_H
+#pragma once
 
 #include <QPointer>
 #include <QThread>
@@ -56,5 +55,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__CLIENT_SESSION_DESKTOP_VIEW_H

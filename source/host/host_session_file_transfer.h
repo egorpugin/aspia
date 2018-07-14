@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__HOST_SESSION_FILE_TRANSFER_H
-#define _ASPIA_HOST__HOST_SESSION_FILE_TRANSFER_H
+#pragma once
 
 #include "host_session.h"
 
@@ -38,5 +37,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__HOST_SESSION_FILE_TRANSFER_H

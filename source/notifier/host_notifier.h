@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__HOST_NOTIFIER_H
-#define _ASPIA_HOST__HOST_NOTIFIER_H
+#pragma once
 
 #include "ipc/ipc_channel.h"
 #include "protocol/notifier.pb.h"
@@ -43,5 +42,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__HOST_NOTIFIER_H

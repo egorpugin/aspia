@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__ABOUT_DIALOG_H
-#define _ASPIA_CONSOLE__ABOUT_DIALOG_H
+#pragma once
 
 #include "ui_about_dialog.h"
 
@@ -27,5 +26,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__ABOUT_DIALOG_H

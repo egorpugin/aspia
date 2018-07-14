@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__FILE_WORKER_H
-#define _ASPIA_HOST__FILE_WORKER_H
+#pragma once
 
 #include "client/file_depacketizer.h"
 #include "client/file_packetizer.h"
@@ -52,5 +51,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__FILE_WORKER_H

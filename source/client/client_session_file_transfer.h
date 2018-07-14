@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__CLIENT_SESSION_FILE_TRANSFER_H
-#define _ASPIA_CLIENT__CLIENT_SESSION_FILE_TRANSFER_H
+#pragma once
 
 #include <QQueue>
 #include <QPointer>
@@ -55,5 +54,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__CLIENT_SESSION_FILE_TRANSFER_H

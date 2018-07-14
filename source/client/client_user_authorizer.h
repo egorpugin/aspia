@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__CLIENT_USER_AUTHORIZER_H
-#define _ASPIA_CLIENT__CLIENT_USER_AUTHORIZER_H
+#pragma once
 
 #include <QObject>
 
@@ -58,5 +57,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__CLIENT_USER_AUTHORIZER_H

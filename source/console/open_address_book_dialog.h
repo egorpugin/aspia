@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__OPEN_ADDRESS_BOOK_DIALOG_H
-#define _ASPIA_CONSOLE__OPEN_ADDRESS_BOOK_DIALOG_H
+#pragma once
 
 #include "protocol/address_book.pb.h"
 #include "ui_open_address_book_dialog.h"
@@ -34,5 +33,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__OPEN_ADDRESS_BOOK_DIALOG_H

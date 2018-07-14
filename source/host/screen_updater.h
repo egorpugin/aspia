@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__SCREEN_UPDATER_H
-#define _ASPIA_HOST__SCREEN_UPDATER_H
+#pragma once
 
 #include "base/common.h"
 
@@ -80,5 +79,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__SCREEN_UPDATER_H

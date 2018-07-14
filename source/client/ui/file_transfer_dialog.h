@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__FILE_TRANSFER_DIALOG_H
-#define _ASPIA_CLIENT__UI__FILE_TRANSFER_DIALOG_H
+#pragma once
 
 #include "client/file_transfer.h"
 #include "ui_file_transfer_dialog.h"
@@ -35,5 +34,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__FILE_TRANSFER_DIALOG_H

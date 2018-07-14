@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__WIN__HOST_PROCESS_IMPL_H
-#define _ASPIA_HOST__WIN__HOST_PROCESS_IMPL_H
+#pragma once
 
 #include <QPointer>
 #include "base/common.h"
@@ -44,5 +43,3 @@ public:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__WIN__HOST_PROCESS_IMPL_H

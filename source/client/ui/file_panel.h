@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__FILE_PANEL_H
-#define _ASPIA_CLIENT__UI__FILE_PANEL_H
+#pragma once
 
 #include "client/file_remover.h"
 #include "client/file_transfer.h"
@@ -69,5 +68,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__FILE_PANEL_H

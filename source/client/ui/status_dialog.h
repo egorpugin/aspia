@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__STATUS_DIALOG_H
-#define _ASPIA_CLIENT__UI__STATUS_DIALOG_H
+#pragma once
 
 #include "ui_status_dialog.h"
 
@@ -31,5 +30,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__STATUS_DIALOG_H

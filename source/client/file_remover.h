@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__FILE_REMOVER_H
-#define _ASPIA_CLIENT__FILE_REMOVER_H
+#pragma once
 
 #include <QQueue>
 
@@ -82,5 +81,3 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS(FileRemover::Actions)
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__FILE_REMOVER_H

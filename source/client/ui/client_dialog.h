@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__CLIENT_DIALOG_H
-#define _ASPIA_CLIENT__UI__CLIENT_DIALOG_H
+#pragma once
 
 #include "protocol/address_book.pb.h"
 #include "ui_client_dialog.h"
@@ -36,5 +35,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__CLIENT_DIALOG_H

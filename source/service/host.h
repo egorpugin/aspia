@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__WIN__HOST_H
-#define _ASPIA_HOST__WIN__HOST_H
+#pragma once
 
 #include <QPointer>
 
@@ -98,5 +97,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__WIN__HOST_H

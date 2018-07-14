@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_HOST__HOST_SERVER_H
-#define _ASPIA_HOST__HOST_SERVER_H
+#pragma once
 
 #include "host_process.h"
 #include "core/user.h"
@@ -84,5 +83,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_HOST__HOST_SERVER_H

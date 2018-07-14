@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__UI__FILE_MANAGER_WINDOW_H
-#define _ASPIA_CLIENT__UI__FILE_MANAGER_WINDOW_H
+#pragma once
 
 #include "client/connect_data.h"
 #include "ui_file_manager_window.h"
@@ -50,5 +49,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__UI__FILE_MANAGER_WINDOW_H

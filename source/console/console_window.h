@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CONSOLE__CONSOLE_WINDOW_H
-#define _ASPIA_CONSOLE__CONSOLE_WINDOW_H
+#pragma once
 
 #include "core/locale_loader.h"
 #include "protocol/address_book.pb.h"
@@ -78,5 +77,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CONSOLE__CONSOLE_WINDOW_H

@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__CONNECT_DATA_H
-#define _ASPIA_CLIENT__CONNECT_DATA_H
+#pragma once
 
 #include <QString>
 
@@ -54,5 +53,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__CONNECT_DATA_H

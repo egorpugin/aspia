@@ -5,8 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#ifndef _ASPIA_CLIENT__CLIENT_SESSION_DESKTOP_MANAGE_H
-#define _ASPIA_CLIENT__CLIENT_SESSION_DESKTOP_MANAGE_H
+#pragma once
 
 #include "client/client_session_desktop_view.h"
 
@@ -48,5 +47,3 @@ private:
 };
 
 } // namespace aspia
-
-#endif // _ASPIA_CLIENT__CLIENT_SESSION_DESKTOP_MANAGE_H
