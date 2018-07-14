@@ -16,8 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "host_main.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -29,11 +27,15 @@
 #include "host_session.h"
 #include "version.h"
 
-namespace aspia {
+#include <QtCore/QtPlugin>
+#ifdef QT_STATIC
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+#endif
 
-int hostMain(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-    initLoggerForApplication(argc, argv);
+    aspia::initLoggerForApplication(argc, argv);
 
     // At the end of the user's session, the program ends later than the others.
     SetProcessShutdownParameters(0, SHUTDOWN_NORETRY);
@@ -64,7 +66,7 @@ int hostMain(int argc, char *argv[])
     auto channel_id = parser.value(channel_id_option).toStdString();
     auto session_type = parser.value(session_type_option).toStdString();
 
-    QPointer<HostSession> session = HostSession::create(session_type, channel_id);
+    QPointer<aspia::HostSession> session = aspia::HostSession::create(session_type, channel_id);
     if (session.isNull())
         return 1;
 
@@ -72,5 +74,3 @@ int hostMain(int argc, char *argv[])
 
     return application.exec();
 }
-
-} // namespace aspia

@@ -16,8 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "console/console_main.h"
-
 #include <QCommandLineParser>
 #include <QFileInfo>
 
@@ -25,11 +23,19 @@
 #include "console/console_window.h"
 #include "version.h"
 
-namespace aspia {
+#include <QtCore/QtPlugin>
+#ifdef QT_STATIC
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+#endif
 
-int consoleMain(int argc, char *argv[])
+int qInitResources_resources();
+
+int main(int argc, char *argv[])
 {
-    initLoggerForApplication(argc, argv);
+    qInitResources_resources();
+
+    aspia::initLoggerForApplication(argc, argv);
 
     QApplication application(argc, argv);
 
@@ -50,11 +56,9 @@ int consoleMain(int argc, char *argv[])
     if (arguments.size())
         file_path = arguments.front();
 
-    ConsoleWindow window(file_path);
+    aspia::ConsoleWindow window(file_path);
     window.show();
     window.activateWindow();
 
     return application.exec();
 }
-
-} // namespace aspia

@@ -16,7 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "host_main.h"
+#include <QFileInfo>
+
+#include "base/log.h"
+#include "ui/host_config_dialog.h"
+#include "version.h"
 
 #include <QtCore/QtPlugin>
 #ifdef QT_STATIC
@@ -24,10 +28,23 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
 #endif
 
-//int qInitResources_resources();
+int qInitResources_resources();
 
 int main(int argc, char *argv[])
 {
-    //qInitResources_resources();
-    return aspia::hostMain(argc, argv);
+    qInitResources_resources();
+
+    aspia::initLoggerForApplication(argc, argv);
+
+    QApplication application(argc, argv);
+    application.setOrganizationName(QStringLiteral("Aspia"));
+    application.setApplicationName(QStringLiteral("Host"));
+    application.setApplicationVersion(QStringLiteral(ASPIA_VERSION_STRING));
+    application.setAttribute(Qt::AA_DisableWindowContextHelpButton, true);
+
+    aspia::HostConfigDialog dialog;
+    dialog.show();
+    dialog.activateWindow();
+
+    return application.exec();
 }

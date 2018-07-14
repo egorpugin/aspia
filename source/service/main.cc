@@ -16,10 +16,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <QFileInfo>
 
-namespace aspia {
+#include "base/log.h"
+#include "host_service.h"
 
-int hostConfigMain(int argc, char *argv[]);
+#include <QtCore/QtPlugin>
+#ifdef QT_STATIC
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+#endif
 
-} // namespace aspia
+int main(int argc, char *argv[])
+{
+    aspia::initLoggerForApplication(argc, argv);
+    return aspia::HostService().exec(argc, argv);
+}

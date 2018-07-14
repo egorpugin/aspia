@@ -16,8 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "host_notifier_main.h"
-
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -32,17 +30,25 @@
 #include "notifier/ui/host_notifier_window.h"
 #include "version.h"
 
-namespace aspia {
+#include <QtCore/QtPlugin>
+#ifdef QT_STATIC
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+#endif
 
-int hostNotifierMain(int argc, char *argv[])
+int qInitResources_resources();
+
+int main(int argc, char *argv[])
 {
+    qInitResources_resources();
+
     //initLoggerForApplication(argc, argv);
 
     int max_attempt_count = 600;
 
     do
     {
-        Desktop input_desktop(Desktop::inputDesktop());
+        aspia::Desktop input_desktop(aspia::Desktop::inputDesktop());
         if (input_desktop.isValid())
         {
             if (input_desktop.setThreadDesktop())
@@ -77,7 +83,7 @@ int hostNotifierMain(int argc, char *argv[])
         return 1;
     }
 
-    HostNotifierWindow window;
+    aspia::HostNotifierWindow window;
     window.setChannelId(parser.value(channel_id_option).toStdString());
     window.show();
 
@@ -112,5 +118,3 @@ int hostNotifierMain(int argc, char *argv[])
 
     return application.exec();
 }
-
-} // namespace aspia
