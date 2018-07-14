@@ -16,32 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "file_item_drag.h"
 
-#include "base/common.h"
-
-#include <QIcon>
-#include <QPair>
-
-#include "protocol/file_transfer_session.pb.h"
+#include "file_item_mime_data.h"
 
 namespace aspia {
 
-class ASPIA_CLIENT_API FilePlatformUtil
+FileItemDrag::FileItemDrag(QObject* drag_source)
+    : QDrag(drag_source)
 {
-public:
-    // Returns a pair of icons for the file type and a description of the file type.
-    static QPair<QIcon, std::string> fileTypeInfo(const std::string& file_name);
+    // Nothing
+}
 
-    // The methods below return the appropriate icons.
-    static QIcon computerIcon();
-    static QIcon directoryIcon();
-
-    static QIcon driveIcon(proto::file_transfer::DriveList::Item::Type type);
-    static proto::file_transfer::DriveList::Item::Type driveType(const std::string& drive_path);
-
-private:
-    DISABLE_COPY(FilePlatformUtil)
-};
+void FileItemDrag::setFileList(const QList<FileTransfer::Item>& file_list)
+{
+    FileItemMimeData* mime_data = new FileItemMimeData();
+    mime_data->setFileList(file_list);
+    setMimeData(mime_data);
+}
 
 } // namespace aspia

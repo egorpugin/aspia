@@ -21,9 +21,9 @@
 #include <QDateTime>
 #include <QMessageBox>
 
-#include "client/ui/desktop_config_dialog.h"
-#include "client/client_session_desktop_manage.h"
-#include "console/computer_group_item.h"
+#include "ui/desktop_config_dialog.h"
+#include "client_session_desktop_manage.h"
+#include "computer_group_item.h"
 #include "core/user.h"
 
 namespace aspia {

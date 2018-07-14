@@ -25,9 +25,9 @@
 #include <QTranslator>
 
 #include "base/log.h"
-#include "client/ui/client_dialog.h"
-#include "client/client.h"
-#include "client/computer_factory.h"
+#include "ui/client_dialog.h"
+#include "client.h"
+#include "computer_factory.h"
 #include "console/about_dialog.h"
 #include "console/address_book_tab.h"
 #include "console/console_settings.h"

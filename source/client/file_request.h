@@ -26,7 +26,7 @@
 
 namespace aspia {
 
-class FileRequest : public QObject
+class ASPIA_CLIENT_API FileRequest : public QObject
 {
     Q_OBJECT
 

@@ -18,30 +18,31 @@
 
 #pragma once
 
-#include "base/common.h"
-
-#include <QIcon>
-#include <QPair>
-
-#include "protocol/file_transfer_session.pb.h"
+#include "protocol/address_book.pb.h"
+#include "ui_client_dialog.h"
 
 namespace aspia {
 
-class ASPIA_CLIENT_API FilePlatformUtil
+class ClientDialog : public QDialog
 {
+    Q_OBJECT
+
 public:
-    // Returns a pair of icons for the file type and a description of the file type.
-    static QPair<QIcon, std::string> fileTypeInfo(const std::string& file_name);
+    explicit ClientDialog(QWidget* parent = nullptr);
+    ~ClientDialog() = default;
 
-    // The methods below return the appropriate icons.
-    static QIcon computerIcon();
-    static QIcon directoryIcon();
+    const proto::address_book::Computer& computer() const { return computer_; }
 
-    static QIcon driveIcon(proto::file_transfer::DriveList::Item::Type type);
-    static proto::file_transfer::DriveList::Item::Type driveType(const std::string& drive_path);
+private slots:
+    void sessionTypeChanged(int item_index);
+    void sessionConfigButtonPressed();
+    void connectButtonPressed();
 
 private:
-    DISABLE_COPY(FilePlatformUtil)
+    Ui::ClientDialog ui;
+    proto::address_book::Computer computer_;
+
+    Q_DISABLE_COPY(ClientDialog)
 };
 
 } // namespace aspia

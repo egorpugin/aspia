@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "client/file_packetizer.h"
+#include "file_packetizer.h"
 
 #include "base/log.h"
 

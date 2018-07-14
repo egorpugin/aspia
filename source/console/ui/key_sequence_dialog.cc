@@ -16,32 +16,40 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "key_sequence_dialog.h"
 
-#include "base/common.h"
-
-#include <QIcon>
-#include <QPair>
-
-#include "protocol/file_transfer_session.pb.h"
+#include <QAbstractButton>
 
 namespace aspia {
 
-class ASPIA_CLIENT_API FilePlatformUtil
+KeySequenceDialog::KeySequenceDialog(QWidget* parent)
+    : QDialog(parent)
 {
-public:
-    // Returns a pair of icons for the file type and a description of the file type.
-    static QPair<QIcon, std::string> fileTypeInfo(const std::string& file_name);
+    ui.setupUi(this);
+    setFixedHeight(sizeHint().height());
 
-    // The methods below return the appropriate icons.
-    static QIcon computerIcon();
-    static QIcon directoryIcon();
+    connect(ui.button_box, &QDialogButtonBox::clicked,
+            this, &KeySequenceDialog::onButtonBoxClicked);
+}
 
-    static QIcon driveIcon(proto::file_transfer::DriveList::Item::Type type);
-    static proto::file_transfer::DriveList::Item::Type driveType(const std::string& drive_path);
+// static
+QKeySequence KeySequenceDialog::keySequence(QWidget* parent)
+{
+    KeySequenceDialog dialog(parent);
+    if (dialog.exec() != KeySequenceDialog::Accepted)
+        return QKeySequence();
 
-private:
-    DISABLE_COPY(FilePlatformUtil)
-};
+    return dialog.ui.edit->keySequence();
+}
+
+void KeySequenceDialog::onButtonBoxClicked(QAbstractButton* button)
+{
+    if (ui.button_box->standardButton(button) == QDialogButtonBox::Ok)
+        accept();
+    else
+        reject();
+
+    close();
+}
 
 } // namespace aspia

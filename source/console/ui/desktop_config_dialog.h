@@ -18,30 +18,37 @@
 
 #pragma once
 
-#include "base/common.h"
-
-#include <QIcon>
-#include <QPair>
-
-#include "protocol/file_transfer_session.pb.h"
+#include "protocol/desktop_session.pb.h"
+#include "ui_desktop_config_dialog.h"
 
 namespace aspia {
 
-class ASPIA_CLIENT_API FilePlatformUtil
+class DesktopConfigDialog : public QDialog
 {
+    Q_OBJECT
+
 public:
-    // Returns a pair of icons for the file type and a description of the file type.
-    static QPair<QIcon, std::string> fileTypeInfo(const std::string& file_name);
+    DesktopConfigDialog(const proto::desktop::Config& config,
+                        quint32 supported_video_encodings,
+                        quint32 supported_features,
+                        QWidget* parent = nullptr);
+    ~DesktopConfigDialog() = default;
 
-    // The methods below return the appropriate icons.
-    static QIcon computerIcon();
-    static QIcon directoryIcon();
+    const proto::desktop::Config& config() { return config_; }
 
-    static QIcon driveIcon(proto::file_transfer::DriveList::Item::Type type);
-    static proto::file_transfer::DriveList::Item::Type driveType(const std::string& drive_path);
+private slots:
+    void onCodecChanged(int item_index);
+    void onCompressionRatioChanged(int value);
+    void onButtonBoxClicked(QAbstractButton* button);
 
 private:
-    DISABLE_COPY(FilePlatformUtil)
+    Ui::DesktopConfigDialog ui;
+
+    proto::desktop::Config config_;
+    quint32 supported_video_encodings_;
+    quint32 supported_features_;
+
+    Q_DISABLE_COPY(DesktopConfigDialog)
 };
 
 } // namespace aspia

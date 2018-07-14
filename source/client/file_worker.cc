@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "client/file_worker.h"
+#include "file_worker.h"
 
 #include <QDebug>
 #include <QDateTime>
@@ -24,7 +24,7 @@
 #include <QStorageInfo>
 
 #include "base/log.h"
-#include "client/file_platform_util.h"
+#include "file_platform_util.h"
 
 namespace aspia {
 

@@ -195,30 +195,33 @@ projects:
             list(FILTER moc INCLUDE REGEX ".cpp$")
             set(src ${src} ${moc})
 
+    core:
+        type: lib
+        files:
+            - core/.*
+        dependencies:
+            - crypto
+            - pvt.cppan.demo.qtproject.qt.base.core: 5
+
     client:
         type: lib
         files:
             - client/.*
 
         dependencies:
-            - codec
-            - desktop_capture
-            - network
+            private:
+                - protocols
+                - pvt.cppan.demo.qtproject.qt.winextras: 5
+            public:
+                - core
 
-            - pvt.cppan.demo.qtproject.qt.winextras: 5
-            - pvt.cppan.demo.qtproject.qt.base.xml: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.widgets
-              ref: WIDGETS
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.core
-              ref: CORE
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
-              ref: MOC_COMMAND
-              version: 5
-            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
-              ref: UIC_COMMAND
-              version: 5
+                - pvt.cppan.demo.qtproject.qt.base.gui: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.core
+                  ref: CORE
+                  version: 5
+                - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+                  ref: MOC_COMMAND
+                  version: 5
 
         post_sources: |
             include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
@@ -233,33 +236,19 @@ projects:
             list(FILTER moc INCLUDE REGEX ".cpp$")
             set(src ${src} ${moc})
 
-            #
-            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
-            file(GLOB_RECURSE uis "${SDIR}/client/*.ui")
-            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
-            qt5_wrap_ui(uic ${uis})
-            set(src ${src} ${uic})
-
-
-    core:
-        type: lib
-        files:
-            - core/.*
-        dependencies:
-            - crypto
-            - pvt.cppan.demo.qtproject.qt.base.core: 5
-
-
     aspia_console:
         executable_type: win32
         rc_enabled: false
         files:
             - console/.*
         dependencies:
-            - client
             - core
             - resources
+            - codec
+            - network
+            - client
 
+            - pvt.cppan.demo.qtproject.qt.base.xml: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
@@ -344,10 +333,6 @@ projects:
             qt5_wrap_ui(uic ${uis})
             set(src ${src} ${uic})
 
-
-
-
-
     aspia_host_service:
         executable_type: win32
         rc_enabled: false
@@ -403,6 +388,8 @@ projects:
         dependencies:
             - client
             - ipc
+            - codec
+            - core
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
@@ -473,6 +460,3 @@ projects:
             set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
             qt5_wrap_ui(uic ${uis})
             set(src ${src} ${uic})
-
-
-

@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "client/file_depacketizer.h"
-#include "client/file_packetizer.h"
-#include "client/file_request.h"
+#include "file_depacketizer.h"
+#include "file_packetizer.h"
+#include "file_request.h"
 #include "protocol/file_transfer_session.pb.h"
 
 namespace aspia {

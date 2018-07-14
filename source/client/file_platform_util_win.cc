@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "client/file_platform_util.h"
+#include "file_platform_util.h"
 
 #if !defined(_WIN32)
 #error This file is only for MS Windows

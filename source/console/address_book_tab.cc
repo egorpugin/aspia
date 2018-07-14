@@ -23,7 +23,7 @@
 #include <QMessageBox>
 
 #include "base/message_serialization.h"
-#include "client/computer_factory.h"
+#include "computer_factory.h"
 #include "codec/video_util.h"
 #include "console/address_book_dialog.h"
 #include "console/computer_dialog.h"

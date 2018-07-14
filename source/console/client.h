@@ -18,30 +18,43 @@
 
 #pragma once
 
-#include "base/common.h"
-
-#include <QIcon>
-#include <QPair>
-
-#include "protocol/file_transfer_session.pb.h"
+#include "client_session.h"
+#include "connect_data.h"
+#include "network/network_channel.h"
 
 namespace aspia {
 
-class ASPIA_CLIENT_API FilePlatformUtil
+class ClientUserAuthorizer;
+class StatusDialog;
+
+class Client : public QObject
 {
+    Q_OBJECT
+
 public:
-    // Returns a pair of icons for the file type and a description of the file type.
-    static QPair<QIcon, std::string> fileTypeInfo(const std::string& file_name);
+    Client(const ConnectData& connect_data, QObject* parent = nullptr);
+    ~Client() = default;
 
-    // The methods below return the appropriate icons.
-    static QIcon computerIcon();
-    static QIcon directoryIcon();
+signals:
+    void clientTerminated(Client* client);
 
-    static QIcon driveIcon(proto::file_transfer::DriveList::Item::Type type);
-    static proto::file_transfer::DriveList::Item::Type driveType(const std::string& drive_path);
+private slots:
+    void onChannelConnected();
+    void onChannelDisconnected();
+    void onChannelError(const QString& message);
+    void onAuthorizationFinished(proto::auth::Status status);
+    void onSessionClosedByUser();
+    void onSessionError(const QString& message);
 
 private:
-    DISABLE_COPY(FilePlatformUtil)
+    ConnectData connect_data_;
+
+    QPointer<NetworkChannel> network_channel_;
+    QPointer<StatusDialog> status_dialog_;
+    QPointer<ClientUserAuthorizer> authorizer_;
+    QPointer<ClientSession> session_;
+
+    Q_DISABLE_COPY(Client)
 };
 
 } // namespace aspia
