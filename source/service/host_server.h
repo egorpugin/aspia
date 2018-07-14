@@ -9,7 +9,7 @@
 #define _ASPIA_HOST__HOST_SERVER_H
 
 #include "host/win/host_process.h"
-#include "host/user.h"
+#include "core/user.h"
 #include "ipc/ipc_channel.h"
 #include "network/network_server.h"
 

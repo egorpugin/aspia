@@ -8,8 +8,8 @@
 #ifndef _ASPIA_HOST__UI__HOST_NOTIFIER_WINDOW_H
 #define _ASPIA_HOST__UI__HOST_NOTIFIER_WINDOW_H
 
-#include "host/locale_loader.h"
-#include "host/host_notifier.h"
+#include "core/locale_loader.h"
+#include "notifier/host_notifier.h"
 #include "protocol/notifier.pb.h"
 #include "ui_host_notifier_window.h"
 

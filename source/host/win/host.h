@@ -21,7 +21,7 @@ class IpcChannel;
 class IpcServer;
 class NetworkChannel;
 
-class Host : public QObject
+class ASPIA_CORE_API Host : public QObject
 {
     Q_OBJECT
 

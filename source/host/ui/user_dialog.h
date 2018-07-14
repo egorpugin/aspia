@@ -10,7 +10,7 @@
 
 #include "base/common.h"
 
-#include "host/user.h"
+#include "core/user.h"
 #include "ui_user_dialog.h"
 
 namespace aspia {

@@ -10,7 +10,6 @@
 
 namespace aspia {
 
-ASPIA_CORE_API
 int hostNotifierMain(int argc, char *argv[]);
 
 } // namespace aspia

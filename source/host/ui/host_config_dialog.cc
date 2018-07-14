@@ -13,11 +13,11 @@
 #include <QMessageBox>
 #include <QTranslator>
 
+#include "base/log.h"
 #include "base/service_controller.h"
 #include "host/ui/user_dialog.h"
 #include "host/ui/user_tree_item.h"
-#include "host/win/host_service.h"
-#include "host/host_settings.h"
+#include "core/host_settings.h"
 
 namespace aspia {
 
@@ -282,9 +282,7 @@ void HostConfigDialog::reloadUserList()
 
 bool HostConfigDialog::isServiceStarted()
 {
-    HostService host_service;
-
-    ServiceController controller = ServiceController::open(host_service.serviceName());
+    ServiceController controller = ServiceController::open("aspia-host-service");
     if (controller.isValid())
         return controller.isRunning();
 
@@ -293,9 +291,7 @@ bool HostConfigDialog::isServiceStarted()
 
 bool HostConfigDialog::restartService()
 {
-    HostService host_service;
-
-    ServiceController controller = ServiceController::open(host_service.serviceName());
+    ServiceController controller = ServiceController::open("aspia-host-service");
     if (!controller.isValid())
         return false;
 

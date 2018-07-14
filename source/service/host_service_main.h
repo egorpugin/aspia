@@ -10,7 +10,6 @@
 
 namespace aspia {
 
-ASPIA_CORE_API
 int hostServiceMain(int argc, char *argv[]);
 
 } // namespace aspia

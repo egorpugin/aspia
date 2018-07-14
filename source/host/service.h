@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "base/service_impl.h"
+#include "service_impl.h"
 
 #include <qpointer.h>
 

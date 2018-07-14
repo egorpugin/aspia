@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/locale_loader.h"
+#include "locale_loader.h"
 
 #include "base/log.h"
 

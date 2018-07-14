@@ -12,11 +12,11 @@
 
 #include <QSettings>
 
-#include "host/user.h"
+#include "user.h"
 
 namespace aspia {
 
-class HostSettings
+class ASPIA_CORE2_API HostSettings
 {
 public:
     HostSettings();

@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_notifier_main.h"
+#include "host_notifier_main.h"
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -18,7 +18,7 @@
 
 #include "base/log.h"
 #include "desktop_capture/win/scoped_thread_desktop.h"
-#include "host/ui/host_notifier_window.h"
+#include "notifier/ui/host_notifier_window.h"
 #include "version.h"
 
 namespace aspia {

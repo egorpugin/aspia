@@ -12,7 +12,7 @@
 
 #include <QTreeWidget>
 
-#include "host/user.h"
+#include "core/user.h"
 
 namespace aspia {
 

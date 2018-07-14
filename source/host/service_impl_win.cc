@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "base/service_impl.h"
+#include "service_impl.h"
 
 #include <qglobal.h>
 

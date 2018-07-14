@@ -10,7 +10,7 @@
 
 #include <QPointer>
 
-#include "host/user.h"
+#include "core/user.h"
 #include "network/network_channel.h"
 #include "protocol/authorization.pb.h"
 
@@ -18,7 +18,7 @@ namespace aspia {
 
 class NetworkChannel;
 
-class HostUserAuthorizer : public QObject
+class ASPIA_CORE_API HostUserAuthorizer : public QObject
 {
     Q_OBJECT
 

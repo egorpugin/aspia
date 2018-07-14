@@ -16,7 +16,7 @@ class QTranslator;
 
 namespace aspia {
 
-class ASPIA_CORE_API LocaleLoader
+class ASPIA_CORE2_API LocaleLoader
 {
 public:
     LocaleLoader();

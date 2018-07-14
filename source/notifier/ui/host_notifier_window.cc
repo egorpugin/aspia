@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/ui/host_notifier_window.h"
+#include "notifier/ui/host_notifier_window.h"
 
 #include <QMenu>
 #include <QMouseEvent>
@@ -13,7 +13,7 @@
 #include <QTranslator>
 
 #include "base/log.h"
-#include "host/host_settings.h"
+#include "core/host_settings.h"
 
 namespace aspia {
 

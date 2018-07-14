@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/user.h"
+#include "user.h"
 
 #include <qchar.h>
 

@@ -8,8 +8,8 @@
 #ifndef _ASPIA_HOST__UI__HOST_CONFIG_DIALOG_H
 #define _ASPIA_HOST__UI__HOST_CONFIG_DIALOG_H
 
-#include "host/locale_loader.h"
-#include "host/user.h"
+#include "core/locale_loader.h"
+#include "core/user.h"
 #include "ui_host_config_dialog.h"
 
 namespace aspia {

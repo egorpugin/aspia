@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/win/host_service.h"
+#include "host_service.h"
 
 #include <QGuiApplication>
 
@@ -14,8 +14,8 @@
 #include <sddl.h>
 
 #include "base/win/security_helpers.h"
-#include "host/host_server.h"
-#include "host/host_settings.h"
+#include "host_server.h"
+#include "core/host_settings.h"
 #include "version.h"
 
 namespace aspia {

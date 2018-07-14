@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_server.h"
+#include "host_server.h"
 
 #include <QCoreApplication>
 #include <QDebug>

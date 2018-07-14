@@ -5,12 +5,12 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/win/host_service_main.h"
+#include "host_service_main.h"
 
 #include <QFileInfo>
 
 #include "base/log.h"
-#include "host/win/host_service.h"
+#include "host_service.h"
 
 namespace aspia {
 

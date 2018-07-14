@@ -13,7 +13,7 @@ namespace aspia {
 
 class ServiceEventHandler;
 
-class ServiceImpl
+class ASPIA_CORE_API ServiceImpl
 {
 public:
     ServiceImpl(const std::string& name, const std::string& display_name, const std::string& description);

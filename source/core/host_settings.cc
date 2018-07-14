@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_settings.h"
+#include "host_settings.h"
 
 #include "base/log.h"
 #include "base/errno_logging.h"

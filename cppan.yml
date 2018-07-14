@@ -270,6 +270,15 @@ projects:
             qt5_wrap_ui(uic ${uis})
             set(src ${src} ${uic})
 
+
+    core2:
+        type: lib
+        files:
+            - core/.*
+        dependencies:
+            - crypto
+            - pvt.cppan.demo.qtproject.qt.base.core: 5
+
     core:
         type: lib
         #shared_only: true
@@ -291,8 +300,8 @@ projects:
 
         dependencies:
             - client
-            - crypto
             - ipc
+            - core2
 
             - name: pvt.cppan.demo.qtproject.qt.base.widgets
               ref: WIDGETS
@@ -389,13 +398,46 @@ projects:
         executable_type: win32
         rc_enabled: false
         files:
-            - host/win/host_service_entry_point.cc
-            - host/win/host_service.rc
+            - service/.*
         dependencies:
             - core
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+              ref: WIDGETS
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+              ref: UIC_COMMAND
+              version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/service/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
 
     aspia_host:
         executable_type: win32
@@ -413,12 +455,47 @@ projects:
         executable_type: win32
         rc_enabled: false
         files:
-            - host/host_notifier_entry_point.cc
-            - host/host_notifier.rc
+            - notifier/.*
         dependencies:
-            - core
+            - client
+            - ipc
+            - core2
             - pvt.cppan.demo.qtproject.qt.base.plugins.platforms.windows: 5
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
+
+            - name: pvt.cppan.demo.qtproject.qt.base.widgets
+              ref: WIDGETS
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.core
+              ref: CORE
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.moc
+              ref: MOC_COMMAND
+              version: 5
+            - name: pvt.cppan.demo.qtproject.qt.base.tools.uic
+              ref: UIC_COMMAND
+              version: 5
+
+        post_sources: |
+            include(${CORE_SDIR}/src/corelib/Qt5CoreMacros.cmake)
+
+            set(moc ${src})
+            list(FILTER moc INCLUDE REGEX ".h$")
+
+            find_moc_targets(moc ${moc})
+
+            set(Qt5Core_MOC_EXECUTABLE ${MOC_COMMAND})
+            cppan_qt5_wrap_cpp(moc ${moc} TARGET ${this})
+            list(FILTER moc INCLUDE REGEX ".cpp$")
+            set(src ${src} ${moc})
+
+            #
+            include(${WIDGETS_SDIR}/src/widgets/Qt5WidgetsMacros.cmake)
+            file(GLOB_RECURSE uis "${SDIR}/notifier/*.ui")
+            set(Qt5Widgets_UIC_EXECUTABLE ${UIC_COMMAND})
+            qt5_wrap_ui(uic ${uis})
+            set(src ${src} ${uic})
+
 
 

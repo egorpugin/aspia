@@ -5,7 +5,7 @@
 // PROGRAMMERS:     Dmitry Chapyshev (dmitry@aspia.ru)
 //
 
-#include "host/host_notifier.h"
+#include "host_notifier.h"
 
 #include "base/message_serialization.h"
 

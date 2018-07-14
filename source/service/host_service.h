@@ -13,7 +13,7 @@
 #include <QPointer>
 
 #include "base/win/scoped_com_initializer.h"
-#include "host/locale_loader.h"
+#include "core/locale_loader.h"
 #include "host/service.h"
 
 namespace aspia {
