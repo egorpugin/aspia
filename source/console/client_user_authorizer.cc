@@ -27,8 +27,8 @@ namespace aspia {
 
 namespace {
 
-const quint32 kKeyHashingRounds = 100000;
-const quint32 kPasswordHashingRounds = 100000;
+const uint32_t kKeyHashingRounds = 100000;
+const uint32_t kPasswordHashingRounds = 100000;
 
 enum MessageId { LogonRequest, ClientChallenge };
 
@@ -43,7 +43,7 @@ std::string createPasswordHash(const std::string& password)
 std::string createSessionKey(const std::string& password_hash, const std::string& nonce)
 {
     auto data = password_hash;
-    for (quint32 i = 0; i < kKeyHashingRounds; ++i)
+    for (uint32_t i = 0; i < kKeyHashingRounds; ++i)
         data = sha512(data + nonce);
     return data;
 }

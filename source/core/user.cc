@@ -58,7 +58,7 @@ std::string createPasswordHash(const std::string& password)
     static const int kIterCount = 100000;
 
     auto data = password;
-    for (quint32 i = 0; i < kIterCount; ++i)
+    for (uint32_t i = 0; i < kIterCount; ++i)
         data = sha512(data);
     return data;
 }

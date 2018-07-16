@@ -354,6 +354,9 @@ projects:
             - pvt.cppan.demo.qtproject.qt.base.plugins.styles.windowsvista: 5
             - pvt.cppan.demo.qtproject.qt.base.winmain: 5
 
+            - pvt.cppan.demo.taywee.args: "*"
+            - pvt.cppan.demo.boost.dll: 1
+
             - name: pvt.cppan.demo.qtproject.qt.base.core
               ref: CORE
               version: 5

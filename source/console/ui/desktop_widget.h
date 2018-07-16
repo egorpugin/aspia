@@ -49,8 +49,8 @@ public slots:
     void executeKeySequense(int key_sequence);
 
 signals:
-    void sendKeyEvent(quint32 usb_keycode, quint32 flags);
-    void sendPointerEvent(const QPoint& pos, quint32 mask);
+    void sendKeyEvent(uint32_t usb_keycode, uint32_t flags);
+    void sendPointerEvent(const QPoint& pos, uint32_t mask);
 
 protected:
     // QWidget implementation.
@@ -68,7 +68,7 @@ private:
     std::unique_ptr<DesktopFrameQImage> frame_;
 
     QPoint prev_pos_;
-    quint32 prev_mask_ = 0;
+    uint32_t prev_mask_ = 0;
 
     Q_DISABLE_COPY(DesktopWidget)
 };

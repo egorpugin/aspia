@@ -35,7 +35,7 @@ namespace aspia {
 
 namespace {
 
-constexpr quint32 kWheelMask =
+constexpr uint32_t kWheelMask =
     proto::desktop::PointerEvent::WHEEL_DOWN | proto::desktop::PointerEvent::WHEEL_UP;
 
 bool isNumLockActivated()
@@ -87,7 +87,7 @@ void DesktopWidget::doMouseEvent(QEvent::Type event_type,
     if (!frame_ || !frame_->contains(pos.x(), pos.y()))
         return;
 
-    quint32 mask;
+    uint32_t mask;
 
     if (event_type == QMouseEvent::MouseMove)
     {
@@ -152,12 +152,12 @@ void DesktopWidget::doKeyEvent(QKeyEvent* event)
     if (key == Qt::Key_CapsLock || key == Qt::Key_NumLock)
         return;
 
-    quint32 flags = ((event->type() == QEvent::KeyPress) ? proto::desktop::KeyEvent::PRESSED : 0);
+    uint32_t flags = ((event->type() == QEvent::KeyPress) ? proto::desktop::KeyEvent::PRESSED : 0);
 
     flags |= (isCapsLockActivated() ? proto::desktop::KeyEvent::CAPSLOCK : 0);
     flags |= (isNumLockActivated() ? proto::desktop::KeyEvent::NUMLOCK : 0);
 
-    quint32 usb_keycode = KeycodeConverter::nativeKeycodeToUsbKeycode(event->nativeScanCode());
+    uint32_t usb_keycode = KeycodeConverter::nativeKeycodeToUsbKeycode(event->nativeScanCode());
     if (usb_keycode == KeycodeConverter::invalidUsbKeycode())
         return;
 
@@ -166,10 +166,10 @@ void DesktopWidget::doKeyEvent(QKeyEvent* event)
 
 void DesktopWidget::executeKeySequense(int key_sequence)
 {
-    const quint32 kUsbCodeLeftAlt = 0x0700e2;
-    const quint32 kUsbCodeLeftCtrl = 0x0700e0;
-    const quint32 kUsbCodeLeftShift = 0x0700e1;
-    const quint32 kUsbCodeLeftMeta = 0x0700e3;
+    const uint32_t kUsbCodeLeftAlt = 0x0700e2;
+    const uint32_t kUsbCodeLeftCtrl = 0x0700e0;
+    const uint32_t kUsbCodeLeftShift = 0x0700e1;
+    const uint32_t kUsbCodeLeftMeta = 0x0700e3;
 
     QVector<int> keys;
 
@@ -185,13 +185,13 @@ void DesktopWidget::executeKeySequense(int key_sequence)
     if (key_sequence & Qt::MetaModifier)
         keys.push_back(kUsbCodeLeftMeta);
 
-    quint32 key = KeycodeConverter::qtKeycodeToUsbKeycode(key_sequence & ~Qt::KeyboardModifierMask);
+    uint32_t key = KeycodeConverter::qtKeycodeToUsbKeycode(key_sequence & ~Qt::KeyboardModifierMask);
     if (key == KeycodeConverter::invalidUsbKeycode())
         return;
 
     keys.push_back(key);
 
-    quint32 flags = proto::desktop::KeyEvent::PRESSED;
+    uint32_t flags = proto::desktop::KeyEvent::PRESSED;
 
     flags |= (isCapsLockActivated() ? proto::desktop::KeyEvent::CAPSLOCK : 0);
     flags |= (isNumLockActivated() ? proto::desktop::KeyEvent::NUMLOCK : 0);

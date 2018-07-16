@@ -43,7 +43,6 @@ protected:
 
 private:
     QScopedPointer<ScopedCOMInitializer> com_initializer_;
-    QScopedPointer<LocaleLoader> locale_loader_;
     QPointer<HostServer> server_;
 
     DISABLE_COPY(HostService)

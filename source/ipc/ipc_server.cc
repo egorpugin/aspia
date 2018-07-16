@@ -27,9 +27,7 @@
 
 namespace aspia {
 
-namespace {
-
-QString generateUniqueChannelId()
+std::string generateUniqueChannelId()
 {
     static std::atomic_uint32_t last_channel_id = 0;
     uint32_t channel_id = last_channel_id++;
@@ -37,10 +35,8 @@ QString generateUniqueChannelId()
     return QString("%1.%2.%3")
         .arg(QCoreApplication::applicationPid())
         .arg(channel_id)
-        .arg(Random::generateNumber());
+        .arg(Random::generateNumber()).toStdString();
 }
-
-} // namespace
 
 IpcServer::IpcServer(QObject* parent)
     : QObject(parent)
@@ -70,7 +66,7 @@ void IpcServer::start()
 
     auto channel_id = generateUniqueChannelId();
 
-    if (!server_->listen(channel_id))
+    if (!server_->listen(channel_id.c_str()))
     {
         LOG_WARN(logger, "") << "listen failed: " << server_->errorString().toStdString();
         emit errorOccurred();
@@ -78,7 +74,7 @@ void IpcServer::start()
         return;
     }
 
-    emit started(channel_id.toStdString());
+    emit started(channel_id);
 }
 
 void IpcServer::stop()

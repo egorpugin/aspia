@@ -45,7 +45,7 @@ std::string generateNonce()
 std::string createSessionKey(const std::string& password_hash, const std::string& nonce)
 {
     auto data = password_hash;
-    for (quint32 i = 0; i < kKeyHashingRounds; ++i)
+    for (uint32_t i = 0; i < kKeyHashingRounds; ++i)
         data = sha512(data + nonce);
     return data;
 }

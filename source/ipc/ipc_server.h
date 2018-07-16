@@ -26,6 +26,9 @@ class QLocalServer;
 
 namespace aspia {
 
+ASPIA_IPC_API
+std::string generateUniqueChannelId();
+
 class IpcChannel;
 
 class ASPIA_IPC_API IpcServer : public QObject

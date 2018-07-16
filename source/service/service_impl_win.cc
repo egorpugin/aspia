@@ -18,7 +18,18 @@
 
 #include "service_impl.h"
 
-#include <qglobal.h>
+#include "service2.h"
+
+#include "base/win/security_helpers.h"
+#include "base/win/scoped_com_initializer.h"
+#include "base/errno_logging.h"
+#include "base/message_serialization.h"
+#include "base/service_controller.h"
+#include "core/host_settings.h"
+#include "ipc/ipc_server.h"
+#include "network/firewall_manager.h"
+
+#include "protocol/authorization.pb.h"
 
 #if !defined(_WIN32)
 #error This file for MS Windows only
@@ -31,12 +42,10 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QThread>
+#include <QUuid>
 
 #include <condition_variable>
 #include <mutex>
-
-#include "base/errno_logging.h"
-#include "base/service_controller.h"
 
 namespace aspia {
 
@@ -68,15 +77,7 @@ public:
     std::mutex event_lock;
     bool event_processed = false;
 
-protected:
-    // QThread implementation.
-    void run() override;
-
 private:
-    static void WINAPI serviceMain(DWORD argc, LPWSTR* argv);
-    static DWORD WINAPI serviceControlHandler(
-        DWORD control_code, DWORD event_type, LPVOID event_data, LPVOID context);
-
     SERVICE_STATUS_HANDLE status_handle_ = nullptr;
     SERVICE_STATUS status_;
 
@@ -91,12 +92,7 @@ public:
 
     static ServiceEventHandler* instance;
 
-    static const int kStartEvent = QEvent::User + 1;
-    static const int kStopEvent = QEvent::User + 2;
     static const int kSessionChangeEvent = QEvent::User + 3;
-
-    static void postStartEvent();
-    static void postStopEvent();
     static void postSessionChangeEvent(uint32_t event, uint32_t session_id);
 
     class SessionChangeEvent : public QEvent
@@ -150,161 +146,6 @@ ServiceHandler::~ServiceHandler()
 
 void ServiceHandler::setStatus(DWORD status)
 {
-    status_.dwServiceType             = SERVICE_WIN32;
-    status_.dwControlsAccepted        = 0;
-    status_.dwCurrentState            = status;
-    status_.dwWin32ExitCode           = NO_ERROR;
-    status_.dwServiceSpecificExitCode = NO_ERROR;
-    status_.dwWaitHint                = 0;
-
-    if (status == SERVICE_RUNNING)
-    {
-        status_.dwControlsAccepted =
-            SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_SESSIONCHANGE;
-    }
-
-    if (status != SERVICE_RUNNING && status != SERVICE_STOPPED)
-        ++status_.dwCheckPoint;
-    else
-        status_.dwCheckPoint = 0;
-
-    if (!SetServiceStatus(status_handle_, &status_))
-    {
-        qWarningErrno("SetServiceStatus failed");
-        return;
-    }
-}
-
-void ServiceHandler::run()
-{
-    SERVICE_TABLE_ENTRYW service_table[2];
-
-    auto n = to_wstring(ServiceImpl::instance()->serviceName());
-    service_table[0].lpServiceName = (LPWSTR)n.c_str();
-    service_table[0].lpServiceProc = ServiceHandler::serviceMain;
-    service_table[1].lpServiceName = nullptr;
-    service_table[1].lpServiceProc = nullptr;
-
-    if (!StartServiceCtrlDispatcherW(service_table))
-    {
-        std::scoped_lock<std::mutex> lock(instance->startup_lock);
-
-        DWORD error_code = GetLastError();
-        if (error_code == ERROR_FAILED_SERVICE_CONTROLLER_CONNECT)
-        {
-            instance->startup_state = RunningAsConsole;
-        }
-        else
-        {
-            LOG_WARN(logger, "") << "StartServiceCtrlDispatcherW failed: "
-                       << errnoToString(error_code);
-            instance->startup_state = ErrorOccurred;
-        }
-
-        instance->startup_condition.notify_all();
-    }
-}
-
-// static
-void WINAPI ServiceHandler::serviceMain(DWORD /* argc */, LPWSTR* /* argv */)
-{
-    if (!instance || !ServiceImpl::instance())
-        return;
-
-    // Start creating the QCoreApplication instance.
-    {
-        std::scoped_lock<std::mutex> lock(instance->startup_lock);
-        instance->startup_state = ServiceMainCalled;
-        instance->startup_condition.notify_all();
-    }
-
-    // Waiting for the completion of the creation.
-    {
-        std::unique_lock<std::mutex> lock(instance->startup_lock);
-
-        while (instance->startup_state != ApplicationCreated)
-            instance->startup_condition.wait(lock);
-
-        instance->startup_state = RunningAsService;
-    }
-
-    auto n = to_wstring(ServiceImpl::instance()->serviceName());
-    instance->status_handle_ = RegisterServiceCtrlHandlerExW(
-        n.c_str(),
-        serviceControlHandler,
-        nullptr);
-
-    if (!instance->status_handle_)
-    {
-        qWarningErrno("RegisterServiceCtrlHandlerExW failed");
-        return;
-    }
-
-    instance->setStatus(SERVICE_START_PENDING);
-
-    std::unique_lock<std::mutex> lock(instance->event_lock);
-    instance->event_processed = false;
-
-    ServiceEventHandler::postStartEvent();
-
-    // Wait for the event to be processed by the application.
-    while (!instance->event_processed)
-        instance->event_condition.wait(lock);
-
-    instance->setStatus(SERVICE_RUNNING);
-}
-
-// static
-DWORD WINAPI ServiceHandler::serviceControlHandler(
-    DWORD control_code, DWORD event_type, LPVOID event_data, LPVOID /* context */)
-{
-    switch (control_code)
-    {
-        case SERVICE_CONTROL_INTERROGATE:
-            return NO_ERROR;
-
-        case SERVICE_CONTROL_SESSIONCHANGE:
-        {
-            if (!instance)
-                return NO_ERROR;
-
-            std::unique_lock<std::mutex> lock(instance->event_lock);
-            instance->event_processed = false;
-
-            // Post event to application.
-            ServiceEventHandler::postSessionChangeEvent(
-                event_type, reinterpret_cast<WTSSESSION_NOTIFICATION*>(event_data)->dwSessionId);
-
-            // Wait for the event to be processed by the application.
-            while (!instance->event_processed)
-                instance->event_condition.wait(lock);
-        }
-        return NO_ERROR;
-
-        case SERVICE_CONTROL_SHUTDOWN:
-        case SERVICE_CONTROL_STOP:
-        {
-            if (!instance)
-                return NO_ERROR;
-
-            if (control_code == SERVICE_CONTROL_STOP)
-                instance->setStatus(SERVICE_STOP_PENDING);
-
-            std::unique_lock<std::mutex> lock(instance->event_lock);
-            instance->event_processed = false;
-
-            // Post event to application.
-            ServiceEventHandler::postStopEvent();
-
-            // Wait for the event to be processed by the application.
-            while (!instance->event_processed)
-                instance->event_condition.wait(lock);
-        }
-        return NO_ERROR;
-
-        default:
-            return ERROR_CALL_NOT_IMPLEMENTED;
-    }
 }
 
 //================================================================================================
@@ -326,20 +167,6 @@ ServiceEventHandler::~ServiceEventHandler()
 }
 
 // static
-void ServiceEventHandler::postStartEvent()
-{
-    if (instance)
-        QCoreApplication::postEvent(instance, new QEvent(QEvent::Type(kStartEvent)));
-}
-
-// static
-void ServiceEventHandler::postStopEvent()
-{
-    if (instance)
-        QCoreApplication::postEvent(instance, new QEvent(QEvent::Type(kStopEvent)));
-}
-
-// static
 void ServiceEventHandler::postSessionChangeEvent(uint32_t event, uint32_t session_id)
 {
     if (instance)
@@ -348,32 +175,6 @@ void ServiceEventHandler::postSessionChangeEvent(uint32_t event, uint32_t sessio
 
 void ServiceEventHandler::customEvent(QEvent* event)
 {
-    switch (event->type())
-    {
-        case kStartEvent:
-            ServiceImpl::instance()->start();
-            break;
-
-        case kStopEvent:
-            ServiceImpl::instance()->stop();
-            QCoreApplication::instance()->quit();
-            break;
-
-        case kSessionChangeEvent:
-        {
-            SessionChangeEvent* session_change_event = dynamic_cast<SessionChangeEvent*>(event);
-            if (!session_change_event)
-                return;
-
-            ServiceImpl::instance()->sessionChange(session_change_event->event(),
-                                                   session_change_event->sessionId());
-        }
-        break;
-
-        default:
-            return;
-    }
-
     std::scoped_lock<std::mutex> lock(ServiceHandler::instance->event_lock);
 
     // Set the event flag is processed.
@@ -399,116 +200,124 @@ ServiceImpl::ServiceImpl(const std::string& name,
     instance_ = this;
 }
 
-int ServiceImpl::exec(int argc, char* argv[])
+extern const wchar_t *kComProcessSd;
+extern const wchar_t *kComProcessMandatoryLabel;
+extern const char *kFirewallRuleName;
+
+DWORD WINAPI serviceControlHandler(DWORD control_code, DWORD event_type, LPVOID event_data, LPVOID /* context */)
 {
-    QScopedPointer<ServiceHandler> handler(new ServiceHandler());
-
-    // Waiting for the launch ServiceHandler::serviceMain.
+    switch (control_code)
     {
-        std::unique_lock<std::mutex> lock(handler->startup_lock);
-        handler->startup_state = ServiceHandler::NotStarted;
+    case SERVICE_CONTROL_INTERROGATE:
+        return NO_ERROR;
+    case SERVICE_CONTROL_SESSIONCHANGE:
+        get_service().session_change(event_type, reinterpret_cast<WTSSESSION_NOTIFICATION *>(event_data)->dwSessionId);
+        return NO_ERROR;
+    case SERVICE_CONTROL_SHUTDOWN:
+    case SERVICE_CONTROL_STOP:
+        get_service().stop();
+        return NO_ERROR;
+    default:
+        return ERROR_CALL_NOT_IMPLEMENTED;
+    }
+}
 
-        // Starts handler thread.
-        handler->start();
+void WINAPI serviceMain(DWORD /* argc */, LPWSTR* /* argv */)
+{
+    auto &svc = get_service();
 
-        while (handler->startup_state == ServiceHandler::NotStarted)
-            handler->startup_condition.wait(lock);
+    auto n = to_wstring(ServiceImpl::instance()->serviceName());
+    svc.status_handle = RegisterServiceCtrlHandlerExW(n.c_str(), serviceControlHandler, nullptr);
 
-        if (handler->startup_state == ServiceHandler::ErrorOccurred)
-            return 1;
+    if (!svc.status_handle)
+    {
+        qWarningErrno("RegisterServiceCtrlHandlerExW failed");
+        return;
     }
 
-    // Creates QCoreApplication.
-    createApplication(argc, argv);
+    LOG_INFO(logger, "Command to start the service has been received");
 
-    QScopedPointer<QCoreApplication> application(QCoreApplication::instance());
-    if (application.isNull())
+    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+
+    ScopedCOMInitializer com_initializer_;
+    if (!com_initializer_.isSucceeded())
     {
-        LOG_WARN(logger, "Application instance is null");
-        return 1;
+        LOG_FATAL(logger, "COM not initialized");
+        return;
     }
 
-    if (handler->startup_state == ServiceHandler::RunningAsConsole)
+    initializeComSecurity(kComProcessSd, kComProcessMandatoryLabel, false);
+
+    LOG_INFO(logger, "Starting the server");
+
+    svc.set_status(SERVICE_START_PENDING);
+
+    HostSettings settings;
+    auto port = settings.tcpPort();
+
+    for (auto &u : settings.userList())
     {
-        QCommandLineOption install_option(QStringLiteral("install"),
-                                          QStringLiteral("Install service"));
-        QCommandLineOption remove_option(QStringLiteral("remove"),
-                                         QStringLiteral("Remove service"));
-        QCommandLineParser parser;
+        user u2;
+        u2.name = u.name();
+        u2.flags = u.flags();
+        u2.password_hash = u.passwordHash();
+        u2.sessions = u.sessions();
+        svc.users.push_back(u2);
+    }
+    if (svc.users.empty())
+    {
+        LOG_WARN(logger, "Empty user list");
+    }
 
-        parser.addHelpOption();
-        parser.addOption(install_option);
-        parser.addOption(remove_option);
+    FirewallManager firewall(QCoreApplication::applicationFilePath().toStdString());
+    if (firewall.isValid())
+    {
+        if (firewall.addTcpRule(kFirewallRuleName, "Allow incoming TCP connections", port))
+            LOG_INFO(logger, "Rule is added to the firewall");
+    }
 
-        parser.process(application->arguments());
+    LOG_INFO(logger, "") << "Server is started on port" << port;
 
-        if (parser.isSet(install_option))
+    svc.set_status(SERVICE_RUNNING);
+    LOG_INFO(logger, "Service is started");
+
+    try
+    {
+        svc.run(port);
+    }
+    catch (std::exception &e)
+    {
+        LOG_FATAL(logger, "Error during server execution" << e.what());
+    }
+
+    svc.set_status(SERVICE_STOPPED);
+}
+
+int ServiceImpl::exec()
+{
+    SERVICE_TABLE_ENTRYW service_table[2];
+
+    auto n = to_wstring(ServiceImpl::instance()->serviceName());
+    service_table[0].lpServiceName = (LPWSTR)n.c_str();
+    service_table[0].lpServiceProc = serviceMain;
+    service_table[1].lpServiceName = nullptr;
+    service_table[1].lpServiceProc = nullptr;
+
+    if (!StartServiceCtrlDispatcherW(service_table))
+    {
+        DWORD error_code = GetLastError();
+        if (error_code == ERROR_FAILED_SERVICE_CONTROLLER_CONNECT)
         {
-            ServiceController controller = ServiceController::install(
-                name_, display_name_, application->applicationFilePath().toStdString());
-            if (controller.isValid())
-            {
-                printf("Service has been successfully installed. Starting...\n");
-                controller.setDescription(description_);
-                if (!controller.start())
-                    printf("Service could not be started.");
-                else
-                    printf("Done.\n");
-            }
+            //instance->startup_state = RunningAsConsole;
         }
-        else if (parser.isSet(remove_option))
+        else
         {
-            ServiceController controller = ServiceController::open(name_);
-            if (controller.isValid())
-            {
-                if (controller.isRunning())
-                {
-                    printf("Service is started. Stopping...\n");
-                    if (!controller.stop())
-                        printf("Error: Service could not be stopped.\n");
-                    else
-                        printf("Done.\n");
-                }
-
-                printf("Remove the service...\n");
-                if (!controller.remove())
-                    printf("Error: Service could not be removed.\n");
-                else
-                    printf("Done.\n");
-            }
-            else
-            {
-                printf("Could not access the service.\n"
-                       "The service is not installed or you do not have administrator rights.\n");
-            }
+            LOG_WARN(logger, "") << "StartServiceCtrlDispatcherW failed: "
+                << errnoToString(error_code);
         }
-
-        return 0;
     }
 
-    QScopedPointer<ServiceEventHandler> event_handler(new ServiceEventHandler());
-
-    // Now we can complete the registration of the service.
-    {
-        std::scoped_lock<std::mutex> lock(handler->startup_lock);
-        handler->startup_state = ServiceHandler::ApplicationCreated;
-        handler->startup_condition.notify_all();
-    }
-
-    // Calls QCoreApplication::exec().
-    int ret = executeApplication();
-
-    // Set the state of the service and wait for the thread to complete.
-    handler->setStatus(SERVICE_STOPPED);
-
-    if (handler->isRunning())
-        handler->wait();
-
-    event_handler.reset();
-    handler.reset();
-    application.reset();
-
-    return ret;
+    return 0;
 }
 
 } // namespace aspia

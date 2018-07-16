@@ -36,13 +36,13 @@ public:
     std::string serviceDisplayName() const { return display_name_; }
     std::string serviceDescription() const { return description_; }
 
-    int exec(int argc, char* argv[]);
-
-protected:
-    friend class ServiceEventHandler;
+    int exec();
 
     virtual void start() = 0;
     virtual void stop() = 0;
+
+protected:
+    friend class ServiceEventHandler;
 
 #if defined(_WIN32)
     virtual void sessionChange(uint32_t event, uint32_t session_id) = 0;

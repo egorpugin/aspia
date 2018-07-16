@@ -33,10 +33,8 @@
 
 namespace aspia {
 
-namespace {
-
-const char kFirewallRuleName[] = "Aspia Host Service";
-const char kNotifierFileName[] = "aspia_host_notifier.exe";
+const char *kFirewallRuleName = "Aspia Host Service";
+const char *kNotifierFileName = "aspia_host_notifier.exe";
 
 const char* sessionTypeToString(proto::auth::SessionType session_type)
 {
@@ -73,8 +71,6 @@ const char* statusToString(proto::auth::Status status)
             return "Unknown";
     }
 }
-
-} // namespace
 
 HostServer::HostServer(QObject* parent)
     : QObject(parent)
@@ -363,7 +359,7 @@ void HostServer::onIpcMessageReceived(const std::string& buffer)
 
     if (!parseMessage(buffer, message))
     {
-        LOG_WARN(logger, "Invaliid message from notifier");
+        LOG_WARN(logger, "Invalid message from notifier");
         stop();
         return;
     }

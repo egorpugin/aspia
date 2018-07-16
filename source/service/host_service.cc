@@ -31,8 +31,6 @@
 
 namespace aspia {
 
-namespace {
-
 // Concatenates ACE type, permissions and sid given as SDDL strings into an ACE
 // definition in SDDL form.
 #define SDDL_ACE(type, permissions, sid) L"(" type L";;" permissions L";;;" sid L")"
@@ -43,7 +41,7 @@ namespace {
 
 // Security descriptor allowing local processes running under SYSTEM or
 // LocalService accounts to call COM methods exposed by the daemon.
-const wchar_t kComProcessSd[] =
+const wchar_t *kComProcessSd =
     SDDL_OWNER L":" SDDL_LOCAL_SYSTEM
     SDDL_GROUP L":" SDDL_LOCAL_SYSTEM
     SDDL_DACL L":"
@@ -53,16 +51,14 @@ const wchar_t kComProcessSd[] =
 // Appended to |kComProcessSd| to specify that only callers running at medium
 // or higher integrity level are allowed to call COM methods exposed by the
 // daemon.
-const wchar_t kComProcessMandatoryLabel[] =
+const wchar_t *kComProcessMandatoryLabel =
     SDDL_SACL L":"
     SDDL_ACE(SDDL_MANDATORY_LABEL, SDDL_NO_EXECUTE_UP, SDDL_ML_MEDIUM);
 
-} // namespace
-
 HostService::HostService()
     : Service<QGuiApplication>(
-        "aspia-host-service",
-        "Aspia Host Service",
+        "aspia-host-service-2",
+        "Aspia Host Service-2",
         "Accepts incoming remote desktop connections to this computer.")
 {
     // Nothing
@@ -91,9 +87,6 @@ void HostService::start()
     initializeComSecurity(kComProcessSd, kComProcessMandatoryLabel, false);
 
     HostSettings settings;
-
-    locale_loader_.reset(new LocaleLoader());
-    locale_loader_->installTranslators(settings.locale());
 
     server_ = new HostServer();
     if (!server_->start(settings.tcpPort(), settings.userList()))
