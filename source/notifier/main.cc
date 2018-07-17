@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
 
     //initLoggerForApplication(argc, argv);
 
-    Sleep(10000);
     int max_attempt_count = 600;
 
     do

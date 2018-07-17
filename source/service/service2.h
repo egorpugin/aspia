@@ -68,6 +68,7 @@ struct ipc_channel : channel_data
     void start(callback cb);
 
     void read(callback cb);
+    void write(callback cb);
     void write(callback cb, const std::string &msg);
 
     bool is_valid() const { return const_cast<ipc_channel*>(this)->ipc_.native_handle() != INVALID_HANDLE_VALUE; }
@@ -86,6 +87,7 @@ protected:
     tcp::socket socket;
 
     void read(callback cb);
+    void write(callback cb);
     void write(callback cb, const std::string &msg);
 
     virtual std::string decrypt(const std::string &s) { return s; }

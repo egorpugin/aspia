@@ -307,6 +307,7 @@ void session::start()
 
 void session::stop()
 {
+    socket.cancel();
     socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
     socket.close();
     host.reset();
@@ -653,58 +654,20 @@ void ipc_channel::start(callback cb)
 
 void ipc_channel::read(callback cb)
 {
-    ipc_.async_read_some(boost::asio::buffer(buffer_),
+    boost::asio::async_read(ipc_, boost::asio::buffer(&read_size_, sizeof(read_size_)),
         [this, cb](boost::system::error_code ec, std::size_t bytes_transferred)
     {
         if (ec)
             return;
-
-        if (!bytes_transferred)
-            return read(cb);
-
-        size_t ptr = 0;
-
-    begin:
-        if (!read_size_received_)
+        read_buffer.resize(read_size_);
+        boost::asio::async_read(ipc_, boost::asio::buffer(read_buffer),
+            [this, cb](boost::system::error_code ec, std::size_t bytes_transferred)
         {
-            while (ptr < bytes_transferred && read_size_len_--)
-                ((char*)&read_size_)[sizeof(MessageSizeType) - read_size_len_ - 1] = buffer_[ptr++];
-            if (read_size_len_ == 0)
-            {
-                read_size_received_ = true;
-
-                if (!read_size_ || read_size_ > kMaxMessageSize)
-                {
-                    LOG_WARN(logger, "") << "Wrong message size: " << read_size_;
-                    return;
-                }
-            }
-        }
-
-        if (read_buffer.size() < read_size_)
-        {
-            if (ptr < bytes_transferred)
-            {
-                size_t len = std::min(bytes_transferred - ptr, read_size_ - read_buffer.size());
-                read_buffer.append(buffer_.data() + ptr, buffer_.data() + ptr + len);
-                ptr += len;
-                if (read_buffer.size() < read_size_)
-                    return read(cb);
-            }
-            else
-                return read(cb);
-        }
-
-        read_size_ = 0;
-        read_size_len_ = sizeof(MessageSizeType);
-        read_size_received_ = false;
-
-        if (cb)
-            cb(read_buffer);
-        read_buffer.clear();
-
-        if (ptr < bytes_transferred)
-            goto begin;
+            if (ec)
+                return;
+            if (cb)
+                cb(read_buffer);
+        });
     });
 }
 
@@ -714,11 +677,20 @@ void ipc_channel::write(callback cb, const std::string &msg)
     write_buffer.resize(sizeof(write_size_) + msg.size());
     memcpy(write_buffer.data(), &write_size_, sizeof(write_size_));
     memcpy(write_buffer.data() + sizeof(write_size_), msg.data(), msg.size());
+    write(cb);
+}
+
+void ipc_channel::write(callback cb)
+{
     boost::asio::async_write(ipc_, boost::asio::buffer(write_buffer),
         [this, cb](boost::system::error_code ec, std::size_t bytes_transferred)
     {
         if (ec)
             return;
+
+        if (!bytes_transferred)
+            return write(cb);
+
         if (cb)
             cb({});
     });
@@ -918,6 +890,11 @@ void net_channel::write(callback cb, const std::string &msg)
 {
     write_buffer = encrypt(msg);
     write_buffer = createWriteBuffer(write_buffer);
+    write(cb);
+}
+
+void net_channel::write(callback cb)
+{
     auto self = shared_from_this();
     boost::asio::async_write(socket, boost::asio::buffer(write_buffer),
         [this, self, cb](boost::system::error_code ec, std::size_t bytes_transferred)
