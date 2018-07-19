@@ -1,3 +1,21 @@
+/*
+ * Aspia: Remote desktop and file transfer tool.
+ * Copyright (C) 2018 Egor Pugin <egor.pugin@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include "host_process.h"
@@ -82,6 +100,7 @@ struct ipc_server : ipc_channel
 struct net_channel : channel_data, std::enable_shared_from_this<net_channel>
 {
     net_channel(tcp::socket &&s);
+    ~net_channel();
 
 protected:
     tcp::socket socket;
