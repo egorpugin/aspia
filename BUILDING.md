@@ -1,5 +1,4 @@
-# Instructions for building the project
-
+Instructions for building the project
 =====================================
 1. Download and install [Visual Studio Community 2017](https://www.visualstudio.com/downloads).
    **Desktop development with C++** workload should be selected when installing.
@@ -18,10 +17,9 @@
    <br/>After these actions, the **aspia.sln** file will be generated in directory "build".
 8. Open **aspia.sln** in Visual Studio and build the project.
 
-# dfg
-
+Alternative instructions (SW build system)
 =====================================
-1. Download and install [Visual Studio Community 2017](https://www.visualstudio.com/downloads).
-   **Desktop development with C++** workload should be selected when installing.
-2. Download and install [CMake](https://cmake.org/download).
-3. Download pre-compiled [third-party libraries](https://aspia.org/files/third_pa
+1. Download, unpack and add to PATH `sw` tool from https://github.com/SoftwareNetwork/binaries
+2. Run `sw build` in the project root.
+   Binaries will be available under `.sw` directory.
+3. To generate VS solution, run `sw generate`.
