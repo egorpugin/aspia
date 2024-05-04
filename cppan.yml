@@ -1,6 +1,6 @@
 local_settings:
     #storage_dir: .s
-    #use_shared_libs: false
+    use_shared_libs: false
     builds:
         vs2017:
             generator: Visual Studio 15 2017
